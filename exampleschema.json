@@ -1,0 +1,53 @@
+{
+    "_id": "616505df43de4c907d0a907e",
+    "Username": "pHill",
+    "hashedPassword": "xxxxxxxxxxxxxxxxxxx",
+    "favorites": {
+        "artists": ["Tyler, the Creator", "Kali Uchis", "Steve Lacy"],
+        "songs": [
+            { "songName": "CORSO", "artist": "Tyler, the Creator" },
+            { "songName": "Fue Mejor", "artist": "Kali Uchis" }
+        ],
+        "albums": [
+            { "albumName": "CALL ME IF YOU GET LOST", "artist": "Tyler, the Creator" },
+            { "albumName": "IGOR", "artist": "Tyler, the Creator" }
+        ]
+    },
+    "journalEntries": [
+        {
+            "_id": "5178w5df43d99o107d0af998",
+            "title": "The Best Song of 2021",
+            "journalBody": "CORSO is the best song because it's emotional",
+            "references": {
+                "artists": ["Tyler, the Creator"],
+                "songs": [
+                    { "songName": "CORSO", "artist": "Tyler, the Creator" },
+                    { "songName": "Fue Mejor", "artist": "Kali Uchis" }
+                ],
+                "albums": [{ "albumName": "CALL ME IF YOU GET LOST", "artist": "Tyler, the Creator" }]
+            }
+        },
+        {
+            "_id": "5178w5df43d99o107d0af998",
+            "title": "The Best Song of 2022",
+            "journalBody": "Donda is the best song because it's Kanye West AKA Ye",
+            "references": {
+                "artists": ["Kanye West"],
+                "songs": [{ "songName": "Donda", "artist": "Kanye West" }],
+                "albums": [{ "albumName": "Donda", "artist": "Kanye West" }]
+            }
+        }
+    ],
+    "accolades": [
+        {
+            "_id": "5178w5df43d99o107d0af998",
+            "title": "Ye approved",
+            "awardedTo": { "songName": "Donda", "artist": "Kanye West" }
+        },
+        {
+            "_id": "5178w5df43d99o107d0af998",
+            "title": "Tyler approved",
+            "awardedTo": { "songName": "Fue Mejor", "artist": "Kali Uchis" }
+        }
+    ]
+}
