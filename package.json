@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/MspMarik/food-finder/issues"
   },
-  "homepage": "https://github.com/MspMarik/food-finder#readme"
+  "homepage": "https://github.com/MspMarik/food-finder#readme",
+  "dependencies": {
+    "mongodb": "^4.1.4"
+  }
 }
