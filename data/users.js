@@ -21,7 +21,7 @@ async function createUser(username, password) {
     if(typeof password != "string") {
         throw "Password must be a string";
     }
-    if(username.trim().length <= 0) {
+    if(password.trim().length <= 0) {
         throw "Password is whitespace";
     }
 
@@ -30,7 +30,7 @@ async function createUser(username, password) {
     //TODO: Hash password
 
     //Check to see if another user already has said username, throw(?) if they do.
-    if(!checkUsernameAvailable(username)) {
+    if(!(await checkUsernameAvailable(username))) {
         throw "Username is already taken";
     } 
 
@@ -128,12 +128,12 @@ async function getUserByCredentials(username, password) {
     if(typeof password != "string") {
         throw "Password must be a string";
     }
-    if(username.trim().length <= 0) {
+    if(password.trim().length <= 0) {
         throw "Password is whitespace";
     }
 
     newPass = password;
-    
+
     //TODO: Hash password
 
     const userCollection = await users();
@@ -148,6 +148,21 @@ async function getUserByCredentials(username, password) {
     }
 }
 
+async function deleteUser(username, password) {
+    let name = username
+    let user = await getUserByCredentials(username, password);
+
+    const userCollection = await users();
+    const deletionStatus = await userCollection.deleteOne({_id: user._id});
+
+    if(deletionStatus.deletedCount == 0) {
+        throw "User could not be deleted";
+    }
+
+    return `${name} has been deleted.`;
+}
+
+module.exports = {createUser, getUserByID, checkUsernameAvailable, getUserByCredentials, deleteUser};
 
 
 
