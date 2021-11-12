@@ -2,7 +2,7 @@ const lastfm = require("../data/lastfm");
 
 async function main() {
     try {
-        let artistSearch = await lastfm.getArtistsByTextInput("cher");
+        let artistSearch = await lastfm.getArtistsByTextInput("cher", ["pop"]);
         console.log(artistSearch);
     }
     catch(e) {
@@ -10,7 +10,7 @@ async function main() {
     }
     console.log("-------------------------");
     try {
-        let artistSearchTwo = await lastfm.getArtistsByTextInput("cher", ["pop"]);
+        let artistSearchTwo = await lastfm.getArtistsByTextInput("cher", ["pop", "rock"]);
         console.log(artistSearchTwo);
     }
     catch(e) {

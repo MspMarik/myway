@@ -34,7 +34,7 @@ async function getArtistsByTextInput(input, userTags = undefined) {
 
         Note 2:
         (If I calculated this correctly) This filtering function is O(n*m*t), with
-            n = Number of artists returned that have mbids
+            n = Number of artists returned
             m = Number of tags the user inputted
             t = The maximum number of tags that any one of the artists had
         This should be replaced with a more efficient solution, but this one is implemented for now just to get something working
@@ -46,11 +46,11 @@ async function getArtistsByTextInput(input, userTags = undefined) {
     if(userTags) {
         filteredArtists = [];
         for(let artist of artists) {
-            let artistInfo = await axios.get(baseURL + `artist.getInfo&artist=${artist.name}`);
+            let artistInfo = await axios.get(baseURL + `artist.getInfo&artist=${artist.name}`); //I don't think there will be a way around this
             let tagsList = artistInfo.data.artist.tags.tag;
             let tagFound = false;
             for(let tag of tagsList) {
-                for(let i = 0; i < userTags.length; i++) {
+                for(let i = 0; i < userTags.length; i++) { //The three nested loop can probably be dealt with however
                     if(userTags[i] == tag.name) {
                         filteredArtists.push(artist);
                         tagFound = true;
