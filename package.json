@@ -4,7 +4,9 @@
   "description": "CS-546 Final Project, a website that helps you find restaurants.",
   "main": "app.js",
   "scripts": {
-    "test": "node app.js"
+    "test": "node app.js",
+    "basicapi": "node tasks/basicapi.js",
+    "filterapi": "node tasks/filterapi.js"
   },
   "repository": {
     "type": "git",
