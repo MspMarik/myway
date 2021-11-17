@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/MspMarik/food-finder/issues"
   },
-  "homepage": "https://github.com/MspMarik/food-finder#readme"
+  "homepage": "https://github.com/MspMarik/food-finder#readme",
+  "dependencies": {
+    "axios": "^0.24.0"
+  }
 }

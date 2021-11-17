@@ -10,7 +10,7 @@ async function main() {
     }
     console.log("-------------------------");
     try {
-        let artistSearchTwo = await lastfm.getArtistsByTextInput("cher", ["pop", "rock"]);
+        let artistSearchTwo = await lastfm.getArtistsByTextInput("cher", ["pop", "80s"]);
         console.log(artistSearchTwo);
     }
     catch(e) {

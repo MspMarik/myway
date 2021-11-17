@@ -6,6 +6,76 @@ const key_location = require("./lastfmkey.json")
 const api_key = key_location.key;
 const baseURL = "https://ws.audioscrobbler.com/2.0/?api_key=" + api_key + "&format=json&method=" //Remember to supply method for each function that uses this base
 
+//Should be a more efficient filtering function than the previous one.
+async function filterArtists(artists, filters) {
+    let filteredArtists = []; //Start with empty list (assume no artists will make it through)
+    for(let i = 0; i < artists.length; i++) {
+        let artistInfo = await axios.get(baseURL + `artist.getInfo&artist=${artists[i].name}`); //I don't think there will be a way around this
+        let tagsList = artistInfo.data.artist.tags.tag;
+        let filteringMap = new Map();
+        for(let j = 0; j < tagsList.length; j++) { //For each tag the artist has, put it in the map
+            filteringMap.set(tagsList[j].name, true);
+        }
+        let tagPresent = true;
+        for(let j = 0; j < filters.length; j++) { //Attempt to fetch each tag present in the filter criteria
+            tagPresent = filteringMap.get(filters[j]);
+            if(!tagPresent) { //If tag is not present, it will appear as undefined
+                break;
+            }
+        }
+        if(tagPresent) { //If all tags are present (tagPresent remained true), add the artist to the filtered list
+            filteredArtists.push(artists[i]);
+        }
+    }
+    return filteredArtists;
+}
+
+async function filterSongs(songs, filters) {
+    let filteredSongs = []; //Start with empty list (assume no songs will make it through)
+    for(let i = 0; i < songs.length; i++) {
+        let songInfo = await axios.get(baseURL + `track.getInfo&artist=${songs[i].artist}&track=${songs[i].name}`);
+        let tagsList = songInfo.data.track.tags.tag;
+        let filteringMap = new Map();
+        for(let j = 0; j < tagsList.length; j++) { //For each tag the song has, put it in the map
+            filteringMap.set(tagsList[j].name, true);
+        }
+        let tagPresent = true;
+        for(let j = 0; j < filters.length; j++) { //Attempt to fetch each tag present in the filter criteria
+            tagPresent = filteringMap.get(filters[j]);
+            if(!tagPresent) { //If tag is not present, it will appear as undefined
+                break;
+            }
+        }
+        if(tagPresent) { //If all tags are present (tagPresent remained true), add the song to the filtered list
+            filteredSongs.push(songs[i]);
+        }
+    }
+    return filteredSongs;
+}
+
+async function filterAlbums(albums, filters) {
+    let filteredAlbums = []; //Start with empty list (assume no albums will make it through)
+    for(let i = 0; i < songs.length; i++) {
+        let albumInfo = await axios.get(baseURL + `album.getInfo&artist=${album.artist}&album=${album.name}`);
+        let tagsList = albumInfo.data.album.tags.tag;
+        let filteringMap = new Map();
+        for(let j = 0; j < tagsList.length; j++) { //For each tag the album has, put it in the map
+            filteringMap.set(tagsList[j].name, true);
+        }
+        let tagPresent = true;
+        for(let j = 0; j < filters.length; j++) { //Attempt to fetch each tag present in the filter criteria
+            tagPresent = filteringMap.get(filters[j]);
+            if(!tagPresent) { //If tag is not present, it will appear as undefined
+                break;
+            }
+        }
+        if(tagPresent) { //If all tags are present (tagPresent remained true), add the album to the filtered list
+            filteredAlbums.push(albums[i]);
+        }
+    }
+    return filteredAlbums;
+}
+
 async function getArtistsByTextInput(input, userTags = undefined) {
     if(!input) {
         throw "Input not provided";
@@ -22,45 +92,13 @@ async function getArtistsByTextInput(input, userTags = undefined) {
         throw "If provided, user tags must be in the form of an array";
     }
 
-    let requestURL = baseURL + `artist.search&artist=${trimmedInput}`;
+    let requestURL = baseURL + `artist.search&artist=${trimmedInput}&limit=10`;
     const {data} = await axios.get(requestURL);
     const artists = data.results.artistmatches.artist;
-    /*
-        Note 1:
-        Tag information (what we would use for filtering) is not included when artist.search is used. Therefore, the mbid of the artist 
-        has to be used to call artist.getInfo. This means that for any search that uses filtering, the website won't just make one call per 
-        search but n+1 calls, with n being the amount of artists returned by artist.search. We should probably find a way to put a cap on the 
-        number of entries so that we don't end up calling the API too much. This also applies to the songs and albums too.
 
-        Note 2:
-        (If I calculated this correctly) This filtering function is O(n*m*t), with
-            n = Number of artists returned
-            m = Number of tags the user inputted
-            t = The maximum number of tags that any one of the artists had
-        This should be replaced with a more efficient solution, but this one is implemented for now just to get something working
-
-        Note 3:
-        This filtering system assumes that the user wants results that fit ANY tag, not all tags.
-    */
     let filteredArtists;
     if(userTags) {
-        filteredArtists = [];
-        for(let artist of artists) {
-            let artistInfo = await axios.get(baseURL + `artist.getInfo&artist=${artist.name}`); //I don't think there will be a way around this
-            let tagsList = artistInfo.data.artist.tags.tag;
-            let tagFound = false;
-            for(let tag of tagsList) {
-                for(let i = 0; i < userTags.length; i++) { //The three nested loop can probably be dealt with however
-                    if(userTags[i] == tag.name) {
-                        filteredArtists.push(artist);
-                        tagFound = true;
-                    }
-                }
-                if(tagFound) {
-                    break;
-                }
-            }
-        }
+        filteredArtists = await filterArtists(artists, userTags);
     }
     else {
         filteredArtists = artists;
@@ -84,28 +122,13 @@ async function getSongsByTextInput(input, userTags = undefined) {
         throw "If provided, user tags must be in the form of an array";
     }
 
-    let requestURL = baseURL + `track.search&track=${trimmedInput}`;
+    let requestURL = baseURL + `track.search&track=${trimmedInput}&limit=10`;
     const {data} = await axios.get(requestURL);
     const songs = data.results.trackmatches.track;
+
     let filteredSongs;
     if(userTags) {
-        filteredSongs = [];
-        for(let song of songs) {
-            let songInfo = await axios.get(baseURL + `track.getInfo&artist=${song.artist}&track=${song.name}`);
-            let tagsList = songInfo.data.track.tags.tag;
-            let tagFound = false;
-            for(let tag of tagsList) {
-                for(let i = 0; i < userTags; i++) {
-                    if(userTags[i] == tag.name) {
-                        filteredSongs.push(songs);
-                        tagFound = true;
-                    }
-                }
-                if(tagFound) {
-                    break;
-                }
-            }
-        }
+        filteredSongs = await filterSongs(songs, userTags);
     }
     else {
         filteredSongs = songs;
@@ -129,28 +152,13 @@ async function getAlbumsByTextInput(input, userTags = undefined) {
         throw "If provided, user tags must be in the form of an array";
     }
 
-    let requestURL = baseURL + `album.search&album=${trimmedInput}`;
+    let requestURL = baseURL + `album.search&album=${trimmedInput}&limit=10`;
     const {data} = await axios.get(requestURL);
     const albums = data.results.albummatches.album;
+
     let filteredAlbums;
     if(userTags) {
-        filteredAlbums = [];
-        for(let album of albums) {
-            let albumInfo = await axios.get(baseURL + `album.getInfo&artist=${album.artist}&album=${album.name}`);
-            let tagsList = albumInfo.data.album.tags.tag;
-            let tagFound = false;
-            for(let tag of tagsList) {
-                for(let i = 0; i < userTags; i++) {
-                    if(userTags[i] == tag.name) {
-                        filteredAlbums.push(album);
-                        tagFound = true;
-                    }
-                }
-                if(tagFound) {
-                    break;
-                }
-            }
-        }
+        filteredAlbums = await filterAlbums(albums, userTags);
     }
     else {
         filteredAlbums = albums;
