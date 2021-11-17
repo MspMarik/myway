@@ -1,24 +1,24 @@
 {
-  "name": "food-finder",
-  "version": "1.0.0",
-  "description": "CS-546 Final Project, a website that helps you find restaurants.",
-  "main": "app.js",
-  "scripts": {
-    "test": "node app.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MspMarik/food-finder.git"
-  },
-  "keywords": [
-    "food",
-    "finder",
-    "cs546"
-  ],
-  "author": "Brianna Ellis, Mark Spivak, Walker Bove, Zane ThummBorst",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/MspMarik/food-finder/issues"
-  },
-  "homepage": "https://github.com/MspMarik/food-finder#readme"
+    "name": "myway",
+    "version": "1.0.0",
+    "description": "CS-546 Final Project, a website that helps you find restaurants.",
+    "main": "app.js",
+    "scripts": {
+        "run": "node app.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/MspMarik/myway.git"
+    },
+    "keywords": [
+        "my",
+        "way",
+        "cs546"
+    ],
+    "author": "Brianna Ellis, Mark Spivak, Walker Bove, Zane ThummBorst",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/MspMarik/myway/issues"
+    },
+    "homepage": "https://github.com/MspMarik/myway#readme"
 }
