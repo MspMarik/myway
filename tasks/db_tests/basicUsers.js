@@ -35,7 +35,7 @@ async function main() {
 
     //No password provided
     try {
-        badUser = await userFunctions.createUser("Joe Somebody");
+        badUser = await userFunctions.createUser("JoeSomebody");
         console.log(badUser);
     }
     catch(e) {
@@ -53,7 +53,7 @@ async function main() {
 
     //Improper password provided
     try {
-        badUser = await userFunctions.createUser("Joe Somebody", 1234);
+        badUser = await userFunctions.createUser("JoeSomebody", 1234);
         console.log(badUser);
     }
     catch(e) {
@@ -69,9 +69,9 @@ async function main() {
         console.log(e);
     }
 
-    //Blankspace password
+    //Whitespace password
     try {
-        badUser = await userFunctions.createUser("Joe Somebody", "   ");
+        badUser = await userFunctions.createUser("JoeSomebody", "   ");
         console.log(badUser);
     }
     catch(e) {
@@ -87,10 +87,19 @@ async function main() {
         console.log(e);
     }
 
+    //Already provided username in a different case
+    try {
+        badUser = await userFunctions.createUser("walkerbove", "notaverygoodpassword");
+        console.log(badUser);
+    }
+    catch(e) {
+        console.log(e);
+    }
+
     //Delete user one
     let deletionMessage;
     try {
-        deletionMessage = await userFunctions.deleteUser(userOne.username, userOne.hashedPassword);
+        deletionMessage = await userFunctions.deleteUser(userOne);
         console.log(deletionMessage);
     }
     catch(e) {
@@ -98,7 +107,7 @@ async function main() {
     }
 
     try {
-        deletionMessage = await userFunctions.deleteUser(userTwo.username, userTwo.hashedPassword);
+        deletionMessage = await userFunctions.deleteUser(userTwo);
         console.log(deletionMessage);
     }
     catch(e) {

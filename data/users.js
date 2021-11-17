@@ -1,5 +1,7 @@
 const {users} = require("../config/mongoCollections");
 const {ObjectId} = require("mongodb");
+const {validUsername, validPassword} = require("./fieldValidations");
+const bcrypt = require("bcryptjs");
 
 //Inserts a user into the database once an account is created
 async function createUser(username, password) {
@@ -10,9 +12,16 @@ async function createUser(username, password) {
     if(typeof username != "string") {
         throw "Username must be a string";
     }
-    if(username.trim().length <= 0) {
-        throw "Username is whitespace";
+    let trimmedUsername = username.trim().toLowerCase();
+    if(!validUsername(trimmedUsername)) {
+        throw "Username must be at least four characters long, and only contain letters and numbers.";
     }
+
+    //Check to see if another user already has said username, throw(?) if they do.
+    if(!(await checkUsernameAvailable(trimmedUsername))) {
+        throw "Username is already taken";
+    } 
+
 
     //Password Verification
     if(!password) {
@@ -21,23 +30,18 @@ async function createUser(username, password) {
     if(typeof password != "string") {
         throw "Password must be a string";
     }
-    if(password.trim().length <= 0) {
-        throw "Password is whitespace";
+    let trimmedPassword = password.trim();
+    if(!validPassword(trimmedPassword)) {
+        throw "Password must be at least six characters long, and not contain any spaces.";
     }
 
-    newPass = password;
-
     //TODO: Hash password
-
-    //Check to see if another user already has said username, throw(?) if they do.
-    if(!(await checkUsernameAvailable(username))) {
-        throw "Username is already taken";
-    } 
+    let hashedPassword = await bcrypt.hash(trimmedPassword, 16);
 
     //Add the user into the database
     const newUser = {
-        username: username,
-        hashedPassword: newPass,
+        username: trimmedUsername,
+        hashedPassword: hashedPassword,
         favorites: {
             artists: [],
             songs: [],
@@ -56,11 +60,11 @@ async function createUser(username, password) {
     }
 
     //Return the user
-    const user = await getUserByCredentials(username, newPass);
+    const user = await getUserByID(insertionStatus.insertedId.toString());
     return user;
 }
 
-//Not too sure if this function is necessary
+//Used to get user by ID once created
 async function getUserByID(id) {
     //ID Verification
     if(!id) {
@@ -77,7 +81,7 @@ async function getUserByID(id) {
 
     const userCollection = await users();
 
-    const user = await userCollection.findOne({ _id: id });
+    const user = await userCollection.findOne({ _id: ObjID });
 
     if(!user) {
         throw "User not found";
@@ -96,20 +100,21 @@ async function checkUsernameAvailable(username) {
     if(typeof username != "string") {
         throw "Username must be a string";
     }
-    if(username.trim().length <= 0) {
-        throw "Username is whitespace";
+    let trimmedUsername = username.trim().toLowerCase();
+    if(!validUsername(trimmedUsername)) {
+        throw "Username must be at least four characters long, and only contain letters and numbers.";
     }
 
     const userCollection = await users();
 
-    const user = await userCollection.findOne({ username: username }, { projection: {_id:1} } );
+    const user = await userCollection.findOne({ username: trimmedUsername }, { projection: {_id:1} } );
 
     //Returns true if username is available, returns false if username is already taken
     return !user;
 }
 
-//Used for fetching user after log-in
-async function getUserByCredentials(username, password) {
+//Used in log-in
+async function loginUser(username, password) {
     //Username Verification
     if(!username) {
         throw "Username not provided";
@@ -117,8 +122,9 @@ async function getUserByCredentials(username, password) {
     if(typeof username != "string") {
         throw "Username must be a string";
     }
-    if(username.trim().length <= 0) {
-        throw "Username is whitespace";
+    let trimmedUsername = username.trim().toLowerCase();
+    if(!validUsername(trimmedUsername)) {
+        throw "Username must be at least four characters long, and only contain letters and numbers.";
     }
 
     //Password Verification
@@ -128,32 +134,34 @@ async function getUserByCredentials(username, password) {
     if(typeof password != "string") {
         throw "Password must be a string";
     }
-    if(password.trim().length <= 0) {
-        throw "Password is whitespace";
+    let trimmedPassword = password.trim();
+    if(!validPassword(trimmedPassword)) {
+        throw "Password must be at least six characters long, and not contain any spaces.";
     }
 
-    newPass = password;
-
-    //TODO: Hash password
-
     const userCollection = await users();
-
-    const user = await userCollection.findOne({ username: username, hashedPassword: newPass });
+    const user = await userCollection.findOne({username: trimmedUsername});
 
     if(!user) {
-        throw "User not found";
+        throw "Username or password is incorrect";
+    }
+    
+    let passwordCorrect = bcrypt.compare(trimmedPassword, user.hashedPassword);
+
+    if(!passwordCorrect) {
+        throw "Username or password is incorrect";
     }
     else {
         return user;
     }
+
 }
 
-async function deleteUser(username, password) {
-    let name = username
-    let user = await getUserByCredentials(username, password);
 
+async function deleteUser(userObject) {
+    let name = userObject.username
     const userCollection = await users();
-    const deletionStatus = await userCollection.deleteOne({_id: user._id});
+    const deletionStatus = await userCollection.deleteOne({_id: userObject._id});
 
     if(deletionStatus.deletedCount == 0) {
         throw "User could not be deleted";
@@ -162,7 +170,7 @@ async function deleteUser(username, password) {
     return `${name} has been deleted.`;
 }
 
-module.exports = {createUser, getUserByID, checkUsernameAvailable, getUserByCredentials, deleteUser};
+module.exports = {createUser, getUserByID, checkUsernameAvailable, loginUser, deleteUser};
 
 
 

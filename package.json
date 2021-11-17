@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/MspMarik/myway#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "mongodb": "^4.1.4"
   }
 }
