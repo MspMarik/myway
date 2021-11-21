@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "basicDBtest": "node tasks/db_tests/basicUsers.js"
+    "basicDBtest": "node tasks/db_tests/basicUsers.js",
+    "recordDBtest": "node tasks/db_tests/userRecords.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,6 @@
   "homepage": "https://github.com/MspMarik/myway#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "mongodb": "^4.1.4"
+    "mongodb": "^4.2.0"
   }
 }
