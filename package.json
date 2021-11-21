@@ -1,29 +1,32 @@
 {
-  "name": "food-finder",
+  "name": "myway",
   "version": "1.0.0",
-  "description": "CS-546 Final Project, a website that helps you find restaurants.",
+  "description": "CS-546 Final Project, a website that lets you list your favorite artists, song, and albums. Also gives you recommendations.",
   "main": "app.js",
   "scripts": {
-    "test": "node app.js",
+    "start": "node app.js",
+    "basicDBtest": "node tasks/db_tests/basicUsers.js",
     "basicapi": "node tasks/basicapi.js",
     "filterapi": "node tasks/filterapi.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MspMarik/food-finder.git"
+    "url": "git+https://github.com/MspMarik/myway.git"
   },
   "keywords": [
-    "food",
-    "finder",
+    "my",
+    "way",
     "cs546"
   ],
   "author": "Brianna Ellis, Mark Spivak, Walker Bove, Zane ThummBorst",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MspMarik/food-finder/issues"
+    "url": "https://github.com/MspMarik/myway/issues"
   },
-  "homepage": "https://github.com/MspMarik/food-finder#readme",
+  "homepage": "https://github.com/MspMarik/myway#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "mongodb": "^4.1.4",
     "axios": "^0.24.0"
   }
 }
