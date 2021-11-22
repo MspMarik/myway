@@ -24,6 +24,7 @@
   "homepage": "https://github.com/MspMarik/myway#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "express": "^4.17.1",
     "mongodb": "^4.1.4"
   }
 }
