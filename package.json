@@ -25,6 +25,8 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "express": "^4.17.1",
-    "mongodb": "^4.1.4"
+    "express-session": "^1.17.2",
+    "mongodb": "^4.1.4",
+    "xss": "^1.0.10"
   }
 }
