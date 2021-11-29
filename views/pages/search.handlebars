@@ -1,4 +1,8 @@
 <h1>Search for a{{#if song}} song{{/if}}{{#if artist}}n artist{{/if}}{{#if album}}n album{{/if}}:</h1>
+
+<a href="/chooseWhatToSearch"><button>Search for something else?</button></a>
+
+{{! ADD FORM ACTION }}
 <form>
     <input type="text" id="searchbox" name="searchbox" required />
     {{#if album}}
@@ -8,7 +12,20 @@
 </form>
 
 {{#if searchResults}}
-    {{#each searchResults}}{{/each}}
+    {{#each searchResults}}
+        {{! make sure all elements within div are on one line }}
+        <div>
+            {{! might need some tweaking based on variable names }}
+            <span>{{this.songName}}{{this.albumName}}</span>
+            <span>{{this.artistName}}</span>
+            {{#if album}}
+                <span>{{this.prodYear}}</span>
+            {{/if}}
+            <button id="add">&#10133;</button>
+        </div>
+    {{/each}}
+
+    <a href="/chooseWhatToSearch"><button>Search for something else?</button></a>
 {{/if}}
 
 {{#if error}}

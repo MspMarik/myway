@@ -1,0 +1,20 @@
+<h1>My {{#if song}}Songs{{/if}}{{#if artist}}Artists{{/if}}{{#if album}}Albums{{/if}}</h1>
+
+{{#each list}}
+    {{! make sure all elements within div are on one line }}
+    <div>
+        {{! might need some tweaking based on variable names }}
+        <span>{{this.songName}}{{this.albumName}}</span>
+        <span>{{this.artistName}}</span>
+        {{#if album}}
+            <span>{{this.prodYear}}</span>
+            <span>{{this.ranking}}</span>
+            <a href="/editRaning"><button>&#9999; Edit Ranking</button></a>
+        {{/if}}
+        <button id="remove">&#128465;</button>
+    </div>
+{{/each}}
+
+{{#if error}}
+    <p>Looks like you don't have any {{#if song}}songs{{/if}}{{#if artist}}artists{{/if}}{{#if album}}albums{{/if}} saved &#128532;</p>
+{{/if}}
