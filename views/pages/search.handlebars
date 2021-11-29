@@ -1,0 +1,18 @@
+<h1>Search for a{{#if song}} song{{/if}}{{#if artist}}n artist{{/if}}{{#if album}}n album{{/if}}:</h1>
+<form>
+    <input type="text" id="searchbox" name="searchbox" required />
+    {{#if album}}
+        <input type="number" id="prodYear" name="prodYear" min="1900" max="2099" step="1" />
+    {{/if}}
+    <button type="submit" id="submit" name="submit">Search</button>
+</form>
+
+{{#if searchResults}}
+    {{#each searchResults}}{{/each}}
+{{/if}}
+
+{{#if error}}
+    <div>
+        <p>We're sorry but we couldn't find anything for {{searchTerm}}{{#if prodYear}} produced in {{prodYear}}{{/if}}.</p>
+    </div>
+{{/if}}
