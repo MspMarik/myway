@@ -129,6 +129,46 @@ router.post("/signup", (request, response) => {
     
 });
 
+//Main search page
+router.get("/search", (request, response) => {
+   if(!request.user.session) {
+       response.redirect("/login");
+   }
+   else {
+       response.render("path_to_search_type_page");
+   }
+});
+
+//Specific search pages
+router.get("/searchforartists", (request, response) => {
+    if(!request.user.session) {
+        response.redirect("/login");
+    }
+    else {
+        response.render("path_to_search_page", {artist: true});
+    }
+ });
+
+ router.get("/searchforsongs", (request, response) => {
+    if(!request.user.session) {
+        response.redirect("/login");
+    }
+    else {
+        response.render("path_to_search_page", {song: true});
+    }
+ });
+
+ router.get("/searchforalbums", (request, response) => {
+    if(!request.user.session) {
+        response.redirect("/login");
+    }
+    else {
+        response.render("path_to_search_page", {album: true});
+    }
+ });
+
+
+
 //Logout of the website
 router.get("/logout", (request, response) => {
     //Check if the user is logged in. If so, redirect to "main page" with a succesful logout message. Else redirect to "main page" without said message
