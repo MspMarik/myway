@@ -1,6 +1,6 @@
 <h1>Search for a{{#if song}} song{{/if}}{{#if artist}}n artist{{/if}}{{#if album}}n album{{/if}}:</h1>
 
-<a href="/chooseWhatToSearch"><button>Search for something else?</button></a>
+<a href="/chooseWhatToSearch">Search for something else?</a>
 
 {{! ADD FORM ACTION }}
 <form>
@@ -8,7 +8,7 @@
     {{#if album}}
         <input type="number" id="prodYear" name="prodYear" min="1900" max="2099" step="1" />
     {{/if}}
-    <button type="submit" id="submit" name="submit">Search</button>
+    <button type="submit" id="submitSearch" name="submitSearch">Search</button>
 </form>
 
 {{#if searchResults}}
@@ -21,11 +21,22 @@
             {{#if album}}
                 <span>{{this.prodYear}}</span>
             {{/if}}
-            <button id="add">&#10133;</button>
+            <button id="add" onclick="add{{#if song}}Song({{songID}}){{/if}}{{#if artist}}Artist({{artistID}}){{/if}}{{#if album}}Album({{albumID}}){{/if}}">&#10133;</button>
+            {{!-- once added made plus emoji into check emoji --}}
+        </div>
+        <div id="album{{this.albumID}}" hidden>
+            <h3>{{this.albumName}} by {{this.artistName}}</h3>
+
+            {{! ADD FORM ACTION }}
+            <form>
+                <span>Input your ranking of {{albumName}}</span>
+                <label><input type="number" id="ranking" name="ranking" min="0" max="10" step="1" required />/10</label>
+                <button type="submit" id="submitRank" name="submitRank">Submit</button>
+            </form>
         </div>
     {{/each}}
 
-    <a href="/chooseWhatToSearch"><button>Search for something else?</button></a>
+    <a href="/chooseWhatToSearch">Search for something else?</a>
 {{/if}}
 
 {{#if error}}

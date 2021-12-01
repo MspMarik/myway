@@ -9,3 +9,13 @@
     <a href="/mymetrics"><button><span class="specialMy">My</span> Metrics</button></a>
     <a href="/chooseWhatToSearch"><button>Search</button></a>
 </div>
+
+{{#if weeklyRec}}
+    <h2>Here's your weekly reccomended artists!</h2>
+{{/if}}
+
+{{#each weeklyRec}}
+    <div>
+        <span>{{this.artistName}}</span>
+    </div>
+{{/each}}
