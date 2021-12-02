@@ -1,5 +1,7 @@
 <h1>{{artistName}}</h1>
 
+<button onclick="addArtist({{artistID}})">Add to <span class="specialMy">My</span> Artists</button>
+
 {{#each socials}}
     <a>{{this.icon}}{{this.link}}</a>
 {{/each}}
