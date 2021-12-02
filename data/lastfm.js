@@ -89,7 +89,7 @@ async function getArtistsByTextInput(input, userTags = undefined) {
     }
 
     if(userTags && !Array.isArray(userTags)) {
-        throw "If provided, user tags must be in the form of an array";
+        throw "If provided, search tags must be in the form of an array";
     }
 
     let requestURL = baseURL + `artist.search&artist=${trimmedInput}&limit=10`;
@@ -119,7 +119,7 @@ async function getSongsByTextInput(input, userTags = undefined) {
     }
 
     if(userTags && !Array.isArray(userTags)) {
-        throw "If provided, user tags must be in the form of an array";
+        throw "If provided, search tags must be in the form of an array";
     }
 
     let requestURL = baseURL + `track.search&track=${trimmedInput}&limit=10`;
@@ -149,7 +149,7 @@ async function getAlbumsByTextInput(input, userTags = undefined) {
     }
 
     if(userTags && !Array.isArray(userTags)) {
-        throw "If provided, user tags must be in the form of an array";
+        throw "If provided, search tags must be in the form of an array";
     }
 
     let requestURL = baseURL + `album.search&album=${trimmedInput}&limit=10`;
