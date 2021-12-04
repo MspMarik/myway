@@ -5,34 +5,23 @@ const userFunctions = require("../data/users");
 const lastfmFunctions = require("../data/lastfm");
 const {validUsername, validPassword} = require("../data/fieldValidations");
 
-//Get homepage
-router.get("/", async (request, response) => {
-    //Check if the user is logged in. If so, redirect to profile page. Else redirect to "main page" with login and signup links
-    if(request.session.user) {
-        response.redirect("/profile") //INC: Potential profile route
-    }
-    else {
-        response.render("path_to_home_page", {}) //INC: Path to home page, remember to include handlebar fields
-    }
-});
-
 //Fetch login page
-router.get("/login", async (request, response) => {
+router.get("/", async (request, response) => {
     //Check if the user is logged in. If so, redirect to profile page. Else render logout page.
     if(request.session.user) {
-        response.redirect("/profile") //INC: Potential profile route
+        response.redirect("/myprofile") //INC: Potential profile route
     }
     else {
-        response.render("path_to_login_page", {}) //INC: Path to login page, remember to include handlebar fields
+        response.render("pages/login", {}) //INC: Path to login page, remember to include handlebar fields
     }
 });
 
 //Post to login page
-router.post("/login", async (request, response) => {
+router.post("/", async (request, response) => {
     try {
         //First, see if the user is already logged in. If so, redirect to user's profile page 
         if(request.session.user) {
-            response.redirect("/profile"); //INC: Potential profile route
+            response.redirect("/myprofile"); //INC: Potential profile route
         }
         else {
             //Then, check that login credentials are provided and of proper format
@@ -64,12 +53,12 @@ router.post("/login", async (request, response) => {
             let newUser = await userFunctions.loginUser(cleanedUsername, cleanedPassword);
 
             request.session.user = newUser;
-            response.redirect("/profile"); //INC: Profile path
+            response.redirect("/profile");
         }
     }
     catch(err) {
         //Finally, if the credentials are not valid, render the signup page again, this time with an error
-        response.render("path_to_login_page", {errorStr: err.message}) //INC: Rerenders signup with error (might do AJAX stuff later)
+        response.render("pages/login", {errorStr: err.message}) //INC: Rerenders signup with error (might do AJAX stuff later)
     }
 });
 
@@ -77,10 +66,10 @@ router.post("/login", async (request, response) => {
 router.get("/signup", async (request, response) => {
     //Check if the user is logged in. If so, redirect to profile page. Else render signup page.
     if(request.user.session) {
-        response.redirect("/profile") //INC: Potential profile route
+        response.redirect("/myprofile") //INC: Potential profile route
     }
     else {
-        response.render("path_to_signup_page", {}) //INC: Path to signup, remember to include handlebar fields
+        response.render("pages/signup", {}) //INC: Path to signup, remember to include handlebar fields
     }
 });
 
@@ -93,7 +82,7 @@ router.post("/signup", async (request, response) => {
     try {
         //First, see if the user is already logged in. If so, redirect to user's profile page 
         if(request.session.user) {
-            response.redirect("/profile"); //INC: Potential profile route
+            response.redirect("/myprofile"); //INC: Potential profile route
         }
         else {
             //Then, check that signup credentials are provided and of proper format
@@ -120,12 +109,12 @@ router.post("/signup", async (request, response) => {
             let fetchedUser = await userFunctions.createUser(cleanedUsername, cleanedPassword);
 
             request.session.user = fetchedUser;
-            response.redirect("/profile"); //INC: Profile path
+            response.redirect("/myprofile");
         }
     }
     catch(err) {
         //Finally, if the credentials are not valid, render the login page again, this time with an error
-        response.render("path_to_signup_page", {errorStr: err.message}) //INC: Rerenders login with error (might do AJAX stuff later)
+        response.render("pages/signup", {errorStr: err.message}) //INC: Rerenders login with error (might do AJAX stuff later)
     }
     
 });
@@ -133,28 +122,28 @@ router.post("/signup", async (request, response) => {
 //Main search page
 router.get("/search", async (request, response) => {
    if(!request.user.session) {
-       response.redirect("/login");
+       response.redirect("/");
    }
    else {
-       response.render("path_to_search_type_page");
+       response.render("pages/chooseWhatToSearch");
    }
 });
 
 //Specific search pages
-router.get("/searchforartists", async (request, response) => {
+router.get("/search/artists", async (request, response) => {
     if(!request.user.session) {
-        response.redirect("/login");
+        response.redirect("/");
     }
     else {
-        response.render("path_to_search_page", {artist: true});
+        response.render("pages/search", {artist: true});
     }
  });
 
  //Fetch search results for artists
- router.post("/searchforartists", async (request, response) => {
+ router.post("/search/artists", async (request, response) => {
     try {
         if(!request.user.session) {
-            response.redirect("/login");
+            response.redirect("/");
         }
         else {
             //Search Term Checking
@@ -194,28 +183,28 @@ router.get("/searchforartists", async (request, response) => {
                 empty = true;
             }
 
-            response.render("path_to_search_page", {artist: true, searchResults: retrievedArtists, error: empty});
+            response.render("pages/search", {artist: true, searchResults: retrievedArtists, error: empty});
         }
     }
     catch(err) { //TODO: Figure out how errors should be displayed on this page
-        response.render("path_to_search_page", {artist: true, searchResults: [], error: true});
+        response.render("pages/search", {artist: true, searchResults: [], error: true});
     }
  });
 
- router.get("/searchforsongs", async (request, response) => {
+ router.get("/search/songs", async (request, response) => {
     if(!request.user.session) {
-        response.redirect("/login");
+        response.redirect("/");
     }
     else {
-        response.render("path_to_search_page", {song: true});
+        response.render("pages/search", {song: true});
     }
  });
 
   //Fetch search results for songs
-  router.post("/searchforsongs", async (request, response) => {
+  router.post("/search/songs", async (request, response) => {
     try {
         if(!request.user.session) {
-            response.redirect("/login");
+            response.redirect("/");
         }
         else {
             //Search Term Checking
@@ -255,28 +244,28 @@ router.get("/searchforartists", async (request, response) => {
                 empty = true;
             }
 
-            response.render("path_to_search_page", {song: true, searchResults: retrievedSongs, error: empty});
+            response.render("pages/search", {song: true, searchResults: retrievedSongs, error: empty});
         }
     }
     catch(err) { //TODO: Figure out how errors should be displayed on this page
-        response.render("path_to_search_page", {song: true, searchResults: [], error: true});
+        response.render("pages/search", {song: true, searchResults: [], error: true});
     }
  });
 
- router.get("/searchforalbums", async (request, response) => {
+ router.get("/search/albums", async (request, response) => {
     if(!request.user.session) {
-        response.redirect("/login");
+        response.redirect("/");
     }
     else {
-        response.render("path_to_search_page", {album: true});
+        response.render("pages/search", {album: true});
     }
  });
 
   //Fetch search results for albums
-  router.post("/searchforalbums", async (request, response) => {
+  router.post("/search/albums", async (request, response) => {
     try {
         if(!request.user.session) {
-            response.redirect("/login");
+            response.redirect("/");
         }
         else {
             //Search Term Checkint
@@ -316,11 +305,11 @@ router.get("/searchforartists", async (request, response) => {
                 empty = true;
             }
 
-            response.render("path_to_search_page", {album: true, searchResults: retrievedAlbums, error: empty});
+            response.render("pages/search", {album: true, searchResults: retrievedAlbums, error: empty});
         }
     }
     catch(err) { //TODO: Figure out how errors should be displayed on this page
-        response.render("path_to_search_page", {album: true, searchResults: [], error: true});
+        response.render("pages/search", {album: true, searchResults: [], error: true});
     }
  });
 
@@ -331,10 +320,10 @@ router.get("/logout", async (request, response) => {
     //Check if the user is logged in. If so, redirect to "main page" with a succesful logout message. Else redirect to "main page" without said message
     if(request.session.user) {
         request.session.destroy();
-        response.render("path_to_home_page", {logoutMsg: "Logged out"});
+        response.render("pages/login", {logoutMsg: "Logged out"});
     }
     else {
-        response.render("path_to_home_page", {}); //INC: Path to homepage, remember to include handlebar fields
+        response.redirect("/");
     }
 });
 
@@ -342,7 +331,7 @@ const constructorMethod = (app) => {
     app.use('/', router);
   
     app.use('*', (request, response) => {
-      response.status(404).render("path_to_404_page");
+      response.status(404).render("pages/404");
     });
 };
   
