@@ -1,0 +1,8 @@
+<h1>{{albumName}} by {{artistName}}</h1>
+
+{{! ADD FORM ACTION }}
+<form>
+    <span>Edit your ranking of {{albumName}}</span>
+    <label><input type="number" id="ranking" name="ranking" min="0" max="10" step="1" required />/10</label>
+    <button type="submit" id="submitRank" name="submitRank">Submit</button>
+</form>
