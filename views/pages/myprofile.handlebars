@@ -1,0 +1,21 @@
+<h1><span class="specialMy">My</span> Profile</h1>
+
+<p>Hello {{username}}!</p>
+
+<div>
+    <a href="/mysongs"><button><span class="specialMy">My</span> Songs</button></a>
+    <a href="/myartists"><button><span class="specialMy">My</span> Artists</button></a>
+    <a href="/myalbums"><button><span class="specialMy">My</span> Albums</button></a>
+    <a href="/mymetrics"><button><span class="specialMy">My</span> Metrics</button></a>
+    <a href="/chooseWhatToSearch"><button>Search</button></a>
+</div>
+
+{{#if weeklyRec}}
+    <h2>Here's your weekly reccomended artists!</h2>
+{{/if}}
+
+{{#each weeklyRec}}
+    <div>
+        <span>{{this.artistName}}</span>
+    </div>
+{{/each}}

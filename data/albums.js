@@ -28,14 +28,14 @@ async function addAlbum(user, albumName, artistName, rating) {
         throw "Artist's name is not a string";
     }
 
-    if(!rating) {
+    if(!rating && rating !== 0) {
         throw "Album rating not provided";
     }
     if(typeof rating != "number") {
         throw "Album rating is not a number";
     }
-    if(rating < 1 || rating > 10) {
-        throw "Album rating must be in between 1 and 10";
+    if(rating < 0 || rating > 10) {
+        throw "Album rating must be in between 0 and 10";
     }
     
     let currentAlbumList = user.favorites.albums;
