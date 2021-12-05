@@ -1,6 +1,6 @@
 <h1>Shuffle</h1>
 
-<p>Choose from the optins below and find a song or artist you may not have heard from before.</p>
+<p>Choose from the options below and find a song or artist you may not have heard from before.</p>
 
 {{! ADD FORM ACTION }}
 <form>
@@ -9,22 +9,8 @@
         <option value="song">Song</option>
         <option value="artist">Artist</option>
     </select>
-    <label for="genre">Genre</label>
-    <select id="genre" name="genre">
-        <option value="country">Country</option>
-        <option value="electronic">Electronic</option>
-        <option value="funk">Funk</option>
-        <option value="hiphop">Hip Hop</option>
-        <option value="jazz">Jazz</option>
-        <option value="latin">Latin</option>
-        <option value="pop">Pop</option>
-        <option value="punk">Punk</option>
-        <option value="reggae">Reggae</option>
-        <option value="rock">Rock</option>
-        <option value="metal">Metal</option>
-        <option value="soulRnB">Soul music and R&B</option>
-        <option value="polka">Polka</option>
-    </select>
+    <label for="tag">Tag</label>
+    <input type="text" name="tag" id="tag" />
 </form>
 
 {{#if shuffleResult}}
