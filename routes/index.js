@@ -8,8 +8,8 @@ const {validUsername, validPassword} = require("../data/fieldValidations");
 //Fetch login page
 router.get("/", async (request, response) => {
     //Check if the user is logged in. If so, redirect to profile page. Else render logout page.
-    if(request.session.user) {
-        response.redirect("/myprofile") //INC: Potential profile route
+    if(request.session.userId) {
+        response.redirect("/myprofile") //INC: Route for the profile page
     }
     else {
         response.render("pages/login", {}) //INC: Path to login page, remember to include handlebar fields
@@ -20,8 +20,8 @@ router.get("/", async (request, response) => {
 router.post("/", async (request, response) => {
     try {
         //First, see if the user is already logged in. If so, redirect to user's profile page 
-        if(request.session.user) {
-            response.redirect("/myprofile"); //INC: Potential profile route
+        if(request.session.userId) {
+            response.redirect("/myprofile"); //INC: Route for the profile page
         }
         else {
             //Then, check that login credentials are provided and of proper format
@@ -50,9 +50,9 @@ router.post("/", async (request, response) => {
             }
 
             //Next, check to see if the signup credentials are valid. If they are, redirect to the user's profile page
-            let newUser = await userFunctions.loginUser(cleanedUsername, cleanedPassword);
+            let userId = await userFunctions.loginUser(cleanedUsername, cleanedPassword);
 
-            request.session.user = newUser;
+            request.session.userId = userId;
             response.redirect("/profile");
         }
     }
@@ -65,8 +65,8 @@ router.post("/", async (request, response) => {
 //Fetch signup page 
 router.get("/signup", async (request, response) => {
     //Check if the user is logged in. If so, redirect to profile page. Else render signup page.
-    if(request.user.session) {
-        response.redirect("/myprofile") //INC: Potential profile route
+    if(request.session.userId) {
+        response.redirect("/myprofile") //INC: Route for the profile page
     }
     else {
         response.render("pages/signup", {}) //INC: Path to signup, remember to include handlebar fields
@@ -81,8 +81,8 @@ router.post("/signup", async (request, response) => {
     //Finally, if the credentials are valid, redirect to the user's profile page
     try {
         //First, see if the user is already logged in. If so, redirect to user's profile page 
-        if(request.session.user) {
-            response.redirect("/myprofile"); //INC: Potential profile route
+        if(request.session.userId) {
+            response.redirect("/myprofile"); //INC: Route for the profile page
         }
         else {
             //Then, check that signup credentials are provided and of proper format
@@ -106,9 +106,9 @@ router.post("/signup", async (request, response) => {
             let cleanedPassword = xss(request.body.password.trim());
 
             //Next, check to see if the login credentials are valid. If they are, redirect to the user's profile page
-            let fetchedUser = await userFunctions.createUser(cleanedUsername, cleanedPassword);
+            let userId = await userFunctions.createUser(cleanedUsername, cleanedPassword);
 
-            request.session.user = fetchedUser;
+            request.session.userId = userId;
             response.redirect("/myprofile");
         }
     }
@@ -121,7 +121,7 @@ router.post("/signup", async (request, response) => {
 
 //Main search page
 router.get("/search", async (request, response) => {
-   if(!request.user.session) {
+   if(!request.session.userId) {
        response.redirect("/");
    }
    else {
@@ -131,7 +131,7 @@ router.get("/search", async (request, response) => {
 
 //Specific search pages
 router.get("/search/artists", async (request, response) => {
-    if(!request.user.session) {
+    if(!request.session.userId) {
         response.redirect("/");
     }
     else {
@@ -142,7 +142,7 @@ router.get("/search/artists", async (request, response) => {
  //Fetch search results for artists
  router.post("/search/artists", async (request, response) => {
     try {
-        if(!request.user.session) {
+        if(!request.session.userId) {
             response.redirect("/");
         }
         else {
@@ -154,30 +154,20 @@ router.get("/search/artists", async (request, response) => {
                 throw "Search term must be a string";
             }
 
-            let cleanedSearchTerm = xss(request.body.searchbox);
-            let cleanedTags = []
+            let cleanedSearchTerm = xss(request.body.searchbox.trim());
+            let cleanedTag;
             
-            //Tags Checking
-            if(request.body.tags) {
-                if(!Array.isArray(request.body.tags)) {
-                    throw "If provided, search tags must be in the form of an array";
+            //Tag Checking
+            if(request.body.tag) {
+                if(typeof userTag != string || !userTag.trim()) {
+                    throw "If provided, search tag must be in the form of a non-whitespace string";
                 }
                 else {
-                    for(let i = 0; i < request.body.tags.length; i++) { //Make sure all tags provided are valid strings
-                        if(typeof request.body.tags[i] != "string") { //A string
-                            throw "One of the tags provided was not a string";
-                        }
-                        if(!request.body.tags[i].trim()) { //Not whitespace
-                            throw "One of the tags provided was whitespace";
-                        }
-                    }
-                    for(let i = 0; i < request.body.tags.length; i++) { //Sanitize all tags
-                        cleanedTags.push(xss(request.body.tags[i].trim()));
-                    }
+                    cleanedTag = xss(request.body.tag.trim())
                 }
             }
 
-            let retrievedArtists = await lastfmFunctions.getArtistsByTextInput(cleanedSearchTerm, cleanedTags);
+            let retrievedArtists = await lastfmFunctions.getArtistsByTextInput(cleanedSearchTerm, cleanedTag);
             let empty = false;
             if(retrievedArtists.length == 0) {
                 empty = true;
@@ -192,7 +182,7 @@ router.get("/search/artists", async (request, response) => {
  });
 
  router.get("/search/songs", async (request, response) => {
-    if(!request.user.session) {
+    if(!request.session.userId) {
         response.redirect("/");
     }
     else {
@@ -203,7 +193,7 @@ router.get("/search/artists", async (request, response) => {
   //Fetch search results for songs
   router.post("/search/songs", async (request, response) => {
     try {
-        if(!request.user.session) {
+        if(!request.session.userId) {
             response.redirect("/");
         }
         else {
@@ -216,29 +206,19 @@ router.get("/search/artists", async (request, response) => {
             }
 
             let cleanedSearchTerm = xss(request.body.searchbox);
-            let cleanedTags = []
+            let cleanedTag;
             
-            //Tags Checking
-            if(request.body.tags) {
-                if(!Array.isArray(request.body.tags)) {
-                    throw "If provided, search tags must be in the form of an array";
+            //Tag Checking
+            if(request.body.tag) {
+                if(typeof userTag != string || !userTag.trim()) {
+                    throw "If provided, search tag must be in the form of a non-whitespace string";
                 }
                 else {
-                    for(let i = 0; i < request.body.tags.length; i++) { //Make sure all tags provided are valid strings
-                        if(typeof request.body.tags[i] != "string") { //A string
-                            throw "One of the tags provided was not a string";
-                        }
-                        if(!request.body.tags[i].trim()) { //Not whitespace
-                            throw "One of the tags provided was whitespace";
-                        }
-                    }
-                    for(let i = 0; i < request.body.tags.length; i++) { //Sanitize all tags
-                        cleanedTags.push(xss(request.body.tags[i].trim()));
-                    }
+                    cleanedTag = xss(request.body.tag.trim())
                 }
             }
 
-            let retrievedSongs = await lastfmFunctions.getSongsByTextInput(cleanedSearchTerm, cleanedTags);
+            let retrievedSongs = await lastfmFunctions.getSongsByTextInput(cleanedSearchTerm, cleanedTag);
             let empty = false;
             if(retrievedSongs.length == 0) {
                 empty = true;
@@ -253,7 +233,7 @@ router.get("/search/artists", async (request, response) => {
  });
 
  router.get("/search/albums", async (request, response) => {
-    if(!request.user.session) {
+    if(!request.session.userId) {
         response.redirect("/");
     }
     else {
@@ -264,7 +244,7 @@ router.get("/search/artists", async (request, response) => {
   //Fetch search results for albums
   router.post("/search/albums", async (request, response) => {
     try {
-        if(!request.user.session) {
+        if(!request.session.userId) {
             response.redirect("/");
         }
         else {
@@ -277,25 +257,15 @@ router.get("/search/artists", async (request, response) => {
             }
 
             let cleanedSearchTerm = xss(request.body.searchbox);
-            let cleanedTags = []
+            let cleanedTag;
             
-            //Tags Checking
-            if(request.body.tags) {
-                if(!Array.isArray(request.body.tags)) {
-                    throw "If provided, search tags must be in the form of an array";
+            //Tag Checking
+            if(request.body.tag) {
+                if(typeof userTag != string || !userTag.trim()) {
+                    throw "If provided, search tag must be in the form of a non-whitespace string";
                 }
                 else {
-                    for(let i = 0; i < request.body.tags.length; i++) { //Make sure all tags provided are valid strings
-                        if(typeof request.body.tags[i] != "string") { //A string
-                            throw "One of the tags provided was not a string";
-                        }
-                        if(!request.body.tags[i].trim()) { //Not whitespace
-                            throw "One of the tags provided was whitespace";
-                        }
-                    }
-                    for(let i = 0; i < request.body.tags.length; i++) { //Sanitize all tags
-                        cleanedTags.push(xss(request.body.tags[i].trim()));
-                    }
+                    cleanedTag = xss(request.body.tag.trim())
                 }
             }
 
@@ -318,7 +288,7 @@ router.get("/search/artists", async (request, response) => {
 //Logout of the website
 router.get("/logout", async (request, response) => {
     //Check if the user is logged in. If so, redirect to "main page" with a succesful logout message. Else redirect to "main page" without said message
-    if(request.session.user) {
+    if(request.session.userId) {
         request.session.destroy();
         response.render("pages/login", {logoutMsg: "Logged out"});
     }

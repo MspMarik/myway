@@ -1,18 +1,20 @@
 const {users} = require("../config/mongoCollections");
-//const {ObjectId} = require("mongodb");
-const {validUserObject} = require("./fieldValidations");
-//const {getUserById} = ("./users");
+const {ObjectId} = require("mongodb");
+//const {validUserObject} = require("./fieldValidations");
+const {getUserById} = ("./users");
 
-async function addAlbum(user, albumName, artistName, rating) {
-    if(!user) {
-        throw "User not provided";
+async function addAlbum(userId, albumName, artistName, rating) {
+    if(!userId) {
+        throw "User ID not provided";
     }
-    if(typeof user != "object" || Array.isArray(user)) {
-        throw "User is not an object";
+    if(typeof userId != "string") {
+        throw "User ID must be a string";
     }
-    if(!validUserObject(user)) {
-        throw "Object provided is not a valid user object";
+    if(userId.trim().length <= 0) {
+        throw "User ID is whitespace";
     }
+
+    ObjID = ObjectId(userId);
 
     if(!albumName) {
         throw "Album name not provided";
@@ -38,6 +40,7 @@ async function addAlbum(user, albumName, artistName, rating) {
         throw "Album rating must be in between 0 and 10";
     }
     
+    let user = await getUserById(userId);
     let currentAlbumList = user.favorites.albums;
     for(let i = 0; i < currentAlbumList.length; i++) { //Make sure album isn't in the list already
         if(albumName == currentAlbumList[i].albumName && artistName == currentAlbumList[i].artistName) {
@@ -48,24 +51,26 @@ async function addAlbum(user, albumName, artistName, rating) {
     user.favorites.albums.push({albumName: albumName, artistName: artistName, rating: rating});
 
     const userCollection = await users();
-    const updateStatus = await userCollection.updateOne({_id: user._id}, {$set: user})
+    const updateStatus = await userCollection.updateOne({_id: ObjID}, {$set: user})
     if(updateStatus.modifiedCount === 0) {
         throw "Could not add the album to the user's list";
     }
     
-    return user;
+    //return userId;
 }
 
-async function removeAlbum(user, albumName, artistName) {
-    if(!user) {
-        throw "User not provided";
+async function removeAlbum(userId, albumName, artistName) {
+    if(!userId) {
+        throw "User ID not provided";
     }
-    if(typeof user != "object" || Array.isArray(user)) {
-        throw "User is not an object";
+    if(typeof userId != "string") {
+        throw "User ID must be a string";
     }
-    if(!validUserObject(user)) {
-        throw "Object provided is not a valid user object";
+    if(userId.trim().length <= 0) {
+        throw "User ID is whitespace";
     }
+
+    ObjID = ObjectId(userId);
 
     if(!albumName) {
         throw "Album's name not provided";
@@ -81,6 +86,7 @@ async function removeAlbum(user, albumName, artistName) {
         throw "Artist's name is not a string";
     }
 
+    let user = await getUserById(userId);
     let currentAlbumList = user.favorites.albums;
     let albumFound = false;
     for(let i = 0; i < currentAlbumList.length; i++) { //Make sure album is in the list already
@@ -95,12 +101,12 @@ async function removeAlbum(user, albumName, artistName) {
     }
 
     const userCollection = await users();
-    const updateStatus = await userCollection.updateOne({_id: user._id}, {$set: user})
+    const updateStatus = await userCollection.updateOne({_id: ObjID}, {$set: user})
     if(updateStatus.modifiedCount === 0) {
         throw "Could not remove the album to the user's list";
     }
     
-    return user;
+    //return user;
 }
 
 module.exports = {addAlbum, removeAlbum};

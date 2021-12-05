@@ -1,18 +1,20 @@
 const {users} = require("../config/mongoCollections");
-//const {ObjectId} = require("mongodb");
-const {validUserObject} = require("./fieldValidations");
-//const {getUserById} = ("./users");
+const {ObjectId} = require("mongodb");
+//const {validUserObject} = require("./fieldValidations");
+const {getUserById} = ("./users");
 
-async function addSong(user, songName, artistName, dislikeFlag=false) {
-    if(!user) {
-        throw "User not provided";
+async function addSong(userId, songName, artistName, dislikeFlag=false) {
+    if(!userId) {
+        throw "User ID not provided";
     }
-    if(typeof user != "object" || Array.isArray(user)) {
-        throw "User is not an object";
+    if(typeof userId != "string") {
+        throw "User ID must be a string";
     }
-    if(!validUserObject(user)) {
-        throw "Object provided is not a valid user object";
+    if(userId.trim().length <= 0) {
+        throw "User ID is whitespace";
     }
+
+    ObjID = ObjectId(userId);
 
     if(!songName) {
         throw "Song name not provided";
@@ -32,6 +34,7 @@ async function addSong(user, songName, artistName, dislikeFlag=false) {
         throw "If provided, dislike flag should be a boolean";
     }
     
+    let user = getUserById(userId);
     let currentSongList = user.favorites.songs;
     for(let i = 0; i < currentSongList.length; i++) { //Make sure song isn't in the list already
         if(songName == currentSongList[i].songName && artistName == currentSongList[i].artistName) {
@@ -42,24 +45,26 @@ async function addSong(user, songName, artistName, dislikeFlag=false) {
     user.favorites.songs.push({songName: songName, artistName: artistName, disliked: dislikeFlag});
 
     const userCollection = await users();
-    const updateStatus = await userCollection.updateOne({_id: user._id}, {$set: user})
+    const updateStatus = await userCollection.updateOne({_id: ObjID}, {$set: user})
     if(updateStatus.modifiedCount === 0) {
         throw "Could not add the song to the user's list";
     }
     
-    return user;
+    //return user;
 }
 
-async function removeSong(user, songName, artistName) {
-    if(!user) {
-        throw "User not provided";
+async function removeSong(userId, songName, artistName) {
+    if(!userId) {
+        throw "User ID not provided";
     }
-    if(typeof user != "object" || Array.isArray(user)) {
-        throw "User is not an object";
+    if(typeof userId != "string") {
+        throw "User ID must be a string";
     }
-    if(!validUserObject(user)) {
-        throw "Object provided is not a valid user object";
+    if(userId.trim().length <= 0) {
+        throw "User ID is whitespace";
     }
+
+    ObjID = ObjectId(userId);
 
     if(!songName) {
         throw "Song's name not provided";
@@ -75,6 +80,7 @@ async function removeSong(user, songName, artistName) {
         throw "Artist's name is not a string";
     }
 
+    let user = getUserById(userId);
     let currentSongList = user.favorites.songs;
     let songFound = false;
     for(let i = 0; i < currentSongList.length; i++) { //Make sure song is in the list already
@@ -89,12 +95,12 @@ async function removeSong(user, songName, artistName) {
     }
 
     const userCollection = await users();
-    const updateStatus = await userCollection.updateOne({_id: user._id}, {$set: user})
+    const updateStatus = await userCollection.updateOne({_id: ObjID}, {$set: user})
     if(updateStatus.modifiedCount === 0) {
         throw "Could not remove the song to the user's list";
     }
     
-    return user;
+    //return user;
 }
 
 module.exports = {addSong, removeSong};
