@@ -1,7 +1,7 @@
 const {users} = require("../config/mongoCollections");
 const {ObjectId} = require("mongodb");
 //const {validUserObject} = require("./fieldValidations");
-const {getUserById} = ("./users");
+const {getUserByID} = require("./users");
 
 async function addAlbum(userId, albumName, artistName, rating) {
     if(!userId) {
@@ -40,7 +40,7 @@ async function addAlbum(userId, albumName, artistName, rating) {
         throw "Album rating must be in between 0 and 10";
     }
     
-    let user = await getUserById(userId);
+    let user = await getUserByID(userId);
     let currentAlbumList = user.favorites.albums;
     for(let i = 0; i < currentAlbumList.length; i++) { //Make sure album isn't in the list already
         if(albumName == currentAlbumList[i].albumName && artistName == currentAlbumList[i].artistName) {
@@ -86,7 +86,7 @@ async function removeAlbum(userId, albumName, artistName) {
         throw "Artist's name is not a string";
     }
 
-    let user = await getUserById(userId);
+    let user = await getUserByID(userId);
     let currentAlbumList = user.favorites.albums;
     let albumFound = false;
     for(let i = 0; i < currentAlbumList.length; i++) { //Make sure album is in the list already

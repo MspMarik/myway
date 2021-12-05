@@ -1,7 +1,7 @@
 const {users} = require("../config/mongoCollections");
 const {ObjectId} = require("mongodb");
 //const {validUserObject} = require("./fieldValidations");
-const {getUserById} = ("./users");
+const {getUserByID} = require("./users");
 
 async function addSong(userId, songName, artistName, dislikeFlag=false) {
     if(!userId) {
@@ -34,7 +34,7 @@ async function addSong(userId, songName, artistName, dislikeFlag=false) {
         throw "If provided, dislike flag should be a boolean";
     }
     
-    let user = getUserById(userId);
+    let user = await getUserByID(userId);
     let currentSongList = user.favorites.songs;
     for(let i = 0; i < currentSongList.length; i++) { //Make sure song isn't in the list already
         if(songName == currentSongList[i].songName && artistName == currentSongList[i].artistName) {
@@ -80,7 +80,7 @@ async function removeSong(userId, songName, artistName) {
         throw "Artist's name is not a string";
     }
 
-    let user = getUserById(userId);
+    let user = await getUserByID(userId);
     let currentSongList = user.favorites.songs;
     let songFound = false;
     for(let i = 0; i < currentSongList.length; i++) { //Make sure song is in the list already

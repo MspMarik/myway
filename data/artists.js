@@ -1,7 +1,7 @@
 const {users} = require("../config/mongoCollections");
 const {ObjectId} = require("mongodb");
 //const {validUserObject} = require("./fieldValidations");
-const {getUserById} = ("./users");
+const {getUserByID} = require("./users");
 
 async function addArtist(userId, artistName, dislikeFlag=false) {
     if(!userId) {
@@ -27,7 +27,7 @@ async function addArtist(userId, artistName, dislikeFlag=false) {
         throw "If provided, dislike flag should be a boolean";
     }
     
-    let user = await getUserById(userId);
+    let user = await getUserByID(userId);
     let currentArtistList = user.favorites.artists;
     for(let i = 0; i < currentArtistList.length; i++) { //Make sure artist isn't in the list already
         if(artistName == currentArtistList[i].artistName) { //TODO: If the user wants to change artist to liked or disliked, still throw, or just take alternate action?
@@ -66,7 +66,7 @@ async function removeArtist(userId, artistName) {
         throw "Artist's name is not a string";
     }
 
-    let user = getUserById(userId);
+    let user = await getUserByID(userId);
     let currentArtistList = user.favorites.artists;
     let artistFound = false;
     for(let i = 0; i < currentArtistList.length; i++) { //Make sure artist is in the list already
