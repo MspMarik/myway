@@ -59,25 +59,25 @@ async function createUser(username, password) {
         throw "User could not be added";
     }
 
-    //Return the user
+    //Return the user's id
     const user = await getUserByID(insertionStatus.insertedId.toString());
-    return user;
+    return user._id.toString();
 }
 
 //Used to get user by ID once created
-async function getUserByID(id) {
+async function getUserByID(userId) {
     //ID Verification
-    if(!id) {
+    if(!userId) {
         throw "User ID not provided";
     }
-    if(typeof id != "string") {
+    if(typeof userId != "string") {
         throw "User ID must be a string";
     }
-    if(id.trim().length <= 0) {
+    if(userId.trim().length <= 0) {
         throw "User ID is whitespace";
     }
 
-    ObjID = ObjectId(id);
+    ObjID = ObjectId(userId);
 
     const userCollection = await users();
 
@@ -123,9 +123,6 @@ async function loginUser(username, password) {
         throw "Username must be a string";
     }
     let trimmedUsername = username.trim().toLowerCase();
-    if(!validUsername(trimmedUsername)) {
-        throw "Username must be at least four characters long, and only contain letters and numbers.";
-    }
 
     //Password Verification
     if(!password) {
@@ -135,9 +132,6 @@ async function loginUser(username, password) {
         throw "Password must be a string";
     }
     let trimmedPassword = password.trim();
-    if(!validPassword(trimmedPassword)) {
-        throw "Password must be at least six characters long, and not contain any spaces.";
-    }
 
     const userCollection = await users();
     const user = await userCollection.findOne({username: trimmedUsername});
@@ -152,16 +146,31 @@ async function loginUser(username, password) {
         throw "Username or password is incorrect";
     }
     else {
-        return user;
+        //Return the user's id
+        return user._id.toString();
     }
 
 }
 
 
-async function deleteUser(userObject) {
-    let name = userObject.username
-    const userCollection = await users();
-    const deletionStatus = await userCollection.deleteOne({_id: userObject._id});
+async function deleteUser(userId) {
+    //ID Verification
+    if(!userId) {
+        throw "User ID not provided";
+    }
+    if(typeof userId != "string") {
+        throw "User ID must be a string";
+    }
+    if(userId.trim().length <= 0) {
+        throw "User ID is whitespace";
+    }
+
+    ObjID = ObjectId(userId);
+
+    let userToBeDeleted = await getUserByID(userId);
+    let name = userToBeDeleted.username;
+    const userCollection = await users(); 
+    const deletionStatus = await userCollection.deleteOne({_id: ObjID});
 
     if(deletionStatus.deletedCount == 0) {
         throw "User could not be deleted";

@@ -1,11 +1,11 @@
-const userFunctions = require("../../data/users");
+const {createUser, getUserByID, deleteUser} = require("../../data/users");
 
 async function main() {
     //Add a first user
     let userOne;
 
     try {
-        userOne = await userFunctions.createUser("WalkerBove", "password");
+        userOne = await getUserByID(await createUser("WalkerBove", "password"));
         console.log(userOne);
     }
     catch(e) {
@@ -15,7 +15,7 @@ async function main() {
     let userTwo;
 
     try {
-        userTwo = await userFunctions.createUser("MalkerClove", "notpassword");
+        userTwo = await getUserByID(await createUser("MalkerClove", "notpassword"));
         console.log(userTwo);
     }
     catch(e) {
@@ -26,7 +26,7 @@ async function main() {
 
     //No username or password provided
     try {
-        badUser = await userFunctions.createUser();
+        badUser = await getUserByID(await createUser());
         console.log(badUser);
     }
     catch(e) {
@@ -35,7 +35,7 @@ async function main() {
 
     //No password provided
     try {
-        badUser = await userFunctions.createUser("JoeSomebody");
+        badUser = await getUserByID(await createUser("JoeSomebody"));
         console.log(badUser);
     }
     catch(e) {
@@ -44,7 +44,7 @@ async function main() {
 
     //Improper username provided
     try {
-        badUser = await userFunctions.createUser(1234, "yes!");
+        badUser = await getUserByID(await createUser(1234, "yes!"));
         console.log(badUser);
     }
     catch(e) {
@@ -53,7 +53,7 @@ async function main() {
 
     //Improper password provided
     try {
-        badUser = await userFunctions.createUser("JoeSomebody", 1234);
+        badUser = await getUserByID(await createUser("JoeSomebody", 1234));
         console.log(badUser);
     }
     catch(e) {
@@ -62,7 +62,7 @@ async function main() {
 
     //Blankspace username
     try {
-        badUser = await userFunctions.createUser("    ", "yes!");
+        badUser = await getUserByID(await createUser("    ", "yes!"));
         console.log(badUser);
     }
     catch(e) {
@@ -71,7 +71,7 @@ async function main() {
 
     //Whitespace password
     try {
-        badUser = await userFunctions.createUser("JoeSomebody", "   ");
+        badUser = await getUserByID(await createUser("JoeSomebody", "   "));
         console.log(badUser);
     }
     catch(e) {
@@ -80,7 +80,7 @@ async function main() {
 
     //Already provided username
     try {
-        badUser = await userFunctions.createUser("WalkerBove", "notaverygoodpassword");
+        badUser = await getUserByID(await createUser("WalkerBove", "notaverygoodpassword"));
         console.log(badUser);
     }
     catch(e) {
@@ -89,7 +89,7 @@ async function main() {
 
     //Already provided username in a different case
     try {
-        badUser = await userFunctions.createUser("walkerbove", "notaverygoodpassword");
+        badUser = await getUserByID(await createUser("walkerbove", "notaverygoodpassword"));
         console.log(badUser);
     }
     catch(e) {
@@ -99,7 +99,7 @@ async function main() {
     //Delete user one
     let deletionMessage;
     try {
-        deletionMessage = await userFunctions.deleteUser(userOne);
+        deletionMessage = await deleteUser(userOne._id.toString());
         console.log(deletionMessage);
     }
     catch(e) {
@@ -107,7 +107,7 @@ async function main() {
     }
 
     try {
-        deletionMessage = await userFunctions.deleteUser(userTwo);
+        deletionMessage = await deleteUser(userTwo._id.toString());
         console.log(deletionMessage);
     }
     catch(e) {
