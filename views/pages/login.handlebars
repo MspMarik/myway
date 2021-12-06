@@ -1,6 +1,6 @@
 <h1>Login to <span class="specialMy">My</span> Way</h1>
 {{! ADD FORM ACTION }}
-<form class = "loginFomr" action = "/login" id = 'login-form' method = "POST">
+<form class = "loginFomr" action = "/loginlogout" id = 'login-form' method = "POST">
     <label>
         Username:
         <input type="text" name="username" />
@@ -11,3 +11,5 @@
     </label>
     <button type="submit">Login!</button>
 </form>
+
+<h2>{{errorStr}}</h2>
