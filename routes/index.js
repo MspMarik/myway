@@ -8,12 +8,14 @@ const {validUsername, validPassword} = require("../data/fieldValidations");
 //Fetch login page
 router.get("/", async (request, response) => {
     //Check if the user is logged in. If so, redirect to profile page. Else render logout page.
-    if(request.session.userId) {
-        response.redirect("/myprofile") //INC: Route for the profile page
-    }
-    else {
-        response.render("pages/login", {}) //INC: Path to login page, remember to include handlebar fields
-    }
+    // if(request.session.userId) {
+    //     response.redirect("/myprofile") //INC: Route for the profile page
+    // }
+    // else {
+    //     response.render("pages/login", {}) //INC: Path to login page, remember to include handlebar fields
+    // }
+
+    response.render("pages/index", {});
 });
 
 //Post to login page
@@ -27,6 +29,7 @@ router.post("/", async (request, response) => {
             //Then, check that login credentials are provided and of proper format
             //Username Checking
             if(!request.body.username) {
+                console.log('error');
                 throw "Username not provided";
             }
             if(typeof request.body.username != "string") {
@@ -75,6 +78,7 @@ router.get("/signup", async (request, response) => {
 
 //Post to signup page
 router.post("/signup", async (request, response) => {
+    //console.log('where do we go now?');
     //First, see if the user is already logged in. If so, redirect to user's profile page 
     //Then, check that signup credentials are provided and of proper format
     //Next, check to see if the username provided is already taken. If they are, render the signup page again, this time with an error
@@ -82,7 +86,7 @@ router.post("/signup", async (request, response) => {
     try {
         //First, see if the user is already logged in. If so, redirect to user's profile page 
         if(request.session.userId) {
-            response.redirect("/myprofile"); //INC: Route for the profile page
+            response.redirect("/"); //INC: Route for the profile page
         }
         else {
             //Then, check that signup credentials are provided and of proper format
@@ -95,26 +99,35 @@ router.post("/signup", async (request, response) => {
             }
             
             //Password Checking
-            if(!password) {
+            if(!request.body.password) {
                 throw "Password not provided";
             }
-            if(typeof password != "string") {
+            if(typeof request.body.password != "string") {
                 throw "Password must be a string";
             }
 
-            let cleanedUsername = xss(request.body.username.trim().toLowercase());
+            if(!request.body.password2) {
+                throw "You must retype your password";
+            }
+            if(request.body.password2 != request.body.password) {
+                throw "You must provide the same initial password";
+            }
+
+
+
+            let cleanedUsername = xss(request.body.username.trim().toLowerCase());
             let cleanedPassword = xss(request.body.password.trim());
 
             //Next, check to see if the login credentials are valid. If they are, redirect to the user's profile page
             let userId = await userFunctions.createUser(cleanedUsername, cleanedPassword);
 
             request.session.userId = userId;
-            response.redirect("/myprofile");
+            response.redirect("/");
         }
     }
     catch(err) {
         //Finally, if the credentials are not valid, render the login page again, this time with an error
-        response.render("pages/signup", {errorStr: err.message}) //INC: Rerenders login with error (might do AJAX stuff later)
+        response.render("pages/signup", {errorStr: err}) //INC: Rerenders login with error (might do AJAX stuff later)
     }
     
 });
@@ -296,6 +309,27 @@ router.get("/logout", async (request, response) => {
         response.redirect("/");
     }
 });
+
+//editRanking page for users of webstie
+router.get("/editRanking", async (request, response) => {
+    if(!request.session.userId) {
+        response.redirect("/");
+    }else{
+        response.render("pages/", {album: true});
+    }
+
+});
+
+router.post("/editRanking", async (request, response) => {
+    if(!request.session.userId) {
+        response.redirect("/");
+    }else{
+        
+    }
+
+});
+
+    
 
 const constructorMethod = (app) => {
     app.use('/', router);
