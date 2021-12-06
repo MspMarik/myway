@@ -1,17 +1,16 @@
-//NOTE: These functions currently rely on the entire user object being passed. Remember this if that is ever changed to something like an id
-
-
-const userFunctions = require("../../data/users");
-const artistFunctions = require("../../data/artists");
-const albumFunctions = require("../../data/albums");
-const songFunctions = require("../../data/songs");
+const {createUser, getUserByID, deleteUser} = require("../../data/users");
+const {addArtist, removeArtist} = require("../../data/artists");
+const {addAlbum, removeAlbum} = require("../../data/albums");
+const {addSong, removeSong} = require("../../data/songs");
 
 async function main() {
     //Add a first user
+    let userOneID;
     let userOne;
 
     try {
-        userOne = await userFunctions.createUser("WalkerBove", "password");
+        userOneID = await createUser("WalkerBove", "password");
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -20,7 +19,8 @@ async function main() {
 
     //Add an artist
     try {
-        userOne = await artistFunctions.addArtist(userOne, "Joe Somebody", false);
+        await addArtist(userOneID, "Joe Somebody", false);
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -29,7 +29,8 @@ async function main() {
 
     //Add an artist already present
     try {
-        userOne = await artistFunctions.addArtist(userOne, "Joe Somebody", false);
+        await addArtist(userOneID, "Joe Somebody", false);
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -38,7 +39,8 @@ async function main() {
 
     //Add an artist with bad data
     try {
-        userOne = await artistFunctions.addArtist();
+        await addArtist();
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -46,7 +48,8 @@ async function main() {
     }
 
     try {
-        userOne = await artistFunctions.addArtist(userOne);
+        await addArtist(userOneID);
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -54,7 +57,8 @@ async function main() {
     }
 
     try {
-        userOne = await artistFunctions.addArtist(userOne, 777);
+        await addArtist(userOneID, 777);
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -62,7 +66,8 @@ async function main() {
     }
 
     try {
-        userOne = await artistFunctions.addArtist(userOne, "Joe Nobody", "spaghetti");
+        await addArtist(userOneID, "Joe Nobody", "spaghetti");
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -71,7 +76,8 @@ async function main() {
 
     //Add a song
     try {
-        userOne = await songFunctions.addSong(userOne, "Hello There, I am Joe", "Joe Somebody", false);
+        await addSong(userOneID, "Hello There, I am Joe", "Joe Somebody", false);
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -80,7 +86,8 @@ async function main() {
 
     //Add a song already present
     try {
-        userOne = await songFunctions.addSong(userOne, "Hello There, I am Joe", "Joe Somebody", false);
+        await addSong(userOneID, "Hello There, I am Joe", "Joe Somebody", false);
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -89,7 +96,8 @@ async function main() {
 
     //Add a song with bad data
     try {
-        userOne = await songFunctions.addSong();
+        await addSong();
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -97,7 +105,8 @@ async function main() {
     }
 
     try {
-        userOne = await songFunctions.addSong(userOne, ["Song", "Title"]);
+        await addSong(userOneID, ["Song", "Title"]);
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -105,7 +114,8 @@ async function main() {
     }
 
     try {
-        userOne = await songFunctions.addSong(userOne, "Song Title", true);
+        await addSong(userOneID, "Song Title", true);
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -113,7 +123,8 @@ async function main() {
     }
 
     try {
-        userOne = await songFunctions.addSong(userOne, "Song Title", "Joe Nobody", 101);
+        await addSong(userOneID, "Song Title", "Joe Nobody", 101);
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -122,7 +133,8 @@ async function main() {
 
     //Add an album
     try {
-        userOne = await albumFunctions.addAlbum(userOne, "Joe's Awesome Album", "Joe Somebody", 8);
+        await addAlbum(userOneID, "Joe's Awesome Album", "Joe Somebody", 8);
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -131,7 +143,8 @@ async function main() {
 
     //Add an album already present
     try {
-        userOne = await albumFunctions.addAlbum(userOne, "Joe's Awesome Album", "Joe Somebody", 8);
+        await addAlbum(userOneID, "Joe's Awesome Album", "Joe Somebody", 8);
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -140,7 +153,8 @@ async function main() {
 
     //Add an album with bad data
     try {
-        userOne = await albumFunctions.addAlbum();
+        await addAlbum();
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -148,7 +162,8 @@ async function main() {
     }
 
     try {
-        userOne = await albumFunctions.addAlbum(userOne, {albumName: "Joe's Awesome Album 2"});
+        await addAlbum(userOneID, {albumName: "Joe's Awesome Album 2"});
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -156,7 +171,8 @@ async function main() {
     }
 
     try {
-        userOne = await albumFunctions.addAlbum(userOne, "Joe's Awesome Album 2", undefined);
+        await addAlbum(userOneID, "Joe's Awesome Album 2", undefined);
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -164,7 +180,8 @@ async function main() {
     }
 
     try {
-        userOne = await albumFunctions.addAlbum(userOne, "Joe's Awesome Album 2", "Joe Somebody", true);
+        await addAlbum(userOneID, "Joe's Awesome Album 2", "Joe Somebody", true);
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -173,7 +190,8 @@ async function main() {
 
     //Delete artist
     try {
-        userOne = await artistFunctions.removeArtist(userOne, "Joe Somebody");
+        await removeArtist(userOneID, "Joe Somebody");
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -182,7 +200,8 @@ async function main() {
 
     //Delete artist that isn't present
     try {
-        userOne = await artistFunctions.removeArtist(userOne, "Joe Somebody");
+        await removeArtist(userOneID, "Joe Somebody");
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -191,7 +210,8 @@ async function main() {
 
     //Delete song
     try {
-        userOne = await songFunctions.removeSong(userOne, "Hello There, I am Joe", "Joe Somebody");
+        await removeSong(userOneID, "Hello There, I am Joe", "Joe Somebody");
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -200,7 +220,8 @@ async function main() {
 
     //Delete song that isn't present
     try {
-        userOne = await songFunctions.removeSong(userOne, "Hello There, I am Joe", "Joe Somebody");
+        await removeSong(userOneID, "Hello There, I am Joe", "Joe Somebody");
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -209,7 +230,8 @@ async function main() {
 
     //Delete album
     try {
-        userOne = await albumFunctions.removeAlbum(userOne, "Joe's Awesome Album", "Joe Somebody");
+        await removeAlbum(userOneID, "Joe's Awesome Album", "Joe Somebody");
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -218,7 +240,8 @@ async function main() {
 
     //Delete album
     try {
-        userOne = await albumFunctions.removeAlbum(userOne, "Joe's Awesome Album", "Joe Somebody");
+        await removeAlbum(userOneID, "Joe's Awesome Album", "Joe Somebody");
+        userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
     catch(e) {
@@ -228,7 +251,7 @@ async function main() {
     //Delete user one
     let deletionMessage;
     try {
-        deletionMessage = await userFunctions.deleteUser(userOne);
+        deletionMessage = await deleteUser(userOneID);
         console.log(deletionMessage);
     }
     catch(e) {

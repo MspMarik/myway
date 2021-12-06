@@ -1,18 +1,20 @@
 const {users} = require("../config/mongoCollections");
-//const {ObjectId} = require("mongodb");
-const {validUserObject} = require("./fieldValidations");
-//const {getUserById} = ("./users");
+const {ObjectId} = require("mongodb");
+//const {validUserObject} = require("./fieldValidations");
+const {getUserByID} = require("./users");
 
-async function addArtist(user, artistName, dislikeFlag=false) {
-    if(!user) {
-        throw "User not provided";
+async function addArtist(userId, artistName, dislikeFlag=false) {
+    if(!userId) {
+        throw "User ID not provided";
     }
-    if(typeof user != "object" || Array.isArray(user)) {
-        throw "User is not an object";
+    if(typeof userId != "string") {
+        throw "User ID must be a string";
     }
-    if(!validUserObject(user)) {
-        throw "Object provided is not a valid user object";
+    if(userId.trim().length <= 0) {
+        throw "User ID is whitespace";
     }
+
+    ObjID = ObjectId(userId);
 
     if(!artistName) {
         throw "Artist's name not provided";
@@ -25,6 +27,7 @@ async function addArtist(user, artistName, dislikeFlag=false) {
         throw "If provided, dislike flag should be a boolean";
     }
     
+    let user = await getUserByID(userId);
     let currentArtistList = user.favorites.artists;
     for(let i = 0; i < currentArtistList.length; i++) { //Make sure artist isn't in the list already
         if(artistName == currentArtistList[i].artistName) { //TODO: If the user wants to change artist to liked or disliked, still throw, or just take alternate action?
@@ -35,24 +38,26 @@ async function addArtist(user, artistName, dislikeFlag=false) {
     user.favorites.artists.push({artistName: artistName, disliked: dislikeFlag});
 
     const userCollection = await users();
-    const updateStatus = await userCollection.updateOne({_id: user._id}, {$set: user})
+    const updateStatus = await userCollection.updateOne({_id: ObjID}, {$set: user})
     if(updateStatus.modifiedCount === 0) {
         throw "Could not add the artist to the user's list";
     }
     
-    return user;
+    //return user;
 }
 
-async function removeArtist(user, artistName) {
-    if(!user) {
-        throw "User not provided";
+async function removeArtist(userId, artistName) {
+    if(!userId) {
+        throw "User ID not provided";
     }
-    if(typeof user != "object" || Array.isArray(user)) {
-        throw "User is not an object";
+    if(typeof userId != "string") {
+        throw "User ID must be a string";
     }
-    if(!validUserObject(user)) {
-        throw "Object provided is not a valid user object";
+    if(userId.trim().length <= 0) {
+        throw "User ID is whitespace";
     }
+
+    ObjID = ObjectId(userId);
 
     if(!artistName) {
         throw "Artist's name not provided";
@@ -61,6 +66,7 @@ async function removeArtist(user, artistName) {
         throw "Artist's name is not a string";
     }
 
+    let user = await getUserByID(userId);
     let currentArtistList = user.favorites.artists;
     let artistFound = false;
     for(let i = 0; i < currentArtistList.length; i++) { //Make sure artist is in the list already
@@ -75,12 +81,12 @@ async function removeArtist(user, artistName) {
     }
 
     const userCollection = await users();
-    const updateStatus = await userCollection.updateOne({_id: user._id}, {$set: user})
+    const updateStatus = await userCollection.updateOne({_id: ObjID}, {$set: user})
     if(updateStatus.modifiedCount === 0) {
         throw "Could not remove the artist to the user's list";
     }
     
-    return user;
+    //return user;
 }
 
 module.exports = {addArtist, removeArtist};

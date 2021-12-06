@@ -1,6 +1,6 @@
 <h1>Search for a{{#if song}} song{{/if}}{{#if artist}}n artist{{/if}}{{#if album}}n album{{/if}}:</h1>
 
-<a href="/chooseWhatToSearch">Search for something else?</a>
+<a href="/search">Search for something else?</a>
 
 {{! ADD FORM ACTION }}
 <form>
@@ -18,12 +18,12 @@
         {{! make sure all elements within div are on one line }}
         <div>
             {{! might need some tweaking based on variable names }}
-            <span>{{this.songName}}{{this.albumName}}</span>
-            <span>{{this.artistName}}</span>
+            <span>{{this.name}}</span>
+            <span>{{this.artist}}</span>
             {{#if album}}
                 <span>{{this.prodYear}}</span>
             {{/if}}
-            <button id="add" onclick="add{{#if song}}Song({{songID}}){{/if}}{{#if artist}}Artist({{artistID}}){{/if}}{{#if album}}Album({{albumID}}){{/if}}">&#10133;</button>
+            <button id="add" onclick="add{{#if song}}Song({{this.song}}){{/if}}{{#if artist}}Artist({{this.name}}){{/if}}{{#if album}}Album({{albumID}}){{/if}}">&#10133;</button>
             {{!-- once added made plus emoji into check emoji --}}
         </div>
         <div id="album{{this.albumID}}" hidden>
@@ -38,7 +38,7 @@
         </div>
     {{/each}}
 
-    <a href="/chooseWhatToSearch">Search for something else?</a>
+    <a href="/search">Search for something else?</a>
 {{/if}}
 
 {{#if error}}
