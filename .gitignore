@@ -103,5 +103,5 @@ dist
 # TernJS port file
 .tern-port
 
-#Lastfm key
+# API Key for LastFM
 data/lastfmkey.json

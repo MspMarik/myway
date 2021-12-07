@@ -1,6 +1,8 @@
 <h1>Sign Up For <span class="specialMy">My</span> Way</h1>
+
+<div>{{errorStr}}</div>
 {{! ADD FORM ACTION }}
-<form class="signupForm">
+<form class="signupForm" action="/signup" id="signup-form" method="POST">
     <label>
         Username:
         <input type="text" name="username" />
@@ -15,3 +17,5 @@
     </label>
     <button type="submit">Sign Up!</button>
 </form>
+
+<p>Already a user? Click <a href="/login">here</a> to login!</p>

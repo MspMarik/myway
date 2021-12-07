@@ -5,8 +5,11 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
+    "seed": "node tasks/seed.js",
     "basicDBtest": "node tasks/db_tests/basicUsers.js",
-    "recordDBtest": "node tasks/db_tests/userRecords.js"
+    "recordDBtest": "node tasks/db_tests/userRecords.js",
+    "basicapi": "node tasks/api_tests/basicapi.js",
+    "filterapi": "node tasks/api_tests/filterapi.js"
   },
   "repository": {
     "type": "git",
@@ -24,7 +27,12 @@
   },
   "homepage": "https://github.com/MspMarik/myway#readme",
   "dependencies": {
+    "axios": "^0.24.0",
     "bcryptjs": "^2.4.3",
-    "mongodb": "^4.2.0"
+    "express": "^4.17.1",
+    "express-handlebars": "^6.0.2",
+    "express-session": "^1.17.2",
+    "mongodb": "^4.2.0",
+    "xss": "^1.0.10"
   }
 }

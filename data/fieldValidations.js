@@ -26,23 +26,23 @@ function validPassword(password) { //Makes sure that all inputted passwords are 
     return true;
 }
 
-function validUserObject(user) { //Checks that all fields of a user object are present
-    let idPresent = user._id;
-    let userPresent = user.username;
-    let passPresent = user.hashedPassword;
-    let favoritesPresent = user.favorites;
-    let entriesPresent = user.journalEntries;
-    let accoladesPresent = user.accolades;
-    if(!idPresent || !userPresent || !passPresent || !favoritesPresent || !entriesPresent || !accoladesPresent) {
-        return false;
-    }
-    let artistsPresent = favoritesPresent.artists;
-    let songsPresent = favoritesPresent.songs;
-    let albumsPresent = favoritesPresent.albums;
-    if(!Array.isArray(artistsPresent) || !Array.isArray(songsPresent) || !Array.isArray(albumsPresent)) {
-        return false;
-    }
-    return true;
-}
+// function validUserObject(user) { //Checks that all fields of a user object are present
+//     let idPresent = user._id;
+//     let userPresent = user.username;
+//     let passPresent = user.hashedPassword;
+//     let favoritesPresent = user.favorites;
+//     let entriesPresent = user.journalEntries;
+//     let accoladesPresent = user.accolades;
+//     if(!idPresent || !userPresent || !passPresent || !favoritesPresent || !entriesPresent || !accoladesPresent) {
+//         return false;
+//     }
+//     let artistsPresent = favoritesPresent.artists;
+//     let songsPresent = favoritesPresent.songs;
+//     let albumsPresent = favoritesPresent.albums;
+//     if(!Array.isArray(artistsPresent) || !Array.isArray(songsPresent) || !Array.isArray(albumsPresent)) {
+//         return false;
+//     }
+//     return true;
+// }
 
-module.exports = {validUsername, validPassword, validUserObject};
+module.exports = {validUsername, validPassword};//, validUserObject};
