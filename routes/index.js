@@ -5,7 +5,7 @@ const userFunctions = require("../data/users");
 const lastfmFunctions = require("../data/lastfm");
 const {validUsername, validPassword} = require("../data/fieldValidations");
 
-//Fetch login page
+//Fetch main page
 router.get("/", async (request, response) => {
     //Check if the user is logged in. If so, redirect to profile page. Else render logout page.
     // if(request.session.userId) {
@@ -20,7 +20,7 @@ router.get("/", async (request, response) => {
 router.get("/loginlogout", async (request, response) => {
     if(request.session.userId) {
         request.session.destroy();
-        response.redirect("/"); //INC: Route for the profile page
+        response.redirect("/");
     }else{
         response.render("pages/login", {});
     }
@@ -30,7 +30,7 @@ router.post("/loginlogout", async (request, response) => {
     try {
         //First, see if the user is already logged in. If so, redirect to user's profile page 
         if(request.session.userId) {
-            response.redirect("/"); //INC: Route for the profile page
+            response.redirect("/");
         }
         else {
             //Then, check that login credentials are provided and of proper format
@@ -80,7 +80,7 @@ router.post("/loginlogout", async (request, response) => {
 router.get("/signup", async (request, response) => {
     //Check if the user is logged in. If so, redirect to profile page. Else render signup page.
     if(request.session.userId) {
-        response.redirect("/") //INC: Route for the profile page
+        response.redirect("/")
     }
     else {
         response.render("pages/signup", {}) //INC: Path to signup, remember to include handlebar fields
@@ -97,7 +97,7 @@ router.post("/signup", async (request, response) => {
     try {
         //First, see if the user is already logged in. If so, redirect to user's profile page 
         if(request.session.userId) {
-            response.redirect("/"); //INC: Route for the profile page
+            response.redirect("/");
         }
         else {
             //Then, check that signup credentials are provided and of proper format
@@ -146,7 +146,7 @@ router.post("/signup", async (request, response) => {
 //Main search page
 router.get("/search", async (request, response) => {
    if(!request.session.userId) {
-       response.redirect("/");
+       response.redirect("/loginlogout");
    }
    else {
        response.render("pages/chooseWhatToSearch");
@@ -156,7 +156,7 @@ router.get("/search", async (request, response) => {
 //Specific search pages
 router.get("/search/artists", async (request, response) => {
     if(!request.session.userId) {
-        response.redirect("/");
+        response.redirect("/loginlogout");
     }
     else {
         response.render("pages/search", {artist: true});
@@ -167,7 +167,7 @@ router.get("/search/artists", async (request, response) => {
  router.post("/search/artists", async (request, response) => {
     try {
         if(!request.session.userId) {
-            response.redirect("/");
+            response.redirect("/loginlogout");
         }
         else {
             //Search Term Checking
@@ -207,7 +207,7 @@ router.get("/search/artists", async (request, response) => {
 
  router.get("/search/songs", async (request, response) => {
     if(!request.session.userId) {
-        response.redirect("/");
+        response.redirect("/loginlogout");
     }
     else {
         response.render("pages/search", {song: true});
@@ -218,7 +218,7 @@ router.get("/search/artists", async (request, response) => {
   router.post("/search/songs", async (request, response) => {
     try {
         if(!request.session.userId) {
-            response.redirect("/");
+            response.redirect("/loginlogout");
         }
         else {
             //Search Term Checking
@@ -258,7 +258,7 @@ router.get("/search/artists", async (request, response) => {
 
  router.get("/search/albums", async (request, response) => {
     if(!request.session.userId) {
-        response.redirect("/");
+        response.redirect("/loginlogout");
     }
     else {
         response.render("pages/search", {album: true});
@@ -269,7 +269,7 @@ router.get("/search/artists", async (request, response) => {
   router.post("/search/albums", async (request, response) => {
     try {
         if(!request.session.userId) {
-            response.redirect("/");
+            response.redirect("/loginlogout");
         }
         else {
             //Search Term Checkint
@@ -311,7 +311,7 @@ router.get("/search/artists", async (request, response) => {
 //editRanking page for users of webstie
 router.get("/editRanking", async (request, response) => {
     if(!request.session.userId) {
-        response.redirect("/");
+        response.redirect("/loginlogout");
     }else{
         response.render("pages/editRanking", {album: true});
     }
@@ -320,7 +320,7 @@ router.get("/editRanking", async (request, response) => {
 
 router.post("/editRanking", async (request, response) => {
     if(!request.session.userId) {
-        response.redirect("/");
+        response.redirect("/loginlogout");
     }else{
         
     }
@@ -328,7 +328,7 @@ router.post("/editRanking", async (request, response) => {
 
 router.get("/myprofile", async (request, response) => {
     if(!request.session.userId) {
-        response.redirect("/");
+        response.redirect("/loginlogout");
     }else{
         response.render("pages/myprofile", {});
     }
@@ -337,7 +337,7 @@ router.get("/myprofile", async (request, response) => {
 
 router.get("/mysongs", async (request, response) => {
     if(!request.session.userId) {
-        response.redirect("/");
+        response.redirect("/loginlogout");
     }else{
         response.render("pages/mypage", {song: "Example"});
     }
@@ -345,7 +345,7 @@ router.get("/mysongs", async (request, response) => {
 
 router.get("/myalbums", async (request, response) => {
     if(!request.session.userId) {
-        response.redirect("/");
+        response.redirect("/loginlogout");
     }else{
         response.render("pages/mypage", {album: "Example"});
     }
@@ -353,7 +353,7 @@ router.get("/myalbums", async (request, response) => {
 
 router.get("/myartists", async (request, response) => {
     if(!request.session.userId) {
-        response.redirect("/");
+        response.redirect("/loginlogout");
     }else{
         response.render("pages/mypage", {artist: "Example"});
     }
@@ -361,7 +361,7 @@ router.get("/myartists", async (request, response) => {
 
 router.get("/shuffle", async (request, response) => {
     if(!request.session.userId) {
-        response.redirect("/");
+        response.redirect("/loginlogout");
     }else{
         response.render("pages/shuffle", {});
     }
