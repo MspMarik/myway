@@ -142,7 +142,8 @@ async function loginUser(username, password) {
     
     let passwordCorrect = bcrypt.compare(trimmedPassword, user.hashedPassword);
 
-    if(!passwordCorrect) {
+    // bcrypt results in a promise, it might be wiser to put this in a try catch but idk if it saves time or not
+    if(!(await passwordCorrect)) {
         throw "Username or password is incorrect";
     }
     else {
