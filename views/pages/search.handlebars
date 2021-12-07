@@ -4,8 +4,10 @@
 
 {{! ADD FORM ACTION }}
 <form>
+    <label for="searchbox">Search:</label>
     <input type="text" id="searchbox" name="searchbox" required />
     {{#if album}}
+        <label for="prodYear">Year Produced:</label>
         <input type="number" id="prodYear" name="prodYear" min="1900" max="2099" step="1" />
     {{/if}}
     <button type="submit" id="submitSearch" name="submitSearch">Search</button>
