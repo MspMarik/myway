@@ -1,0 +1,53 @@
+body {
+    background-color: #2c37a1;
+}
+
+h1 {
+    font-family: "Readex Pro", sans-serif;
+    text-align: center;
+    color: white;
+}
+
+h2 {
+    font-family: "Readex Pro", sans-serif;
+    text-align: center;
+    color: #ffecba;
+}
+
+/* header {
+    text-align: center;
+} */
+
+#navBar {
+    list-style-type: none;
+    margin: 0;
+    padding: 12;
+    text-align: center;
+    overflow: hidden;
+    background-color: #646eca;
+    display: block;
+    padding: 12px;
+    color: white;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 12;
+    text-align: center;
+    overflow: hidden;
+    background-color: #646eca;
+    display: block;
+    padding: 12px;
+}
+
+li {
+    display: inline;
+}
+
+/* ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    
+} */
