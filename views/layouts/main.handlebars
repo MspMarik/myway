@@ -7,17 +7,19 @@
     </head>
     <body>
         <header>
-            {{! make all elements below (except login/logout) float left }}
-            {{!-- <img src="/static/MY_WAY_logos/record_w_text.png" alt="My Way Logo With Text" class="topnavLogo" /> --}}
-            <a href="/index">Home</a>
-            <a href="/myprofile"><span class="specialMy">My</span> Profile</a>
-            <a href="/mysongs"><span class="specialMy">My</span> Songs</a>
-            <a href="/myartists"><span class="specialMy">My</span> Artists</a>
-            <a href="/myalbums"><span class="specialMy">My</span> Albums</a>
-            <a href="/mymetrics"><span class="specialMy">My</span> Metrics</a>
-            <a href="/search">Search</a>
-            {{! make login/logout link float right }}
-            <a href="/loginlogout">Login/Logout</a>
+            <nav class="navbar">
+                {{! make all elements below (except login/logout) float left }}
+                <img src="/static/MY_WAY_logos/record_w_text.png" alt="My Way Logo With Text" class="topnavLogo" />
+                <a href="/">Home</a>
+                <a href="/myprofile"><span class="specialMy">My</span> Profile</a>
+                <a href="/mysongs"><span class="specialMy">My</span> Songs</a>
+                <a href="/myartists"><span class="specialMy">My</span> Artists</a>
+                <a href="/myalbums"><span class="specialMy">My</span> Albums</a>
+                <a href="/mymetrics"><span class="specialMy">My</span> Metrics</a>
+                <a href="/chooseWhatToSearch">Search</a>
+                {{! make login/logout link float right }}
+                <a href="/loginlogout">Login/Logout</a>
+            </nav>
         </header>
         <main>
             {{{body}}}
