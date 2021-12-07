@@ -79,7 +79,7 @@ async function getArtistsByTextInput(input, userTag = undefined) {
     }
 
     let trimmedTag;
-    if(userTag && (typeof userTag != string || !userTag.trim())) {
+    if(userTag && (typeof userTag != "string" || !userTag.trim())) {
         throw "If provided, search tag must be in the form of a non-whitespace string";
     }
     else if(userTag) {
@@ -113,7 +113,7 @@ async function getSongsByTextInput(input, userTag = undefined) {
     }
 
     let trimmedTag;
-    if(userTag && (typeof userTag != string || !userTag.trim())) {
+    if(userTag && (typeof userTag != "string" || !userTag.trim())) {
         throw "If provided, search tag must be in the form of a non-whitespace string";
     }
     else if(userTag) {
@@ -147,7 +147,7 @@ async function getAlbumsByTextInput(input, userTag = undefined) {
     }
 
     let trimmedTag;
-    if(userTag && (typeof userTag != string || !userTag.trim())) {
+    if(userTag && (typeof userTag != "string" || !userTag.trim())) {
         throw "If provided, search tag must be in the form of a non-whitespace string";
     }
     else if(userTag) {
