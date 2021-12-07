@@ -19,6 +19,7 @@ router.get("/", async (request, response) => {
 });
 router.get("/loginlogout", async (request, response) => {
     if(request.session.userId) {
+        request.session.destroy();
         response.redirect("/"); //INC: Route for the profile page
     }else{
         response.render("pages/login", {});
@@ -61,7 +62,7 @@ router.post("/loginlogout", async (request, response) => {
             //Next, check to see if the signup credentials are valid. If they are, redirect to the user's profile page
             try{
             let userId = await userFunctions.loginUser(cleanedUsername, cleanedPassword);
-            console.log(userId);
+            //console.log(userId);
             request.session.userId = userId;
             response.redirect("/");
             }catch(err){
@@ -307,25 +308,12 @@ router.get("/search/artists", async (request, response) => {
  });
 
 
-
-//Logout of the website
-router.get("/logout", async (request, response) => {
-    //Check if the user is logged in. If so, redirect to "main page" with a succesful logout message. Else redirect to "main page" without said message
-    if(request.session.userId) {
-        request.session.destroy();
-        response.render("pages/login", {logoutMsg: "Logged out"});
-    }
-    else {
-        response.redirect("/");
-    }
-});
-
 //editRanking page for users of webstie
 router.get("/editRanking", async (request, response) => {
     if(!request.session.userId) {
         response.redirect("/");
     }else{
-        response.render("pages/", {album: true});
+        response.render("pages/editRanking", {album: true});
     }
 
 });
@@ -336,8 +324,49 @@ router.post("/editRanking", async (request, response) => {
     }else{
         
     }
-
 });
+
+router.get("/myprofile", async (request, response) => {
+    if(!request.session.userId) {
+        response.redirect("/");
+    }else{
+        response.render("pages/myprofile", {});
+    }
+});
+
+
+router.get("/mysongs", async (request, response) => {
+    if(!request.session.userId) {
+        response.redirect("/");
+    }else{
+        response.render("pages/mypage", {song: "Example"});
+    }
+});
+
+router.get("/myalbums", async (request, response) => {
+    if(!request.session.userId) {
+        response.redirect("/");
+    }else{
+        response.render("pages/mypage", {album: "Example"});
+    }
+});
+
+router.get("/myartists", async (request, response) => {
+    if(!request.session.userId) {
+        response.redirect("/");
+    }else{
+        response.render("pages/mypage", {artist: "Example"});
+    }
+});
+
+router.get("/shuffle", async (request, response) => {
+    if(!request.session.userId) {
+        response.redirect("/");
+    }else{
+        response.render("pages/shuffle", {});
+    }
+});
+
 
     
 
