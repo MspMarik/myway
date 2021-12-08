@@ -229,9 +229,16 @@ router.post("/search/songs", async (request, response) => {
             }
 
             let retrievedSongs = await lastfmFunctions.getSongsByTextInput(cleanedSearchTerm, cleanedTag);
+            //let songYear = await lastfmFunctions.getSongInfo(element.name, element.artist);
             let empty = false;
             if (retrievedSongs.length == 0) {
                 empty = true;
+            };
+            let arr = [];
+            for(let i = 0; i < retrievedSongs.length; i++){
+                let year = await lastfmFunctions.getSongInfo(retrievedSongs[i].name, retrievedSongs[i].artist);
+                arr.push(year);
+                retrievedSongs[i].release = year;
             }
 
             response.render("pages/search", { song: true, searchResults: retrievedSongs, error: empty });
@@ -276,35 +283,39 @@ router.post("/search/albums", async (request, response) => {
                 }
             }
 
-            let retrievedAlbums = await lastfmFunctions.getAlbumsByTextInput(cleanedSearchTerm, cleanedTags);
+            let retrievedAlbums = await lastfmFunctions.getAlbumsByTextInput(cleanedSearchTerm, cleanedTag);
             let empty = false;
             if (retrievedAlbums.length == 0) {
                 empty = true;
             }
 
-            response.render("pages/search", { album: true, searchResults: retrievedAlbums, error: empty });
+             let arr = [];
+             for(let i = 0; i < retrievedAlbums.length; i++){
+                 let year = await lastfmFunctions.getAlbumInfo(retrievedAlbums[i].name, retrievedAlbums[i].artist);
+                 arr.push(year);
+                 retrievedAlbums[i].release = year;
+            }
+
+
+            response.render("pages/search", {album: true, searchResults: retrievedAlbums, error: empty});
         }
     } catch (err) {
         //TODO: Figure out how errors should be displayed on this page
-        response.render("pages/search", { album: true, searchResults: [], error: true });
+        response.render("pages/search", { album: true, searchResults: [], error: err });
     }
-});
 
-//Logout of the website
-router.get("/logout", async (request, response) => {
-    //Check if the user is logged in. If so, redirect to "main page" with a succesful logout message. Else redirect to "main page" without said message
-    if (request.session.userId) {
-        request.session.destroy();
-        response.render("pages/login", { logoutMsg: "Logged out" });
-    } else {
-        response.redirect("/");
+router.get("/myprofile", async (request, response) => {
+    if(!request.session.userId) {
+        response.redirect("/loginlogout");
+    }else{
+        response.render("pages/myprofile", {});
     }
 });
 
 //editRanking page for users of webstie
 router.get("/editRanking", async (request, response) => {
     if (!request.session.userId) {
-        response.redirect("/");
+        response.redirect("/loginlogout");
     } else {
         response.render("pages/", { album: true });
     }
@@ -312,7 +323,7 @@ router.get("/editRanking", async (request, response) => {
 
 router.post("/editRanking", async (request, response) => {
     if (!request.session.userId) {
-        response.redirect("/");
+        response.redirect("/loginlogout");
     } else {
     }
 });

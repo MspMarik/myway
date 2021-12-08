@@ -1,12 +1,16 @@
 <h1>Search for a{{#if song}} song{{/if}}{{#if artist}}n artist{{/if}}{{#if album}}n album{{/if}}:</h1>
 
-<a href="/search">Search for something else?</a>
+<a href="/chooseWhatToSearch">Search for something else?</a>
 
 {{! ADD FORM ACTION }}
-<form>
+<form class = "searchForm" action = {{#if song}}"/search/songs"{{/if}} {{#if artist}}"/search/artists"{{/if}} {{#if album}}"/search/albums"{{/if}}  id = 'search-form' method = "POST">
     <label for="searchbox">Search:</label>
     <input type="text" id="searchbox" name="searchbox" required />
     {{#if album}}
+        <label for="prodYear">Year Produced:</label>
+        <input type="number" id="prodYear" name="prodYear" min="1900" max="2099" step="1" />
+    {{/if}}
+        {{#if song}}
         <label for="prodYear">Year Produced:</label>
         <input type="number" id="prodYear" name="prodYear" min="1900" max="2099" step="1" />
     {{/if}}
@@ -18,10 +22,13 @@
         {{! make sure all elements within div are on one line }}
         <div>
             {{! might need some tweaking based on variable names }}
-            <span>{{this.name}}</span>
-            <span>{{this.artist}}</span>
+            <span>{{this.name}}: {{this.release}}</span>
+            {{!-- <span>{{this.artist}}</span> --}}
             {{#if album}}
-                <span>{{this.prodYear}}</span>
+                <span>{{this.release}}: {{this.release}}</span>
+            {{/if}}
+            {{#if song}}
+                <span>{{this.release}}</span>
             {{/if}}
             <button id="add" onclick="add{{#if song}}Song({{this.song}}){{/if}}{{#if artist}}Artist({{this.name}}){{/if}}{{#if album}}Album({{albumID}}){{/if}}">&#10133;</button>
             {{!-- once added made plus emoji into check emoji --}}
@@ -38,11 +45,10 @@
         </div>
     {{/each}}
 
-    <a href="/search">Search for something else?</a>
+    <a href="/chooseWhatToSearch">Search for something else?</a>
 {{/if}}
 
-{{#if error}}
     <div>
-        <p>We're sorry but we couldn't find anything for {{searchTerm}}{{#if prodYear}} produced in {{prodYear}}{{/if}}.</p>
+        {{!-- <p>We're sorry but we couldn't find anything for {{searchTerm}}{{#if prodYear}} produced in {{prodYear}}{{/if}}.</p> --}}
+        <p>{{error}}</p>
     </div>
-{{/if}}
