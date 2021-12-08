@@ -398,7 +398,7 @@ router.get("/mymetrics", async (request, response) => {
         // lastfmFunctions.get;
         let userSongMetrics = await metricsFunctions.getSongDataForMetrics(request.session.userId);
         let likedData = userSongMetrics.likedTags;
-        let dislikedData = userSongMetrics.dislikedData;
+        let dislikedData = userSongMetrics.dislikedTags;
         // Google chart stuff 
         response.render("pages/mymetrics", { userSongs: userSongs });
     }
