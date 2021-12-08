@@ -27,9 +27,9 @@ async function main() {
         console.log(e);
     }
 
-    //Add an artist already present
+    //Alter an artist that's already present
     try {
-        await addArtist(userOneID, "Joe Somebody", false);
+        await addArtist(userOneID, "Joe Somebody", true);
         userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
@@ -84,9 +84,9 @@ async function main() {
         console.log(e);
     }
 
-    //Add a song already present
+    //Alter a song that's already present
     try {
-        await addSong(userOneID, "Hello There, I am Joe", "Joe Somebody", false);
+        await addSong(userOneID, "Hello There, I am Joe", "Joe Somebody", true);
         userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
@@ -141,9 +141,9 @@ async function main() {
         console.log(e);
     }
 
-    //Add an album already present
+    //Alter an album that's already present
     try {
-        await addAlbum(userOneID, "Joe's Awesome Album", "Joe Somebody", 8);
+        await addAlbum(userOneID, "Joe's Awesome Album", "Joe Somebody", 4);
         userOne = await getUserByID(userOneID);
         console.dir(userOne, {depth: null});
     }
