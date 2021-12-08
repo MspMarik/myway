@@ -36,11 +36,7 @@ router.post("/loginlogout", async (request, response) => {
             //Then, check that login credentials are provided and of proper format
             //Username Checking
             if (!request.body.username) {
-<<<<<<< HEAD
                 //console.log('error');
-=======
-                console.log("error");
->>>>>>> main
                 throw "Username not provided";
             }
             if (typeof request.body.username != "string") {
@@ -75,11 +71,7 @@ router.post("/loginlogout", async (request, response) => {
         }
     } catch (err) {
         //Finally, if the credentials are not valid, render the signup page again, this time with an error
-<<<<<<< HEAD
         response.render("pages/login", { errorStr: err }); //INC: Rerenders signup with error (might do AJAX stuff later)
-=======
-        response.render("pages/login", { errorStr: err.message }); //INC: Rerenders signup with error (might do AJAX stuff later)
->>>>>>> main
     }
 });
 
@@ -297,41 +289,19 @@ router.post("/search/albums", async (request, response) => {
         response.render("pages/search", { album: true, searchResults: [], error: true });
     }
 });
-<<<<<<< HEAD
-=======
-
-//Logout of the website
-router.get("/logout", async (request, response) => {
-    //Check if the user is logged in. If so, redirect to "main page" with a succesful logout message. Else redirect to "main page" without said message
-    if (request.session.userId) {
-        request.session.destroy();
-        response.render("pages/login", { logoutMsg: "Logged out" });
-    } else {
-        response.redirect("/");
-    }
-});
->>>>>>> main
 
 //editRanking page for users of webstie
 router.get("/editRanking", async (request, response) => {
     if (!request.session.userId) {
-<<<<<<< HEAD
         response.redirect("/loginlogout");
     } else {
         response.render("pages/editRanking", { album: true });
-=======
-        response.redirect("/");
-    } else {
-        response.render("pages/", { album: true });
->>>>>>> main
     }
 });
 
 router.post("/editRanking", async (request, response) => {
     if (!request.session.userId) {
-<<<<<<< HEAD
-=======
-        response.redirect("/");
+        response.redirect("/loginlogout");
     } else {
     }
 });
@@ -339,7 +309,6 @@ router.post("/editRanking", async (request, response) => {
 router.get("/ye", async (request, response) => {
     response.sendFile(path.resolve("static/ye.html"));
     if (!request.session.userId) {
->>>>>>> main
         response.redirect("/loginlogout");
     } else {
     }
@@ -385,8 +354,7 @@ router.get("/shuffle", async (request, response) => {
     }
 });
 
-<<<<<<< HEAD
-router.get("/mymterics", async (request, response) => {
+router.get("/mymetrics", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
@@ -397,8 +365,6 @@ router.get("/mymterics", async (request, response) => {
     }
 });
 
-=======
->>>>>>> main
 const constructorMethod = (app) => {
     app.use("/", router);
 
