@@ -313,6 +313,17 @@ router.get("/myprofile", async (request, response) => {
     }
 });
 
+//Logout of the website
+router.get("/logout", async (request, response) => {
+    //Check if the user is logged in. If so, redirect to "main page" with a succesful logout message. Else redirect to "main page" without said message
+    if (request.session.userId) {
+        request.session.destroy();
+        response.render("pages/login", { logoutMsg: "Logged out" });
+    } else {
+        response.redirect("/");
+    }
+});
+
 //editRanking page for users of webstie
 router.get("/editRanking", async (request, response) => {
     if (!request.session.userId) {
