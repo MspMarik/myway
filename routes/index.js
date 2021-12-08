@@ -6,7 +6,7 @@ const userFunctions = require("../data/users");
 const lastfmFunctions = require("../data/lastfm");
 const { validUsername, validPassword } = require("../data/fieldValidations");
 
-//Fetch login page
+//Fetch main page
 router.get("/", async (request, response) => {
     //Check if the user is logged in. If so, redirect to profile page. Else render logout page.
     // if(request.session.userId) {
@@ -18,9 +18,16 @@ router.get("/", async (request, response) => {
 
     response.render("pages/index", {});
 });
-
+router.get("/loginlogout", async (request, response) => {
+    if(request.session.userId) {
+        request.session.destroy();
+        response.redirect("/");
+    }else{
+        response.render("pages/login", {});
+    }
+});
 //Post to login page
-router.post("/", async (request, response) => {
+router.post("/loginlogout", async (request, response) => {
     try {
         //First, see if the user is already logged in. If so, redirect to user's profile page
         if (request.session.userId) {
@@ -53,10 +60,14 @@ router.post("/", async (request, response) => {
             }
 
             //Next, check to see if the signup credentials are valid. If they are, redirect to the user's profile page
+            try{
             let userId = await userFunctions.loginUser(cleanedUsername, cleanedPassword);
-
+            //console.log(userId);
             request.session.userId = userId;
-            response.redirect("/profile");
+            response.redirect("/");
+            }catch(err){
+                response.render("pages/login", {errorStr: err})
+            }
         }
     } catch (err) {
         //Finally, if the credentials are not valid, render the signup page again, this time with an error
