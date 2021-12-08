@@ -1,6 +1,6 @@
 //This file contains all the functions for calculating metrics data
 const {getUserByID} = require("./users");
-const {getSpecificSong} = require("./lastfm");
+const {getSongTags} = require("./lastfm");
 
 function countTags(listOfTags) {
     let tagsObject = {};
