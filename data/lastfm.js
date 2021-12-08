@@ -194,6 +194,30 @@ async function getSongsByTextInput(input, userTag = undefined) {
     return songs;
 }
 
+async function getSongTags(songName, artistName) {
+    if(!songName) {
+        throw "Song name not provided";
+    }
+    if(!artistName) {
+        throw "Artist name not provided";
+    }
+    if(typeof songName != "string") {
+        throw "Song name must be a string";
+    }
+    if(typeof artistName != "string") {
+        throw "Artist name must be a string";
+    }
+    if(!songName.trim()) {
+        throw "Song name cannot be whitespace";
+    }
+    if(!artistName.trim()) {
+        throw "Artist name cannot be whitespace";
+    }
+
+    let songInfo = await axios.get(baseURL + `track.getInfo&artist=${artistName}&track=${songName}`);
+    return songInfo.data.track.toptags.tag.map(tagData => tagData.name);
+}
+
 
 async function getAlbumInfo(album, artist){
     if(!album || !artist) {
@@ -262,4 +286,4 @@ async function getAlbumsByTextInput(input, userTag = undefined) {
     return filteredAlbums;
 }
 
-module.exports = {getArtistsByTextInput, getSongsByTextInput, getAlbumsByTextInput, getSongInfo, getAlbumInfo};
+module.exports = {getArtistsByTextInput, getSongsByTextInput, getAlbumsByTextInput, getSongInfo, getSongTags, getAlbumInfo};
