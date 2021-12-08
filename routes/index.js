@@ -36,37 +36,22 @@ router.post("/loginlogout", async (request, response) => {
             //Then, check that login credentials are provided and of proper format
             //Username Checking
             if (!request.body.username) {
-<<<<<<< HEAD
-                //console.log('error');
-=======
                 console.log("error");
->>>>>>> 1519d6ad3200500d704226fec733fc998f181074
                 throw "Username not provided";
             }
             if (typeof request.body.username != "string") {
                 throw "Username must be a string";
             }
-<<<<<<< HEAD
-            let cleanedUsername = xss(request.body.username.trim().toLowerCase());
-=======
             let cleanedUsername = xss(request.body.username.trim().toLowercase());
->>>>>>> 1519d6ad3200500d704226fec733fc998f181074
             if (!validUsername(cleanedUsername)) {
                 throw "Username must be at least four characters long, and only contain letters and numbers.";
             }
 
             //Password Checking
-<<<<<<< HEAD
             if (!request.body.password) {
                 throw "Password not provided";
             }
             if (typeof request.body.password != "string") {
-=======
-            if (!password) {
-                throw "Password not provided";
-            }
-            if (typeof password != "string") {
->>>>>>> 1519d6ad3200500d704226fec733fc998f181074
                 throw "Password must be a string";
             }
             let cleanedPassword = xss(request.body.password.trim());
@@ -86,11 +71,7 @@ router.post("/loginlogout", async (request, response) => {
         }
     } catch (err) {
         //Finally, if the credentials are not valid, render the signup page again, this time with an error
-<<<<<<< HEAD
-        response.render("pages/login", { errorStr: err }); //INC: Rerenders signup with error (might do AJAX stuff later)
-=======
         response.render("pages/login", { errorStr: err.message }); //INC: Rerenders signup with error (might do AJAX stuff later)
->>>>>>> 1519d6ad3200500d704226fec733fc998f181074
     }
 });
 
