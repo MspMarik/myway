@@ -22,12 +22,12 @@ async function getSongDataForMetrics(userId) {
     let tagsOfLiked = [];
     let tagsOfDisliked = [];
     for(let i = 0; i < songsList.length; i++) {
-        let song = await getSpecificSong(songsList[i].songName, songsList[i].artistName);
+        let songTags = await getSongTags(songsList[i].songName, songsList[i].artistName);
         if(!songsList[i].disliked) { //Song is liked
-            tagsOfLiked.concat(song.toptags.tag.map(tagData => tagData.name));
+            tagsOfLiked.concat(songTags);
         }
         else { //Song is disliked
-            tagsOfDisliked.concat(song.toptags.tag.map(tagData => tagData.name));
+            tagsOfDisliked.concat(songTags);
         }
     }
     let countObject = {};

@@ -4,6 +4,7 @@ const xss = require("xss");
 const path = require("path");
 const userFunctions = require("../data/users");
 const lastfmFunctions = require("../data/lastfm");
+const metricsFunctions = require("../data/metrics");
 const { validUsername, validPassword } = require("../data/fieldValidations");
 
 //Fetch main page
@@ -392,9 +393,13 @@ router.get("/mymetrics", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
-        let user = userFunctions.getUserByID(request.session.userId);
-        let userSongs = user.favorites.songs;
+        // let user = userFunctions.getUserByID(request.session.userId);
+        // let userSongs = user.favorites.songs;
         // lastfmFunctions.get;
+        let userSongMetrics = await metricsFunctions.getSongDataForMetrics(request.session.userId);
+        let likedData = userSongMetrics.likedTags;
+        let dislikedData = userSongMetrics.dislikedData;
+        // Google chart stuff 
         response.render("pages/mymetrics", { userSongs: userSongs });
     }
 });
