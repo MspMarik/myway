@@ -6,7 +6,7 @@ const userFunctions = require("../data/users");
 const lastfmFunctions = require("../data/lastfm");
 const { validUsername, validPassword } = require("../data/fieldValidations");
 
-//Fetch login page
+//Fetch main page
 router.get("/", async (request, response) => {
     //Check if the user is logged in. If so, redirect to profile page. Else render logout page.
     // if(request.session.userId) {
@@ -18,33 +18,40 @@ router.get("/", async (request, response) => {
 
     response.render("pages/index", {});
 });
-
+router.get("/loginlogout", async (request, response) => {
+    if (request.session.userId) {
+        request.session.destroy();
+        response.redirect("/");
+    } else {
+        response.render("pages/login", {});
+    }
+});
 //Post to login page
-router.post("/", async (request, response) => {
+router.post("/loginlogout", async (request, response) => {
     try {
         //First, see if the user is already logged in. If so, redirect to user's profile page
         if (request.session.userId) {
-            response.redirect("/myprofile"); //INC: Route for the profile page
+            response.redirect("/");
         } else {
             //Then, check that login credentials are provided and of proper format
             //Username Checking
             if (!request.body.username) {
-                console.log("error");
+                //console.log('error');
                 throw "Username not provided";
             }
             if (typeof request.body.username != "string") {
                 throw "Username must be a string";
             }
-            let cleanedUsername = xss(request.body.username.trim().toLowercase());
+            let cleanedUsername = xss(request.body.username.trim().toLowerCase());
             if (!validUsername(cleanedUsername)) {
                 throw "Username must be at least four characters long, and only contain letters and numbers.";
             }
 
             //Password Checking
-            if (!password) {
+            if (!request.body.password) {
                 throw "Password not provided";
             }
-            if (typeof password != "string") {
+            if (typeof request.body.password != "string") {
                 throw "Password must be a string";
             }
             let cleanedPassword = xss(request.body.password.trim());
@@ -53,14 +60,18 @@ router.post("/", async (request, response) => {
             }
 
             //Next, check to see if the signup credentials are valid. If they are, redirect to the user's profile page
-            let userId = await userFunctions.loginUser(cleanedUsername, cleanedPassword);
-
-            request.session.userId = userId;
-            response.redirect("/profile");
+            try {
+                let userId = await userFunctions.loginUser(cleanedUsername, cleanedPassword);
+                //console.log(userId);
+                request.session.userId = userId;
+                response.redirect("/");
+            } catch (err) {
+                response.render("pages/login", { errorStr: err });
+            }
         }
     } catch (err) {
         //Finally, if the credentials are not valid, render the signup page again, this time with an error
-        response.render("pages/login", { errorStr: err.message }); //INC: Rerenders signup with error (might do AJAX stuff later)
+        response.render("pages/login", { errorStr: err }); //INC: Rerenders signup with error (might do AJAX stuff later)
     }
 });
 
@@ -68,7 +79,7 @@ router.post("/", async (request, response) => {
 router.get("/signup", async (request, response) => {
     //Check if the user is logged in. If so, redirect to profile page. Else render signup page.
     if (request.session.userId) {
-        response.redirect("/myprofile"); //INC: Route for the profile page
+        response.redirect("/");
     } else {
         response.render("pages/signup", {}); //INC: Path to signup, remember to include handlebar fields
     }
@@ -84,7 +95,7 @@ router.post("/signup", async (request, response) => {
     try {
         //First, see if the user is already logged in. If so, redirect to user's profile page
         if (request.session.userId) {
-            response.redirect("/"); //INC: Route for the profile page
+            response.redirect("/");
         } else {
             //Then, check that signup credentials are provided and of proper format
             //Username Checking
@@ -128,7 +139,7 @@ router.post("/signup", async (request, response) => {
 //Main search page
 router.get("/search", async (request, response) => {
     if (!request.session.userId) {
-        response.redirect("/");
+        response.redirect("/loginlogout");
     } else {
         response.render("pages/chooseWhatToSearch");
     }
@@ -137,7 +148,7 @@ router.get("/search", async (request, response) => {
 //Specific search pages
 router.get("/search/artists", async (request, response) => {
     if (!request.session.userId) {
-        response.redirect("/");
+        response.redirect("/loginlogout");
     } else {
         response.render("pages/search", { artist: true });
     }
@@ -147,7 +158,7 @@ router.get("/search/artists", async (request, response) => {
 router.post("/search/artists", async (request, response) => {
     try {
         if (!request.session.userId) {
-            response.redirect("/");
+            response.redirect("/loginlogout");
         } else {
             //Search Term Checking
             if (!request.body.searchbox) {
@@ -185,7 +196,7 @@ router.post("/search/artists", async (request, response) => {
 
 router.get("/search/songs", async (request, response) => {
     if (!request.session.userId) {
-        response.redirect("/");
+        response.redirect("/loginlogout");
     } else {
         response.render("pages/search", { song: true });
     }
@@ -195,7 +206,7 @@ router.get("/search/songs", async (request, response) => {
 router.post("/search/songs", async (request, response) => {
     try {
         if (!request.session.userId) {
-            response.redirect("/");
+            response.redirect("/loginlogout");
         } else {
             //Search Term Checking
             if (!request.body.searchbox) {
@@ -233,7 +244,7 @@ router.post("/search/songs", async (request, response) => {
 
 router.get("/search/albums", async (request, response) => {
     if (!request.session.userId) {
-        response.redirect("/");
+        response.redirect("/loginlogout");
     } else {
         response.render("pages/search", { album: true });
     }
@@ -243,7 +254,7 @@ router.get("/search/albums", async (request, response) => {
 router.post("/search/albums", async (request, response) => {
     try {
         if (!request.session.userId) {
-            response.redirect("/");
+            response.redirect("/loginlogout");
         } else {
             //Search Term Checkint
             if (!request.body.searchbox) {
@@ -308,6 +319,50 @@ router.post("/editRanking", async (request, response) => {
 
 router.get("/ye", async (request, response) => {
     response.sendFile(path.resolve("static/ye.html"));
+    if (!request.session.userId) {
+        response.redirect("/loginlogout");
+    } else {
+    }
+});
+
+router.get("/myprofile", async (request, response) => {
+    if (!request.session.userId) {
+        response.redirect("/loginlogout");
+    } else {
+        response.render("pages/myprofile", {});
+    }
+});
+
+router.get("/mysongs", async (request, response) => {
+    if (!request.session.userId) {
+        response.redirect("/loginlogout");
+    } else {
+        response.render("pages/mypage", { song: "Example" });
+    }
+});
+
+router.get("/myalbums", async (request, response) => {
+    if (!request.session.userId) {
+        response.redirect("/loginlogout");
+    } else {
+        response.render("pages/mypage", { album: "Example" });
+    }
+});
+
+router.get("/myartists", async (request, response) => {
+    if (!request.session.userId) {
+        response.redirect("/loginlogout");
+    } else {
+        response.render("pages/mypage", { artist: "Example" });
+    }
+});
+
+router.get("/shuffle", async (request, response) => {
+    if (!request.session.userId) {
+        response.redirect("/loginlogout");
+    } else {
+        response.render("pages/shuffle", {});
+    }
 });
 
 const constructorMethod = (app) => {
