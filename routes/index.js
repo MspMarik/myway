@@ -42,7 +42,7 @@ router.post("/loginlogout", async (request, response) => {
             if (typeof request.body.username != "string") {
                 throw "Username must be a string";
             }
-            let cleanedUsername = xss(request.body.username.trim().toLowercase());
+            let cleanedUsername = xss(request.body.username.trim().toLowerCase());
             if (!validUsername(cleanedUsername)) {
                 throw "Username must be at least four characters long, and only contain letters and numbers.";
             }
