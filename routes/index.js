@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const xss = require("xss");
+const path = require("path");
 const userFunctions = require("../data/users");
 const lastfmFunctions = require("../data/lastfm");
 const { validUsername, validPassword } = require("../data/fieldValidations");
@@ -35,7 +36,7 @@ router.post("/loginlogout", async (request, response) => {
             //Then, check that login credentials are provided and of proper format
             //Username Checking
             if (!request.body.username) {
-                //console.log('error');
+                console.log("error");
                 throw "Username not provided";
             }
             if (typeof request.body.username != "string") {
@@ -70,7 +71,7 @@ router.post("/loginlogout", async (request, response) => {
         }
     } catch (err) {
         //Finally, if the credentials are not valid, render the signup page again, this time with an error
-        response.render("pages/login", { errorStr: err }); //INC: Rerenders signup with error (might do AJAX stuff later)
+        response.render("pages/login", { errorStr: err.message }); //INC: Rerenders signup with error (might do AJAX stuff later)
     }
 });
 
@@ -289,6 +290,17 @@ router.post("/search/albums", async (request, response) => {
     }
 });
 
+//Logout of the website
+router.get("/logout", async (request, response) => {
+    //Check if the user is logged in. If so, redirect to "main page" with a succesful logout message. Else redirect to "main page" without said message
+    if (request.session.userId) {
+        request.session.destroy();
+        response.render("pages/login", { logoutMsg: "Logged out" });
+    } else {
+        response.redirect("/");
+    }
+});
+
 //editRanking page for users of webstie
 router.get("/editRanking", async (request, response) => {
     if (!request.session.userId) {
@@ -299,6 +311,14 @@ router.get("/editRanking", async (request, response) => {
 });
 
 router.post("/editRanking", async (request, response) => {
+    if (!request.session.userId) {
+        response.redirect("/");
+    } else {
+    }
+});
+
+router.get("/ye", async (request, response) => {
+    response.sendFile(path.resolve("static/ye.html"));
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
