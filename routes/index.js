@@ -36,7 +36,7 @@ router.post("/loginlogout", async (request, response) => {
             //Then, check that login credentials are provided and of proper format
             //Username Checking
             if (!request.body.username) {
-                console.log("error");
+                //console.log('error');
                 throw "Username not provided";
             }
             if (typeof request.body.username != "string") {
@@ -71,7 +71,7 @@ router.post("/loginlogout", async (request, response) => {
         }
     } catch (err) {
         //Finally, if the credentials are not valid, render the signup page again, this time with an error
-        response.render("pages/login", { errorStr: err.message }); //INC: Rerenders signup with error (might do AJAX stuff later)
+        response.render("pages/login", { errorStr: err }); //INC: Rerenders signup with error (might do AJAX stuff later)
     }
 });
 
@@ -312,7 +312,7 @@ router.get("/editRanking", async (request, response) => {
 
 router.post("/editRanking", async (request, response) => {
     if (!request.session.userId) {
-        response.redirect("/");
+        response.redirect("/loginlogout");
     } else {
     }
 });
@@ -365,7 +365,7 @@ router.get("/shuffle", async (request, response) => {
     }
 });
 
-router.get("/mymterics", async (request, response) => {
+router.get("/mymetrics", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
