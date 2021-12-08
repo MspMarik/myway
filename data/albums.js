@@ -42,13 +42,18 @@ async function addAlbum(userId, albumName, artistName, rating) {
     
     let user = await getUserByID(userId);
     let currentAlbumList = user.favorites.albums;
-    for(let i = 0; i < currentAlbumList.length; i++) { //Make sure album isn't in the list already
+    let albumFound = false;
+    for(let i = 0; i < currentAlbumList.length; i++) { //Alter album rating if it's already present
         if(albumName == currentAlbumList[i].albumName && artistName == currentAlbumList[i].artistName) {
-            throw "This album is already on your list."
+            user.favorites.albums[i].rating = rating;
+            albumFound = true;
+            break;
         }
     }
 
-    user.favorites.albums.push({albumName: albumName, artistName: artistName, rating: rating});
+    if(!albumFound) {
+        user.favorites.albums.push({albumName: albumName, artistName: artistName, rating: rating});
+    }
 
     const userCollection = await users();
     const updateStatus = await userCollection.updateOne({_id: ObjID}, {$set: user})
