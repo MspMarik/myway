@@ -8,6 +8,31 @@ const axios = require("axios");
 const api_key = '72fa9d4b46d0200e977b8a920742c10a';
 const baseURL = "https://ws.audioscrobbler.com/2.0/?api_key=" + api_key + "&format=json&method=" //Remember to supply method for each function that uses this base
 
+
+
+let getYear = (content) =>{
+    let arr = content.split(" ");
+    let found = false;
+    let n = -1;
+    arr.forEach(element => {
+        if(!found){
+            if(Number.parseInt(element)){
+                n = Number.parseInt(element);
+                if(n > 1900 && n <= 2021){
+                    //console.log(n);
+                    found == true;
+                }else{
+                    n = -1;
+                }
+            }
+        }
+    });
+    return n;
+}
+
+
+
+
 //Should be a more efficient filtering function than the previous one.
 async function filterArtists(artists, filterString) {
     let filteredArtists = []; //Start with empty list (assume no artists will make it through)
@@ -100,6 +125,41 @@ async function getArtistsByTextInput(input, userTag = undefined) {
     return filteredArtists;
 }
 
+async function getSongInfo(song, artist){
+    if(!song || !artist) {
+        throw "Input not provided";
+    }
+    if(typeof song != "string" || typeof artist != "string") {
+        throw "Input must be a string";
+    }
+    let trimmedsong = song.trim();
+    let trimmedartist = artist.trim();
+    if(!trimmedsong || !trimmedartist) {
+        throw "Input cannot be whitespace";
+    }   
+    
+    ///2.0/?method=track.getInfo&api_key=YOUR_API_KEY&artist=cher&track=believe&format=json 
+    let requestURL = baseURL + `track.getInfo&track=${trimmedsong}&artist=${trimmedartist}`;
+    const {data} = await axios.get(requestURL);
+    
+    if(data.error !== undefined){
+        return 'N/A';
+    }
+    if(data === undefined || data.track.wiki === undefined || data.track.wiki.content === undefined){
+        return 'N/A';
+    }
+
+    if(trimmedartist == "Róisín Murphy"){
+        console.log(data);
+    }
+    const year = getYear(data.track.wiki.content);
+
+    if(year == -1){
+        return 'N/A';
+    }
+
+    return year;
+}
 async function getSongsByTextInput(input, userTag = undefined) {
     if(!input) {
         throw "Input not provided";
@@ -132,6 +192,40 @@ async function getSongsByTextInput(input, userTag = undefined) {
         filteredSongs = songs;
     }
     return songs;
+}
+
+
+async function getAlbumInfo(album, artist){
+    if(!album || !artist) {
+        throw "Input not provided";
+    }
+    if(typeof album != "string" || typeof artist != "string") {
+        throw "Input must be a string";
+    }
+    let trimmedalbum = album.trim();
+    let trimmedartist = artist.trim();
+    if(!trimmedalbum || !trimmedartist) {
+        throw "Input cannot be whitespace";
+    }   
+    
+    ///2.0/?method=track.getInfo&api_key=YOUR_API_KEY&artist=cher&track=believe&format=json 
+    let requestURL = baseURL + `album.getInfo&album=${trimmedalbum}&artist=${trimmedartist}`;
+    const {data} = await axios.get(requestURL);
+    
+    if(data.error !== undefined){
+        return 'N/A';
+    }
+    if(data === undefined || data.album.wiki === undefined || data.album.wiki.content === undefined){
+        return 'N/A';
+    }
+
+    const year = getYear(data.album.wiki.content);
+
+    if(year == -1){
+        return 'N/A';
+    }
+
+    return year;
 }
 
 async function getAlbumsByTextInput(input, userTag = undefined) {
@@ -168,4 +262,4 @@ async function getAlbumsByTextInput(input, userTag = undefined) {
     return filteredAlbums;
 }
 
-module.exports = {getArtistsByTextInput, getSongsByTextInput, getAlbumsByTextInput};
+module.exports = {getArtistsByTextInput, getSongsByTextInput, getAlbumsByTextInput, getSongInfo, getAlbumInfo};

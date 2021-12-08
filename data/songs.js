@@ -36,13 +36,18 @@ async function addSong(userId, songName, artistName, dislikeFlag=false) {
     
     let user = await getUserByID(userId);
     let currentSongList = user.favorites.songs;
-    for(let i = 0; i < currentSongList.length; i++) { //Make sure song isn't in the list already
+    let songFound = false;
+    for(let i = 0; i < currentSongList.length; i++) { //Alter song liking if it's already present
         if(songName == currentSongList[i].songName && artistName == currentSongList[i].artistName) {
-            throw "This song is already on your list."
+            user.favorites.songs[i].disliked = dislikeFlag;
+            songFound = true;
+            break;
         }
     }
 
-    user.favorites.songs.push({songName: songName, artistName: artistName, disliked: dislikeFlag});
+    if(!songFound) {
+        user.favorites.songs.push({songName: songName, artistName: artistName, disliked: dislikeFlag});
+    }
 
     const userCollection = await users();
     const updateStatus = await userCollection.updateOne({_id: ObjID}, {$set: user})
