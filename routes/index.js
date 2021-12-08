@@ -5,6 +5,7 @@ const userFunctions = require("../data/users");
 const lastfmFunctions = require("../data/lastfm");
 const {validUsername, validPassword} = require("../data/fieldValidations");
 
+
 //Fetch login page
 router.get("/", async (request, response) => {
     //Check if the user is logged in. If so, redirect to profile page. Else render logout page.
@@ -144,7 +145,7 @@ router.post("/signup", async (request, response) => {
 });
 
 //Main search page
-router.get("/search", async (request, response) => {
+router.get("/chooseWhatToSearch", async (request, response) => {
    if(!request.session.userId) {
        response.redirect("/");
    }
@@ -243,9 +244,16 @@ router.get("/search/artists", async (request, response) => {
             }
 
             let retrievedSongs = await lastfmFunctions.getSongsByTextInput(cleanedSearchTerm, cleanedTag);
+            //let songYear = await lastfmFunctions.getSongInfo(element.name, element.artist);
             let empty = false;
             if(retrievedSongs.length == 0) {
                 empty = true;
+            };
+            let arr = [];
+            for(let i = 0; i < retrievedSongs.length; i++){
+                let year = await lastfmFunctions.getSongInfo(retrievedSongs[i].name, retrievedSongs[i].artist);
+                arr.push(year);
+                retrievedSongs[i].release = year;
             }
 
             response.render("pages/search", {song: true, searchResults: retrievedSongs, error: empty});
@@ -293,17 +301,26 @@ router.get("/search/artists", async (request, response) => {
                 }
             }
 
-            let retrievedAlbums = await lastfmFunctions.getAlbumsByTextInput(cleanedSearchTerm, cleanedTags);
+            let retrievedAlbums = await lastfmFunctions.getAlbumsByTextInput(cleanedSearchTerm, cleanedTag);
             let empty = false;
             if(retrievedAlbums.length == 0) {
                 empty = true;
             }
 
+
+             let arr = [];
+             for(let i = 0; i < retrievedAlbums.length; i++){
+                 let year = await lastfmFunctions.getAlbumInfo(retrievedAlbums[i].name, retrievedAlbums[i].artist);
+                 arr.push(year);
+                 retrievedAlbums[i].release = year;
+            }
+
+
             response.render("pages/search", {album: true, searchResults: retrievedAlbums, error: empty});
         }
     }
     catch(err) { //TODO: Figure out how errors should be displayed on this page
-        response.render("pages/search", {album: true, searchResults: [], error: true});
+        response.render("pages/search", {album: true, searchResults: [], error: err});
     }
  });
 
