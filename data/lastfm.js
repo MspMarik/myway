@@ -109,14 +109,14 @@ async function getArtist(artistName) {
 
 async function getArtistsByTextInput(input, userTag = undefined) {
     if(!input) {
-        throw "Input not provided";
+        throw "Search term not provided";
     }
     if(typeof input != "string") {
-        throw "Input must be a string";
+        throw "Search term must be a string";
     }
     let trimmedInput = input.trim();
     if(!trimmedInput) {
-        throw "Input cannot be whitespace";
+        throw "Search term cannot be whitespace";
     }
 
     let trimmedTag;
@@ -178,14 +178,14 @@ async function getSongInfo(song, artist){
 }
 async function getSongsByTextInput(input, userTag = undefined) {
     if(!input) {
-        throw "Input not provided";
+        throw "Search term not provided";
     }
     if(typeof input != "string") {
-        throw "Input must be a string";
+        throw "Search term must be a string";
     }
     let trimmedInput = input.trim();
     if(!trimmedInput) {
-        throw "Input cannot be whitespace";
+        throw "Search term cannot be whitespace";
     }
 
     let trimmedTag;
@@ -270,14 +270,14 @@ async function getAlbumInfo(album, artist){
 
 async function getAlbumsByTextInput(input, userTag = undefined) {
     if(!input) {
-        throw "Input not provided";
+        throw "Search term not provided";
     }
     if(typeof input != "string") {
-        throw "Input must be a string";
+        throw "Search term must be a string";
     }
     let trimmedInput = input.trim();
     if(!trimmedInput) {
-        throw "Input cannot be whitespace";
+        throw "Search term cannot be whitespace";
     }
 
     let trimmedTag;
