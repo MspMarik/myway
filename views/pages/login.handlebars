@@ -3,16 +3,16 @@
 <form class = "loginForm" action = "/loginlogout" id = 'login-form' method = "POST">
     <label>
         Username:
-        <input type="text" name="username" />
+        <input type="text" id="username" name="username" />
     </label>
     <label>
         Password:
-        <input type="password" name="password" />
+        <input type="password" id="password" name="password" />
     </label>
     <button type="submit">Login!</button>
 </form>
 
-<h2>{{errorStr}}</h2>
+<div id="error">{{errorStr}}</div>
 
 <p>Not a user yet? Click <a href="/signup">here</a> to signup!</p>
 

@@ -123,6 +123,9 @@ async function loginUser(username, password) {
         throw "Username must be a string";
     }
     let trimmedUsername = username.trim().toLowerCase();
+    if(!validUsername(trimmedUsername)) {
+        throw "Username must be at least four characters long, and only contain letters and numbers.";
+    }
 
     //Password Verification
     if(!password) {
@@ -132,6 +135,9 @@ async function loginUser(username, password) {
         throw "Password must be a string";
     }
     let trimmedPassword = password.trim();
+    if(!validPassword(trimmedPassword)) {
+        throw "Password must be at least six characters long, and not contain any spaces.";
+    }
 
     const userCollection = await users();
     const user = await userCollection.findOne({username: trimmedUsername});

@@ -1,9 +1,8 @@
 //This file is intended to add some users into the database with artist, song, and album lists already filled out.
-const {createUser} = require("../data/users");
-const {addArtist} = require("../data/artists");
-const {addAlbum} = require("../data/albums");
-const {addSong} = require("../data/songs");
-
+const { createUser } = require("../data/users");
+const { addArtist } = require("../data/artists");
+const { addAlbum } = require("../data/albums");
+const { addSong } = require("../data/songs");
 
 async function populateDB() {
     //User One
@@ -12,56 +11,53 @@ async function populateDB() {
     //User Two
     let userTwo = await createUser("userTwo", "passwordTwo");
 
-    userTwo = await addArtist(userTwo, "Cher");
+    await addArtist(userTwo, "Cher");
 
-    userTwo = await addSong(userTwo, "Believe", "Cher");
+    await addSong(userTwo, "Believe", "Cher");
 
-    userTwo = await addAlbum(userTwo, "Believe", "Cher", 10);
-
+    await addAlbum(userTwo, "Believe", "Cher", 10);
 
     //User Three
     let userThree = await createUser("userThree", "passwordThree");
 
-    userThree = await addArtist(userThree, "Cher", true);
+    await addArtist(userThree, "Cher", true);
 
-    userThree = await addSong(userThree, "Believe", "Cher", true);
+    await addSong(userThree, "Believe", "Cher", true);
 
-    userThree = await addAlbum(userThree, "Believe", "Cher", 0);
-
+    await addAlbum(userThree, "Believe", "Cher", 0);
 
     //User Four
     let userFour = await createUser("userFour", "passwordFour");
 
-    userFour = await addArtist(userFour, "Smash Mouth");
-    userFour = await addArtist(userFour, "Nickleback");
-    userFour = await addArtist(userFour, "Rick Astley");
+    await addArtist(userFour, "Smash Mouth");
+    await addArtist(userFour, "Nickleback");
+    await addArtist(userFour, "Rick Astley");
 
-    userFour = await addSong(userFour, "All Star", "Smash Mouth");
-    userFour = await addSong(userFour, "Photograph", "Nickleback");
-    userFour = await addSong(userFour, "Never Gonna Give You Up", "Rick Astley");
+    await addSong(userFour, "All Star", "Smash Mouth");
+    await addSong(userFour, "Photograph", "Nickleback");
+    await addSong(userFour, "Never Gonna Give You Up", "Rick Astley");
 
-    userFour = await addAlbum(userFour, "Astro Lounge", "Smash Mouth", 10);
-    userFour = await addAlbum(userFour, "All the Right Reasons", "Nickelback", 8)
-    userFour = await addAlbum(userFour, "Whenever You Need Somebody", "Rick Astley", 9);
-
+    await addAlbum(userFour, "Astro Lounge", "Smash Mouth", 10);
+    await addAlbum(userFour, "All the Right Reasons", "Nickelback", 8);
+    await addAlbum(userFour, "Whenever You Need Somebody", "Rick Astley", 9);
 
     //User Five
     let userFive = await createUser("userFive", "passwordFive");
 
-    userFive = await addArtist(userFive, "Lil Nas X");
-    userFive = await addArtist(userFive, "Ariana Grande");
-    userFive = await addArtist(userFive, "Ludwig van Beethoven", true);
-    userFive = await addArtist(userFive, "Britney Spears");
+    await addArtist(userFive, "Lil Nas X");
+    await addArtist(userFive, "Ariana Grande");
+    await addArtist(userFive, "Ludwig van Beethoven", true);
+    await addArtist(userFive, "Britney Spears");
 
-    userFive = await addSong(userFive, "Old Town Road", "Lil Nas X", true);
-    userFive = await addSong(userFive, "Thank U, Next", "Ariana Grande", true);
-    userFive = await addSong(userFive, "Symphony No. 7 in A Major, Op. 92: II. Allegretto", "Ludwig van Beethoven");
-    userFive = await addSong(userFive, "Toxic", "Britney Spears", true);
+    await addSong(userFive, "Old Town Road", "Lil Nas X", true);
+    await addSong(userFive, "Thank U, Next", "Ariana Grande", true);
+    await addSong(userFive, "Symphony No. 7 in A Major, Op. 92: II. Allegretto", "Ludwig van Beethoven");
+    await addSong(userFive, "Toxic", "Britney Spears", true);
 
-    userFive = await addAlbum(userFive, "MONTERO", "Lil Nas X", 5);
-    userFive = await addAlbum(userFive, "Thank U, Next", "Ariana Grande", 5);
-    userFive = await addAlbum(userFive, "Beethoven Greatest Hits", "Ludwig Van Beethoven", 5);
-    userFive = await addAlbum(userFive, "In the Zone", "Britney Spears", 5);
+    await addAlbum(userFive, "MONTERO", "Lil Nas X", 5);
+    await addAlbum(userFive, "Thank U, Next", "Ariana Grande", 5);
+    await addAlbum(userFive, "Beethoven Greatest Hits", "Ludwig Van Beethoven", 5);
+    await addAlbum(userFive, "In the Zone", "Britney Spears", 5);
 }
 
 populateDB();

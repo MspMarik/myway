@@ -61,18 +61,18 @@ router.post("/loginlogout", async (request, response) => {
             }
 
             //Next, check to see if the signup credentials are valid. If they are, redirect to the user's profile page
-            try {
-                let userId = await userFunctions.loginUser(cleanedUsername, cleanedPassword);
+            // try {
+            let userId = await userFunctions.loginUser(cleanedUsername, cleanedPassword);
                 //console.log(userId);
-                request.session.userId = userId;
-                response.redirect("/");
-            } catch (err) {
-                response.render("pages/login", { errorStr: err });
-            }
+            request.session.userId = userId;
+            response.redirect("/");
+            // } catch (err) {
+            //     response.render("pages/login", { errorStr: err });
+            // }
         }
     } catch (err) {
         //Finally, if the credentials are not valid, render the signup page again, this time with an error
-        response.render("pages/login", { errorStr: err }); //INC: Rerenders signup with error (might do AJAX stuff later)
+        response.status(400).render("pages/login", {errorStr: err}); //INC: Rerenders signup with error (might do AJAX stuff later)
     }
 });
 
@@ -123,7 +123,13 @@ router.post("/signup", async (request, response) => {
             }
 
             let cleanedUsername = xss(request.body.username.trim().toLowerCase());
+            if (!validUsername(cleanedUsername)) {
+                throw "Username must be at least four characters long, and only contain letters and numbers.";
+            }
             let cleanedPassword = xss(request.body.password.trim());
+            if (!validPassword(cleanedPassword)) {
+                throw "Password must be at least six characters long, and not contain any spaces.";
+            }
 
             //Next, check to see if the login credentials are valid. If they are, redirect to the user's profile page
             let userId = await userFunctions.createUser(cleanedUsername, cleanedPassword);
@@ -133,7 +139,7 @@ router.post("/signup", async (request, response) => {
         }
     } catch (err) {
         //Finally, if the credentials are not valid, render the login page again, this time with an error
-        response.render("pages/signup", { errorStr: err }); //INC: Rerenders login with error (might do AJAX stuff later)
+        response.status(400).render("pages/signup", { errorStr: err }); //INC: Rerenders login with error (might do AJAX stuff later)
     }
 });
 
@@ -170,11 +176,14 @@ router.post("/search/artists", async (request, response) => {
             }
 
             let cleanedSearchTerm = xss(request.body.searchbox.trim());
-            let cleanedTag;
+            if(!cleanedSearchTerm) {
+                throw "Search term cannot be whitespace"
+            }
 
+            let cleanedTag;
             //Tag Checking
             if (request.body.tag) {
-                if (typeof userTag != string || !userTag.trim()) {
+                if (typeof userTag != "string" || !userTag.trim()) {
                     throw "If provided, search tag must be in the form of a non-whitespace string";
                 } else {
                     cleanedTag = xss(request.body.tag.trim());
@@ -191,7 +200,7 @@ router.post("/search/artists", async (request, response) => {
         }
     } catch (err) {
         //TODO: Figure out how errors should be displayed on this page
-        response.render("pages/search", { artist: true, searchResults: [], error: true });
+        response.render("pages/search", { artist: true, searchResults: [], error: err });
     }
 });
 
@@ -218,8 +227,11 @@ router.post("/search/songs", async (request, response) => {
             }
 
             let cleanedSearchTerm = xss(request.body.searchbox);
-            let cleanedTag;
+            if(!cleanedSearchTerm) {
+                throw "Search term cannot be whitespace"
+            }
 
+            let cleanedTag;
             //Tag Checking
             if (request.body.tag) {
                 if (typeof userTag != string || !userTag.trim()) {
@@ -234,9 +246,9 @@ router.post("/search/songs", async (request, response) => {
             let empty = false;
             if (retrievedSongs.length == 0) {
                 empty = true;
-            };
+            }
             let arr = [];
-            for(let i = 0; i < retrievedSongs.length; i++){
+            for (let i = 0; i < retrievedSongs.length; i++) {
                 let year = await lastfmFunctions.getSongInfo(retrievedSongs[i].name, retrievedSongs[i].artist);
                 arr.push(year);
                 retrievedSongs[i].release = year;
@@ -246,7 +258,7 @@ router.post("/search/songs", async (request, response) => {
         }
     } catch (err) {
         //TODO: Figure out how errors should be displayed on this page
-        response.render("pages/search", { song: true, searchResults: [], error: true });
+        response.render("pages/search", { song: true, searchResults: [], error: err });
     }
 });
 
@@ -273,8 +285,11 @@ router.post("/search/albums", async (request, response) => {
             }
 
             let cleanedSearchTerm = xss(request.body.searchbox);
-            let cleanedTag;
+            if(!cleanedSearchTerm) {
+                throw "Search term cannot be whitespace"
+            }
 
+            let cleanedTag;
             //Tag Checking
             if (request.body.tag) {
                 if (typeof userTag != string || !userTag.trim()) {
@@ -290,15 +305,14 @@ router.post("/search/albums", async (request, response) => {
                 empty = true;
             }
 
-             let arr = [];
-             for(let i = 0; i < retrievedAlbums.length; i++){
-                 let year = await lastfmFunctions.getAlbumInfo(retrievedAlbums[i].name, retrievedAlbums[i].artist);
-                 arr.push(year);
-                 retrievedAlbums[i].release = year;
+            let arr = [];
+            for (let i = 0; i < retrievedAlbums.length; i++) {
+                let year = await lastfmFunctions.getAlbumInfo(retrievedAlbums[i].name, retrievedAlbums[i].artist);
+                arr.push(year);
+                retrievedAlbums[i].release = year;
             }
 
-
-            response.render("pages/search", {album: true, searchResults: retrievedAlbums, error: empty});
+            response.render("pages/search", { album: true, searchResults: retrievedAlbums, error: empty });
         }
     } catch (err) {
         //TODO: Figure out how errors should be displayed on this page
@@ -307,23 +321,13 @@ router.post("/search/albums", async (request, response) => {
 });
 
 router.get("/myprofile", async (request, response) => {
-    if(!request.session.userId) {
+    if (!request.session.userId) {
         response.redirect("/loginlogout");
-    }else{
+    } else {
         response.render("pages/myprofile", {});
     }
 });
 
-//Logout of the website
-router.get("/logout", async (request, response) => {
-    //Check if the user is logged in. If so, redirect to "main page" with a succesful logout message. Else redirect to "main page" without said message
-    if (request.session.userId) {
-        request.session.destroy();
-        response.render("pages/login", { logoutMsg: "Logged out" });
-    } else {
-        response.redirect("/");
-    }
-});
 
 //editRanking page for users of webstie
 router.get("/editRanking", async (request, response) => {
@@ -399,8 +403,8 @@ router.get("/mymetrics", async (request, response) => {
         let userSongMetrics = await metricsFunctions.getSongDataForMetrics(request.session.userId);
         let likedData = userSongMetrics.likedTags;
         let dislikedData = userSongMetrics.dislikedTags;
-        // Google chart stuff 
-        response.render("pages/mymetrics", { userSongs: userSongs });
+
+        response.render("pages/mymetrics", { likedData: likedData, dislikedData: dislikedData });
     }
 });
 
