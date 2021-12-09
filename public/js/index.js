@@ -31,19 +31,24 @@ function drawChart() {
     console.log(likedArr);
     console.log(dislikedArr);
 
-    var data = google.visualization.arrayToDataTable(likedArr);
-    var options = {
-        title: "My Liked Songs",
-    };
-    var chart = new google.visualization.PieChart(document.getElementById("piechart1"));
-    chart.draw(data, options);
+    var data;
+    if(likedArr[0][1] != undefined) {
+        data = google.visualization.arrayToDataTable(likedArr);
+        var options = {
+            title: "My Liked Songs",
+        };
+        var chart = new google.visualization.PieChart(document.getElementById("piechart1"));
+        chart.draw(data, options);
+    }
 
-    data = google.visualization.arrayToDataTable(dislikedArr);
-    options = {
-        title: "My Liked Songs",
-    };
-    chart = new google.visualization.PieChart(document.getElementById("piechart2"));
-    chart.draw(data, options);
+    if(dislikedArr[0][1] != undefined) {
+        data = google.visualization.arrayToDataTable(dislikedArr);
+        options = {
+            title: "My Liked Songs",
+        };
+        chart = new google.visualization.PieChart(document.getElementById("piechart2"));
+        chart.draw(data, options);
+    }
 }
 
 $(function() {
@@ -106,6 +111,7 @@ $(function() {
                 errorOnPage("Username must be a string");
                 return false;
             }
+            let trimmedUsername = providedUsername.trim();
             if (!validUsername(trimmedUsername)) {
                 errorOnPage("Username must be at least four characters long, and only contain letters and numbers.");
                 return false;
@@ -120,6 +126,7 @@ $(function() {
                 errorOnPage("Password must be a string");
                 return false;
             }
+            let trimmedPassword = providedPassword.trim();
             if (!validPassword(trimmedPassword)) {
                 errorOnPage("Password must be at least six characters long, and not contain any spaces.");
                 return false;
@@ -192,7 +199,7 @@ $(function() {
                 return false;
             }
 
-            errorDiv.innerHTML = true;
+            errorDiv.innerHTML = "Signing up...";
             //TODO: Find out how to post
             let signupPOST = {
                 method: "POST",
