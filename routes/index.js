@@ -123,7 +123,13 @@ router.post("/signup", async (request, response) => {
             }
 
             let cleanedUsername = xss(request.body.username.trim().toLowerCase());
+            if (!validUsername(cleanedUsername)) {
+                throw "Username must be at least four characters long, and only contain letters and numbers.";
+            }
             let cleanedPassword = xss(request.body.password.trim());
+            if (!validPassword(cleanedPassword)) {
+                throw "Password must be at least six characters long, and not contain any spaces.";
+            }
 
             //Next, check to see if the login credentials are valid. If they are, redirect to the user's profile page
             let userId = await userFunctions.createUser(cleanedUsername, cleanedPassword);
@@ -174,7 +180,7 @@ router.post("/search/artists", async (request, response) => {
 
             //Tag Checking
             if (request.body.tag) {
-                if (typeof userTag != string || !userTag.trim()) {
+                if (typeof userTag != "string" || !userTag.trim()) {
                     throw "If provided, search tag must be in the form of a non-whitespace string";
                 } else {
                     cleanedTag = xss(request.body.tag.trim());
