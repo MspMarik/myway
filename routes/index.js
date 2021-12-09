@@ -72,7 +72,7 @@ router.post("/loginlogout", async (request, response) => {
         }
     } catch (err) {
         //Finally, if the credentials are not valid, render the signup page again, this time with an error
-        response.status(400).render("pages/login"); //INC: Rerenders signup with error (might do AJAX stuff later)
+        response.status(400).render("pages/login", {errorStr: err}); //INC: Rerenders signup with error (might do AJAX stuff later)
     }
 });
 
