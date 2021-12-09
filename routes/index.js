@@ -234,9 +234,9 @@ router.post("/search/songs", async (request, response) => {
             let empty = false;
             if (retrievedSongs.length == 0) {
                 empty = true;
-            };
+            }
             let arr = [];
-            for(let i = 0; i < retrievedSongs.length; i++){
+            for (let i = 0; i < retrievedSongs.length; i++) {
                 let year = await lastfmFunctions.getSongInfo(retrievedSongs[i].name, retrievedSongs[i].artist);
                 arr.push(year);
                 retrievedSongs[i].release = year;
@@ -290,15 +290,14 @@ router.post("/search/albums", async (request, response) => {
                 empty = true;
             }
 
-             let arr = [];
-             for(let i = 0; i < retrievedAlbums.length; i++){
-                 let year = await lastfmFunctions.getAlbumInfo(retrievedAlbums[i].name, retrievedAlbums[i].artist);
-                 arr.push(year);
-                 retrievedAlbums[i].release = year;
+            let arr = [];
+            for (let i = 0; i < retrievedAlbums.length; i++) {
+                let year = await lastfmFunctions.getAlbumInfo(retrievedAlbums[i].name, retrievedAlbums[i].artist);
+                arr.push(year);
+                retrievedAlbums[i].release = year;
             }
 
-
-            response.render("pages/search", {album: true, searchResults: retrievedAlbums, error: empty});
+            response.render("pages/search", { album: true, searchResults: retrievedAlbums, error: empty });
         }
     } catch (err) {
         //TODO: Figure out how errors should be displayed on this page
@@ -307,9 +306,9 @@ router.post("/search/albums", async (request, response) => {
 });
 
 router.get("/myprofile", async (request, response) => {
-    if(!request.session.userId) {
+    if (!request.session.userId) {
         response.redirect("/loginlogout");
-    }else{
+    } else {
         response.render("pages/myprofile", {});
     }
 });
@@ -399,8 +398,9 @@ router.get("/mymetrics", async (request, response) => {
         let userSongMetrics = await metricsFunctions.getSongDataForMetrics(request.session.userId);
         let likedData = userSongMetrics.likedTags;
         let dislikedData = userSongMetrics.dislikedTags;
-        // Google chart stuff 
-        response.render("pages/mymetrics", { userSongs: userSongs });
+
+        // Google chart stuff
+        response.render("pages/mymetrics", { likedData: likedData, dislikedData: dislikedData });
     }
 });
 
