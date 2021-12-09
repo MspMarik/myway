@@ -123,7 +123,13 @@ router.post("/signup", async (request, response) => {
             }
 
             let cleanedUsername = xss(request.body.username.trim().toLowerCase());
+            if (!validUsername(cleanedUsername)) {
+                throw "Username must be at least four characters long, and only contain letters and numbers.";
+            }
             let cleanedPassword = xss(request.body.password.trim());
+            if (!validPassword(cleanedPassword)) {
+                throw "Password must be at least six characters long, and not contain any spaces.";
+            }
 
             //Next, check to see if the login credentials are valid. If they are, redirect to the user's profile page
             let userId = await userFunctions.createUser(cleanedUsername, cleanedPassword);
@@ -174,7 +180,7 @@ router.post("/search/artists", async (request, response) => {
 
             //Tag Checking
             if (request.body.tag) {
-                if (typeof userTag != string || !userTag.trim()) {
+                if (typeof userTag != "string" || !userTag.trim()) {
                     throw "If provided, search tag must be in the form of a non-whitespace string";
                 } else {
                     cleanedTag = xss(request.body.tag.trim());
@@ -314,15 +320,15 @@ router.get("/myprofile", async (request, response) => {
 });
 
 //Logout of the website
-router.get("/logout", async (request, response) => {
-    //Check if the user is logged in. If so, redirect to "main page" with a succesful logout message. Else redirect to "main page" without said message
-    if (request.session.userId) {
-        request.session.destroy();
-        response.render("pages/login", { logoutMsg: "Logged out" });
-    } else {
-        response.redirect("/");
-    }
-});
+// router.get("/logout", async (request, response) => {
+//     //Check if the user is logged in. If so, redirect to "main page" with a succesful logout message. Else redirect to "main page" without said message
+//     if (request.session.userId) {
+//         request.session.destroy();
+//         response.render("pages/login", { logoutMsg: "Logged out" });
+//     } else {
+//         response.redirect("/");
+//     }
+// });
 
 //editRanking page for users of webstie
 router.get("/editRanking", async (request, response) => {
@@ -399,7 +405,6 @@ router.get("/mymetrics", async (request, response) => {
         let likedData = userSongMetrics.likedTags;
         let dislikedData = userSongMetrics.dislikedTags;
 
-        // Google chart stuff
         response.render("pages/mymetrics", { likedData: likedData, dislikedData: dislikedData });
     }
 });

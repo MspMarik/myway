@@ -1,6 +1,6 @@
 <h1>Search for a{{#if song}} song{{/if}}{{#if artist}}n artist{{/if}}{{#if album}}n album{{/if}}:</h1>
 
-<a href="/chooseWhatToSearch">Search for something else?</a>
+<a href="/search">Search for something else?</a>
 
 {{! ADD FORM ACTION }}
 <form class = "searchForm" action = {{#if song}}"/search/songs"{{/if}} {{#if artist}}"/search/artists"{{/if}} {{#if album}}"/search/albums"{{/if}}  id = 'search-form' method = "POST">
@@ -45,10 +45,10 @@
         </div>
     {{/each}}
 
-    <a href="/chooseWhatToSearch">Search for something else?</a>
+    <a href="/search">Search for something else?</a>
 {{/if}}
 
-    <div>
+    <div id="error">
         {{!-- <p>We're sorry but we couldn't find anything for {{searchTerm}}{{#if prodYear}} produced in {{prodYear}}{{/if}}.</p> --}}
-        <p>{{error}}</p>
+        {{error}}
     </div>

@@ -1,19 +1,19 @@
 <h1>Sign Up For <span class="specialMy">My</span> Way</h1>
 
-<div>{{errorStr}}</div>
+<div id="error">{{errorStr}}</div>
 {{! ADD FORM ACTION }}
 <form class="signupForm" action="/signup" id="signup-form" method="POST">
     <label>
         Username:
-        <input type="text" name="username" />
+        <input type="text" id="username" name="username" />
     </label>
     <label>
         Password:
-        <input type="password" name="password" />
+        <input type="password" id="password" name="password" />
     </label>
     <label>
         Retype Password:
-        <input type="password" name="password2" />
+        <input type="password" id="password2" name="password2" />
     </label>
     <button type="submit">Sign Up!</button>
 </form>
