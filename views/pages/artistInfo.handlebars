@@ -1,7 +1,13 @@
-<h1>{{artistName}}</h1>
+<h1>{{artistData.name}}</h1>
 
 <button onclick="addArtist({{artistID}})">Add to <span class="specialMy">My</span> Artists</button>
 
-{{#each socials}}
-    <a>{{this.icon}}{{this.link}}</a>
-{{/each}}
+<h2>Similar Artists</h2>
+<ul>
+    {{#each artistData.similar.artist}}
+        <li><a href="/artistinfo/{{this.name}}">{{this.name}}</a></li>
+    {{/each}}
+</ul>
+
+<h2>Artist Information</h2>
+<p>{{{artistData.bio.content}}}</p>
