@@ -48,9 +48,9 @@
     <a href="/search">Search for something else?</a>
 {{/if}}
 
-{{#if error}}
     <div id="error">
         {{!-- <p>We're sorry but we couldn't find anything for {{searchTerm}}{{#if prodYear}} produced in {{prodYear}}{{/if}}.</p> --}}
-        {{error}}
+        {{#if error}}
+            {{error}}
+        {{/if}}
     </div>
-{{/if}}

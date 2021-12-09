@@ -61,18 +61,18 @@ router.post("/loginlogout", async (request, response) => {
             }
 
             //Next, check to see if the signup credentials are valid. If they are, redirect to the user's profile page
-            try {
-                let userId = await userFunctions.loginUser(cleanedUsername, cleanedPassword);
+            // try {
+            let userId = await userFunctions.loginUser(cleanedUsername, cleanedPassword);
                 //console.log(userId);
-                request.session.userId = userId;
-                response.redirect("/");
-            } catch (err) {
-                response.render("pages/login", { errorStr: err });
-            }
+            request.session.userId = userId;
+            response.redirect("/");
+            // } catch (err) {
+            //     response.render("pages/login", { errorStr: err });
+            // }
         }
     } catch (err) {
         //Finally, if the credentials are not valid, render the signup page again, this time with an error
-        response.render("pages/login", { errorStr: err }); //INC: Rerenders signup with error (might do AJAX stuff later)
+        response.status(400).render("pages/login"); //INC: Rerenders signup with error (might do AJAX stuff later)
     }
 });
 
@@ -139,7 +139,7 @@ router.post("/signup", async (request, response) => {
         }
     } catch (err) {
         //Finally, if the credentials are not valid, render the login page again, this time with an error
-        response.render("pages/signup", { errorStr: err }); //INC: Rerenders login with error (might do AJAX stuff later)
+        response.status(400).render("pages/signup", { errorStr: err }); //INC: Rerenders login with error (might do AJAX stuff later)
     }
 });
 
@@ -176,8 +176,11 @@ router.post("/search/artists", async (request, response) => {
             }
 
             let cleanedSearchTerm = xss(request.body.searchbox.trim());
-            let cleanedTag;
+            if(!cleanedSearchTerm) {
+                throw "Search term cannot be whitespace"
+            }
 
+            let cleanedTag;
             //Tag Checking
             if (request.body.tag) {
                 if (typeof userTag != "string" || !userTag.trim()) {
@@ -197,7 +200,7 @@ router.post("/search/artists", async (request, response) => {
         }
     } catch (err) {
         //TODO: Figure out how errors should be displayed on this page
-        response.render("pages/search", { artist: true, searchResults: [], error: true });
+        response.render("pages/search", { artist: true, searchResults: [], error: err });
     }
 });
 
@@ -224,8 +227,11 @@ router.post("/search/songs", async (request, response) => {
             }
 
             let cleanedSearchTerm = xss(request.body.searchbox);
-            let cleanedTag;
+            if(!cleanedSearchTerm) {
+                throw "Search term cannot be whitespace"
+            }
 
+            let cleanedTag;
             //Tag Checking
             if (request.body.tag) {
                 if (typeof userTag != string || !userTag.trim()) {
@@ -252,7 +258,7 @@ router.post("/search/songs", async (request, response) => {
         }
     } catch (err) {
         //TODO: Figure out how errors should be displayed on this page
-        response.render("pages/search", { song: true, searchResults: [], error: true });
+        response.render("pages/search", { song: true, searchResults: [], error: err });
     }
 });
 
@@ -279,8 +285,11 @@ router.post("/search/albums", async (request, response) => {
             }
 
             let cleanedSearchTerm = xss(request.body.searchbox);
-            let cleanedTag;
+            if(!cleanedSearchTerm) {
+                throw "Search term cannot be whitespace"
+            }
 
+            let cleanedTag;
             //Tag Checking
             if (request.body.tag) {
                 if (typeof userTag != string || !userTag.trim()) {
@@ -319,16 +328,6 @@ router.get("/myprofile", async (request, response) => {
     }
 });
 
-//Logout of the website
-// router.get("/logout", async (request, response) => {
-//     //Check if the user is logged in. If so, redirect to "main page" with a succesful logout message. Else redirect to "main page" without said message
-//     if (request.session.userId) {
-//         request.session.destroy();
-//         response.render("pages/login", { logoutMsg: "Logged out" });
-//     } else {
-//         response.redirect("/");
-//     }
-// });
 
 //editRanking page for users of webstie
 router.get("/editRanking", async (request, response) => {
