@@ -72,21 +72,21 @@ $(function() {
             let providedUsername = usernameInput.value;
             if(!providedUsername) {
                 errorOnPage("Username not provided");
-                return;
+                return false;
             }
             if(typeof providedUsername != "string") {
                 errorOnPage("Username must be a string");
-                return;
+                return false;
             }
 
             let providedPassword = passwordInput.value;
             if(!providedPassword) {
                 errorOnPage("Password not provided");
-                return;
+                return false;
             }
             if(typeof providedPassword != "string") {
                 errorOnPage("Password must be a string");
-                return;
+                return false;
             }
 
             errorDiv.hidden = true;
@@ -110,11 +110,11 @@ $(function() {
             let providedUsername = usernameInput.value;
             if(!providedUsername) {
                 errorOnPage("Username not provided");
-                return;
+                return false;
             }
             if(typeof providedUsername != "string") {
                 errorOnPage("Username must be a string");
-                return;
+                return false;
             }
             let trimmedUsername = providedUsername.trim();
             if(!validUsername(trimmedUsername)) {
@@ -124,11 +124,11 @@ $(function() {
             let providedPassword = passwordInput.value;
             if(!providedPassword) {
                 errorOnPage("Password not provided");
-                return;
+                return false;
             }
             if(typeof providedPassword != "string") {
                 errorOnPage("Password must be a string");
-                return;
+                return false;
             }
             let trimmedPassword = providedPassword.trim();
             if (!validPassword(cleanedPassword)) {
@@ -138,16 +138,16 @@ $(function() {
             let providedPassword2 = password2Input.value;
             if(!providedPassword2) {
                 errorOnPage("Please repeat your password");
-                return;
+                return false;
             }
             if(typeof providedPassword != "string") {
                 errorOnPage("Repeated password must be a string");
-                return;
+                return false;
             }
             let trimmedPassword2 = providedPassword2.trim();
             if(trimmedPassword != trimmedPassword2) {
                 errorOnPage("Passwords don't match");
-                return;
+                return false;
             }
 
             errorDiv.hidden = true;
@@ -172,11 +172,11 @@ $(function() {
             let searchTerm = searchBox.value;
             if(!searchTerm) {
                 errorOnPage("Search term not provided");
-                return;
+                return false;
             }
             if(typeof request.body.searchbox != "string") {
                 errorOnPage("Search term must be a string");
-                return;
+                return false;
             }
             let trimmedSearchTerm = searchTerm.trim();
             if(search)
@@ -184,7 +184,7 @@ $(function() {
             if(year) {
                 if (typeof year != "number") {
                     errorOnPage("If provided, year should be a number");
-                    return;
+                    return false;
                 }
             }
 
@@ -198,7 +198,7 @@ $(function() {
             let searchPOST = {
                 method: "POST",
                 url: searchForm.action,
-                data: {searchbox: searchTerm, tag: tag}
+                data: {searchbox: trimmedSearchTerm, tag: tag}
             }
             $.ajax(searchPOST);
 
