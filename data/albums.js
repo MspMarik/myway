@@ -3,7 +3,7 @@ const {ObjectId} = require("mongodb");
 //const {validUserObject} = require("./fieldValidations");
 const {getUserByID} = require("./users");
 
-async function addAlbum(userId, albumName, artistName, rating) {
+async function addAlbum(userId, albumName, artistName, rating = 0) {
     if(!userId) {
         throw "User ID not provided";
     }
@@ -62,6 +62,7 @@ async function addAlbum(userId, albumName, artistName, rating) {
     }
     
     //return userId;
+    return {ok: 'Album successfully added'}
 }
 
 async function removeAlbum(userId, albumName, artistName) {
