@@ -415,6 +415,32 @@ router.get("/mymetrics", async (request, response) => {
     }
 });
 
+router.get("/artistinfo/:artistName", async (request, response) => {
+    if(!request.session.userId) {
+        response.redirect("/loginlogout");
+    }
+    else {
+        try {
+            if(!request.params.artistName) {
+                throw "Artist name not provided";
+            }
+            if(typeof request.params.artistName != "string") {
+                throw "Provided artist name not a string";
+            }
+            let cleanedName = xss(request.params.artistName.trim());
+            if(!cleanedName) {
+                throw "Artist name provided is whitespace";
+            }
+
+            let artist = await lastfmFunctions.getArtist(cleanedName);
+            response.render("pages/artistInfo", {artistData: artist});
+        }
+        catch(err) {
+            response.status(404).render("pages/404");
+        }
+    }
+});
+
 const constructorMethod = (app) => {
     app.use("/", router);
 
