@@ -44,7 +44,7 @@ function drawChart() {
     if(dislikedArr[0][1] != undefined) {
         data = google.visualization.arrayToDataTable(dislikedArr);
         options = {
-            title: "My Liked Songs",
+            title: "My Disliked Songs",
         };
         chart = new google.visualization.PieChart(document.getElementById("piechart2"));
         chart.draw(data, options);

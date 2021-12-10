@@ -365,7 +365,10 @@ router.get("/mysongs", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
-        response.render("pages/mypage", { song: "Example" });
+        let userData = await userFunctions.getUserByID(request.session.userId);
+        let likedSongs = userData.favorites.songs.filter((song) => {return !song.disliked});
+        let dislikedSongs = userData.favorites.songs.filter((song) => {return song.disliked});
+        response.render("pages/mypage", { song: "Example", liked: likedSongs, disliked: dislikedSongs });
     }
 });
 
@@ -373,7 +376,8 @@ router.get("/myalbums", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
-        response.render("pages/mypage", { album: "Example" });
+        let userData = await userFunctions.getUserByID(request.session.userId);
+        response.render("pages/mypage", { album: "Example", albumList: userData.favorites.albums });
     }
 });
 
@@ -381,7 +385,10 @@ router.get("/myartists", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
-        response.render("pages/mypage", { artist: "Example" });
+        let userData = await userFunctions.getUserByID(request.session.userId);
+        let likedArtists = userData.favorites.artists.filter((artist) => {return !artist.disliked});
+        let dislikedArtists = userData.favorites.artists.filter((artist) => {return artist.disliked});
+        response.render("pages/mypage", { artist: "Example", liked: likedArtists, disliked: dislikedArtists });
     }
 });
 
