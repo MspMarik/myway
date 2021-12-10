@@ -1,0 +1,10 @@
+<h1><span class="specialMy">My</span> Recommended Artists</h1>
+{{#if recommendations}}
+    <ul>
+    {{#each recommendations}}
+        <li><a href="/artistinfo/{{this.name}}">{{this.name}}</a></li>
+    {{/each}}
+    </ul>
+{{else}}
+    <p>We're sorry, we have no recommendations for you at the moment...</p>
+{{/if}}
