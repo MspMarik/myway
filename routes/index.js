@@ -2,12 +2,15 @@ const express = require("express");
 const router = express.Router();
 const xss = require("xss");
 const path = require("path");
+const songsFunctions = require("../data/songs");
+const albumsFunctions = require("../data/albums");
+const artistsFunctions = require("../data/artists");
 const userFunctions = require("../data/users");
 const lastfmFunctions = require("../data/lastfm");
 const metricsFunctions = require("../data/metrics");
 const { validUsername, validPassword } = require("../data/fieldValidations");
 
-//Fetch main page
+//Fetch main pa
 router.get("/", async (request, response) => {
     //Check if the user is logged in. If so, redirect to profile page. Else render logout page.
     // if(request.session.userId) {
@@ -61,18 +64,18 @@ router.post("/loginlogout", async (request, response) => {
             }
 
             //Next, check to see if the signup credentials are valid. If they are, redirect to the user's profile page
-            // try {
-            let userId = await userFunctions.loginUser(cleanedUsername, cleanedPassword);
+            try {
+                let userId = await userFunctions.loginUser(cleanedUsername, cleanedPassword);
                 //console.log(userId);
-            request.session.userId = userId;
-            response.redirect("/");
-            // } catch (err) {
-            //     response.render("pages/login", { errorStr: err });
-            // }
+                request.session.userId = userId;
+                response.redirect("/");
+            } catch (err) {
+                response.render("pages/login", { errorStr: err });
+            }
         }
     } catch (err) {
         //Finally, if the credentials are not valid, render the signup page again, this time with an error
-        response.status(400).render("pages/login", {errorStr: err}); //INC: Rerenders signup with error (might do AJAX stuff later)
+        response.render("pages/login", { errorStr: err }); //INC: Rerenders signup with error (might do AJAX stuff later)
     }
 });
 
@@ -123,13 +126,7 @@ router.post("/signup", async (request, response) => {
             }
 
             let cleanedUsername = xss(request.body.username.trim().toLowerCase());
-            if (!validUsername(cleanedUsername)) {
-                throw "Username must be at least four characters long, and only contain letters and numbers.";
-            }
             let cleanedPassword = xss(request.body.password.trim());
-            if (!validPassword(cleanedPassword)) {
-                throw "Password must be at least six characters long, and not contain any spaces.";
-            }
 
             //Next, check to see if the login credentials are valid. If they are, redirect to the user's profile page
             let userId = await userFunctions.createUser(cleanedUsername, cleanedPassword);
@@ -139,7 +136,7 @@ router.post("/signup", async (request, response) => {
         }
     } catch (err) {
         //Finally, if the credentials are not valid, render the login page again, this time with an error
-        response.status(400).render("pages/signup", { errorStr: err }); //INC: Rerenders login with error (might do AJAX stuff later)
+        response.render("pages/signup", { errorStr: err }); //INC: Rerenders login with error (might do AJAX stuff later)
     }
 });
 
@@ -176,14 +173,11 @@ router.post("/search/artists", async (request, response) => {
             }
 
             let cleanedSearchTerm = xss(request.body.searchbox.trim());
-            if(!cleanedSearchTerm) {
-                throw "Search term cannot be whitespace"
-            }
-
             let cleanedTag;
+
             //Tag Checking
             if (request.body.tag) {
-                if (typeof userTag != "string" || !userTag.trim()) {
+                if (typeof userTag != string || !userTag.trim()) {
                     throw "If provided, search tag must be in the form of a non-whitespace string";
                 } else {
                     cleanedTag = xss(request.body.tag.trim());
@@ -195,12 +189,15 @@ router.post("/search/artists", async (request, response) => {
             if (retrievedArtists.length == 0) {
                 empty = true;
             }
+            for(let i = 0; i < retrievedArtists.length; i++){
+                retrievedArtists[i].art = true;
+            }
 
             response.render("pages/search", { artist: true, searchResults: retrievedArtists, error: empty });
         }
     } catch (err) {
         //TODO: Figure out how errors should be displayed on this page
-        response.render("pages/search", { artist: true, searchResults: [], error: err });
+        response.render("pages/search", { artist: true, searchResults: [], error: true });
     }
 });
 
@@ -227,31 +224,42 @@ router.post("/search/songs", async (request, response) => {
             }
 
             let cleanedSearchTerm = xss(request.body.searchbox);
-            if(!cleanedSearchTerm) {
-                throw "Search term cannot be whitespace"
-            }
-
             let cleanedTag;
+
             //Tag Checking
             if (request.body.tag) {
-                if (typeof userTag != string || !userTag.trim()) {
+                if (typeof userTag != "string" || !userTag.trim()) {
                     throw "If provided, search tag must be in the form of a non-whitespace string";
                 } else {
                     cleanedTag = xss(request.body.tag.trim());
                 }
             }
-
+            let yep = false;
+            let cleanedYear
+            if(request.body.prodYear){
+                cleanedYear = request.body.prodYear;
+                yep = true;
+            }
             let retrievedSongs = await lastfmFunctions.getSongsByTextInput(cleanedSearchTerm, cleanedTag);
-            //let songYear = await lastfmFunctions.getSongInfo(element.name, element.artist);
             let empty = false;
             if (retrievedSongs.length == 0) {
                 empty = true;
-            }
-            let arr = [];
-            for (let i = 0; i < retrievedSongs.length; i++) {
+            };
+
+            for(let i = 0; i < retrievedSongs.length; i++){
                 let year = await lastfmFunctions.getSongInfo(retrievedSongs[i].name, retrievedSongs[i].artist);
-                arr.push(year);
-                retrievedSongs[i].release = year;
+                if(yep){
+                    if(Number.parseInt(cleanedYear) == year){
+                        retrievedSongs[i].release = year;
+                        retrievedSongs[i].song = true;
+                    }else{
+                        retrievedSongs.splice(i,1);
+                        i--;
+                    }
+                }else{
+                    retrievedSongs[i].release = year;
+                    retrievedSongs[i].song = true;
+                }
             }
 
             response.render("pages/search", { song: true, searchResults: retrievedSongs, error: empty });
@@ -285,11 +293,8 @@ router.post("/search/albums", async (request, response) => {
             }
 
             let cleanedSearchTerm = xss(request.body.searchbox);
-            if(!cleanedSearchTerm) {
-                throw "Search term cannot be whitespace"
-            }
-
             let cleanedTag;
+
             //Tag Checking
             if (request.body.tag) {
                 if (typeof userTag != string || !userTag.trim()) {
@@ -299,20 +304,39 @@ router.post("/search/albums", async (request, response) => {
                 }
             }
 
+            let yep = false;
+            let cleanedYear;
+            if(request.body.prodYear){
+                cleanedYear = request.body.prodYear;
+                yep = true;
+            }
+
             let retrievedAlbums = await lastfmFunctions.getAlbumsByTextInput(cleanedSearchTerm, cleanedTag);
             let empty = false;
             if (retrievedAlbums.length == 0) {
                 empty = true;
             }
 
-            let arr = [];
-            for (let i = 0; i < retrievedAlbums.length; i++) {
-                let year = await lastfmFunctions.getAlbumInfo(retrievedAlbums[i].name, retrievedAlbums[i].artist);
-                arr.push(year);
-                retrievedAlbums[i].release = year;
+             for(let i = 0; i < retrievedAlbums.length; i++){
+                 let year;
+                 try{
+                    year = await lastfmFunctions.getAlbumInfo(retrievedAlbums[i].name, retrievedAlbums[i].artist);
+                 }catch(e){
+                 }
+                 if(yep){
+                    if(Number.parseInt(cleanedYear) == year){
+                        retrievedAlbums[i].release = year;
+                        retrievedAlbums[i].album = true;
+                    }else{
+                        retrievedAlbums.splice(i,1);
+                        i--;
+                    }
+                }else{
+                    retrievedAlbums[i].release = year;
+                    retrievedAlbums[i].album = true;
+                }
             }
-
-            response.render("pages/search", { album: true, searchResults: retrievedAlbums, error: empty });
+            response.render("pages/search", {album: true, searchResults: retrievedAlbums, error: empty});
         }
     } catch (err) {
         //TODO: Figure out how errors should be displayed on this page
@@ -321,13 +345,23 @@ router.post("/search/albums", async (request, response) => {
 });
 
 router.get("/myprofile", async (request, response) => {
-    if (!request.session.userId) {
+    if(!request.session.userId) {
         response.redirect("/loginlogout");
-    } else {
+    }else{
         response.render("pages/myprofile", {});
     }
 });
 
+//Logout of the website
+router.get("/logout", async (request, response) => {
+    //Check if the user is logged in. If so, redirect to "main page" with a succesful logout message. Else redirect to "main page" without said message
+    if (request.session.userId) {
+        request.session.destroy();
+        response.render("pages/login", { logoutMsg: "Logged out" });
+    } else {
+        response.redirect("/");
+    }
+});
 
 //editRanking page for users of webstie
 router.get("/editRanking", async (request, response) => {
@@ -365,10 +399,7 @@ router.get("/mysongs", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
-        let userData = await userFunctions.getUserByID(request.session.userId);
-        let likedSongs = userData.favorites.songs.filter((song) => {return !song.disliked});
-        let dislikedSongs = userData.favorites.songs.filter((song) => {return song.disliked});
-        response.render("pages/mypage", { song: "Example", liked: likedSongs, disliked: dislikedSongs });
+        response.render("pages/mypage", { song: "Example" });
     }
 });
 
@@ -376,8 +407,7 @@ router.get("/myalbums", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
-        let userData = await userFunctions.getUserByID(request.session.userId);
-        response.render("pages/mypage", { album: "Example", albumList: userData.favorites.albums });
+        response.render("pages/mypage", { album: "Example" });
     }
 });
 
@@ -385,10 +415,7 @@ router.get("/myartists", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
-        let userData = await userFunctions.getUserByID(request.session.userId);
-        let likedArtists = userData.favorites.artists.filter((artist) => {return !artist.disliked});
-        let dislikedArtists = userData.favorites.artists.filter((artist) => {return artist.disliked});
-        response.render("pages/mypage", { artist: "Example", liked: likedArtists, disliked: dislikedArtists });
+        response.render("pages/mypage", { artist: "Example" });
     }
 });
 
@@ -399,47 +426,50 @@ router.get("/shuffle", async (request, response) => {
         response.render("pages/shuffle", {});
     }
 });
-
-router.get("/mymetrics", async (request, response) => {
+router.post("/search/addSong", async (request, response) => {
     if (!request.session.userId) {
-        response.redirect("/loginlogout");
+       //do nothing?
     } else {
-        // let user = userFunctions.getUserByID(request.session.userId);
-        // let userSongs = user.favorites.songs;
-        // lastfmFunctions.get;
-        let userSongMetrics = await metricsFunctions.getSongDataForMetrics(request.session.userId);
-        let likedData = userSongMetrics.likedTags;
-        let dislikedData = userSongMetrics.dislikedTags;
-
-        response.render("pages/mymetrics", { likedData: likedData, dislikedData: dislikedData });
-    }
-});
-
-router.get("/artistinfo/:artistName", async (request, response) => {
-    if(!request.session.userId) {
-        response.redirect("/loginlogout");
-    }
-    else {
-        try {
-            if(!request.params.artistName) {
-                throw "Artist name not provided";
-            }
-            if(typeof request.params.artistName != "string") {
-                throw "Provided artist name not a string";
-            }
-            let cleanedName = xss(request.params.artistName.trim());
-            if(!cleanedName) {
-                throw "Artist name provided is whitespace";
-            }
-
-            let artist = await lastfmFunctions.getArtist(cleanedName);
-            response.render("pages/artistInfo", {artistData: artist});
-        }
-        catch(err) {
-            response.status(404).render("pages/404");
+        let cleanSongName = request.body.songName;
+        let cleanArtistName = request.body.artistName;
+        let addData = await songsFunctions.addSong(request.session.userId,cleanSongName, cleanArtistName);
+        if(addData.ok){
+            console.log(addData.ok);
+        }else{
+            console.log("something is amuck");
         }
     }
 });
+
+router.post("/search/addAlbum", async (request, response) => {
+    if (!request.session.userId) {
+       //do nothing?
+    } else {
+        let cleanAlbumName = request.body.albumName;
+        let cleanArtistName = request.body.artistName;
+        let addData = await albumsFunctions.addAlbum(request.session.userId,cleanAlbumName, cleanArtistName);
+        if(addData.ok){
+            console.log(addData.ok);
+        }else{
+            console.log("something is amuck");
+        }
+    }
+});
+
+router.post("/search/addArtist", async (request, response) => {
+    if (!request.session.userId) {
+       //do nothing?
+    } else {
+        let cleanArtistName = request.body.artistName;
+        let addData = await artistsFunctions.addArtist(request.session.userId, cleanArtistName);
+        if(addData.ok){
+            console.log(addData.ok);
+        }else{
+            console.log("something is amuck");
+        }
+    }
+});
+
 
 const constructorMethod = (app) => {
     app.use("/", router);
