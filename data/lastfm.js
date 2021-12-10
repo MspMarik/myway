@@ -111,7 +111,10 @@ async function getArtistsByTextInput(input, userTag = undefined) {
         trimmedTag = userTag.trim();
     } 
 
-    let requestURL = baseURL + `artist.search&artist=${trimmedInput}&limit=10`; //TODO: Change the limit when filter isn't being used
+    let requestURL = baseURL + `artist.search&artist=${trimmedInput}`;
+    if(userTag) { //Limits returned results to 10 when using filter to prevent overuse of API
+        requestURL += "&limit=10";
+    }
     const {data} = await axios.get(requestURL);
     const artists = data.results.artistmatches.artist;
 
@@ -180,7 +183,10 @@ async function getSongsByTextInput(input, userTag = undefined) {
         trimmedTag = userTag.trim();
     } 
 
-    let requestURL = baseURL + `track.search&track=${trimmedInput}&limit=10`;
+    let requestURL = baseURL + `track.search&track=${trimmedInput}`;
+    if(userTag) { //Limits returned results to 10 when using filter to prevent overuse of API
+        requestURL += "&limit=10";
+    }
     const {data} = await axios.get(requestURL);
     const songs = data.results.trackmatches.track;
 
@@ -191,7 +197,7 @@ async function getSongsByTextInput(input, userTag = undefined) {
     else {
         filteredSongs = songs;
     }
-    return songs;
+    return filteredSongs;
 }
 
 async function getSongTags(songName, artistName) {
@@ -272,7 +278,10 @@ async function getAlbumsByTextInput(input, userTag = undefined) {
         trimmedTag = userTag.trim();
     } 
 
-    let requestURL = baseURL + `album.search&album=${trimmedInput}&limit=10`;
+    let requestURL = baseURL + `album.search&album=${trimmedInput}`;
+    if(userTag) { //Limits returned results to 10 when using filter to prevent overuse of API
+        requestURL += "&limit=10";
+    }
     const {data} = await axios.get(requestURL);
     const albums = data.results.albummatches.album;
 
