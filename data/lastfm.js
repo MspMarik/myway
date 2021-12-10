@@ -53,6 +53,30 @@ async function filterArtists(artists, filterString) {
     return filteredArtists;
 }
 
+//Used when multiple tags are being used
+async function filterArtistsForRecommendations(artists, filters) {
+    let filteredArtists = []; //Start with empty list (assume no artists will make it through)
+    for(let i = 0; i < artists.length; i++) {
+        let artistInfo = await axios.get(baseURL + `artist.getInfo&artist=${artists[i].name}`);
+        let tagsList = artistInfo.data.artist.tags.tag;
+        let filteringMap = new Map();
+        for(let j = 0; j < tagsList.length; j++) { //For each tag the artist has, put it in the map
+            filteringMap.set(tagsList[j].name, true);
+        }
+        let tagPresent = false;
+        for(let j = 0; j < filters.length; j++) { //Attempt to fetch each tag present in the filter criteria
+            tagPresent = filteringMap.get(filters[j]);
+            if(tagPresent) { //If a tag is present, add the artist into the collection
+                break;
+            }
+        }
+        if(tagPresent) { //If at least one tag is present (tagPresent became true), add the artist to the filtered list
+            filteredArtists.push(artists[i]);
+        }
+    }
+    return filteredArtists;
+}
+
 async function filterSongs(songs, filterString) {
     let filteredSongs = []; //Start with empty list (assume no songs will make it through)
     for(let i = 0; i < songs.length; i++) {
@@ -107,6 +131,14 @@ async function getArtist(artistName) {
     return artistInfo.data.artist;
 }
 
+async function getArtistsForRecommendations() {
+    let pageNumber = Math.floor(Math.random()*2 + 1); //Used to vary the recommendations
+    let requestURL = baseURL + `chart.getTopArtists&page=${pageNumber}`;
+    let {data} = await axios.get(requestURL);
+    let artists = data.results.artists.artist;
+    return artists;
+}
+
 async function getArtistsByTextInput(input, userTag = undefined) {
     if(!input) {
         throw "Search term not provided";
@@ -139,6 +171,21 @@ async function getArtistsByTextInput(input, userTag = undefined) {
         filteredArtists = artists;
     }
     return filteredArtists;
+}
+
+async function getArtistTags(artistName) {
+    if(!artistName) {
+        throw "Artist name not provided";
+    }
+    if(typeof artistName != "string") {
+        throw "Artist name must be a string";
+    }
+    if(!artistName.trim()) {
+        throw "Artist name cannot be whitespace";
+    }
+
+    let artistInfo = await axios.get(baseURL + `artist.getInfo&artist=${artistName}`);
+    return artistInfo.data.track.tags.tag.map(tagData => tagData.name);
 }
 
 async function getSongInfo(song, artist){
@@ -207,7 +254,7 @@ async function getSongsByTextInput(input, userTag = undefined) {
     else {
         filteredSongs = songs;
     }
-    return songs;
+    return filteredSongs;
 }
 
 async function getSongTags(songName, artistName) {
@@ -302,4 +349,4 @@ async function getAlbumsByTextInput(input, userTag = undefined) {
     return filteredAlbums;
 }
 
-module.exports = {getArtist, getArtistsByTextInput, getSongsByTextInput, getAlbumsByTextInput, getSongInfo, getSongTags, getAlbumInfo};
+module.exports = {getArtist, getArtistsForRecommendations, filterArtistsForRecommendations, getArtistsByTextInput, getArtistTags, getSongsByTextInput, getAlbumsByTextInput, getSongInfo, getSongTags, getAlbumInfo};

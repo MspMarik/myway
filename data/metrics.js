@@ -1,11 +1,10 @@
 //This file contains all the functions for calculating metrics data
 const {getUserByID} = require("./users");
-const {getSongTags} = require("./lastfm");
+const {getArtistsForRecommendations, filterArtistsForRecommendations, getArtistTags, getSongTags} = require("./lastfm");
 
 function countTags(listOfTags) {
     let tagsObject = {};
     for(let i = 0; i < listOfTags.length; i++) {
-        //console.log(listOfTags[i]);
         if(!tagsObject[listOfTags[i]]) {
             tagsObject[listOfTags[i]] = 1;
         }
@@ -42,4 +41,28 @@ async function getSongDataForMetrics(userId) {
     return countObject
 }
 
-module.exports = {getSongDataForMetrics};
+async function getRecommendations(userId) {
+    let user = await getUserByID(userId);
+    let artistList = user.favorites.artists;
+    let tagsList = [];
+    let topArtists = await getArtistsForRecommendations();
+    for(let i = 0; i < artistList.length; i++) {
+        let artistTags = await getArtistTags(artistList[i].artistName);
+        if(!artistList[i].disliked) {
+            tagsList.concat(artistTags);
+        }
+    }
+    let countedList = countTags(tagsList);
+    countedList.shift(); //Removes the labels put there for the metrics
+    let tagAvgOccurence = 0; 
+    for(let i = 0; i < countedList.length; i++) {
+        tagAvgOccurence += countedList[i][1];
+    }
+    tagAvgOccurence /= countedList.length;
+    countedList = countedList.filter(tagCounter => {return tagCounter[1] >= tagAvgOccurence}) //Keep tag only if the tag is present higher or equal to average
+    let filteringTags = countedList.map(tagCounter => tagCounter[0]);
+    let recommendationList = filterArtistsForRecommendations(topArtists, filteringTags);
+    return recommendationList;
+}
+
+module.exports = {getSongDataForMetrics, getRecommendations};

@@ -434,6 +434,24 @@ router.get("/artistinfo/:artistName", async (request, response) => {
     }
 });
 
+router.get("/myrecommendedartists", async (request, response) => {
+    if(!request.session.userId) {
+        response.redirect("/loginlogout");
+    }
+    else {
+        let recs;
+        if(request.session.cachedRecommendations) { //Getting recommendations is pretty expensive, so cache it once per session
+            recs = await metricsFunctions.getRecommendations(request.session.userId);
+            console.log(recs);
+            request.session.cachedRecommendations = recs;
+        }
+        else {
+            recs = request.session.cachedRecommendations;
+        }
+        response.render("pages/myrec", {recommendations: recs})
+    }
+});
+
 const constructorMethod = (app) => {
     app.use("/", router);
 
