@@ -1,5 +1,3 @@
-//TODO: Filter using a single string, and not an array of them 
-
 //This file contains all the functions required to get the artists, songs, and albums by lastfm
 
 const axios = require("axios");
@@ -57,21 +55,26 @@ async function filterArtists(artists, filterString) {
 async function filterArtistsForRecommendations(artists, filters) {
     let filteredArtists = []; //Start with empty list (assume no artists will make it through)
     for(let i = 0; i < artists.length; i++) {
-        let artistInfo = await axios.get(baseURL + `artist.getInfo&artist=${artists[i].name}`);
-        let tagsList = artistInfo.data.artist.tags.tag;
-        let filteringMap = new Map();
-        for(let j = 0; j < tagsList.length; j++) { //For each tag the artist has, put it in the map
-            filteringMap.set(tagsList[j].name, true);
-        }
-        let tagPresent = false;
-        for(let j = 0; j < filters.length; j++) { //Attempt to fetch each tag present in the filter criteria
-            tagPresent = filteringMap.get(filters[j]);
-            if(tagPresent) { //If a tag is present, add the artist into the collection
-                break;
+        try {
+            let artistInfo = await axios.get(baseURL + `artist.getInfo&artist=${artists[i].name}`);
+            let tagsList = artistInfo.data.artist.tags.tag;
+            let filteringMap = new Map();
+            for(let j = 0; j < tagsList.length; j++) { //For each tag the artist has, put it in the map
+                filteringMap.set(tagsList[j].name, true);
+            }
+            let tagPresent = false;
+            for(let j = 0; j < filters.length; j++) { //Attempt to fetch each tag present in the filter criteria
+                tagPresent = filteringMap.get(filters[j]);
+                if(tagPresent) { //If a tag is present, add the artist into the collection
+                    break;
+                }
+            }
+            if(tagPresent) { //If at least one tag is present (tagPresent became true), add the artist to the filtered list
+                filteredArtists.push(artists[i]);
             }
         }
-        if(tagPresent) { //If at least one tag is present (tagPresent became true), add the artist to the filtered list
-            filteredArtists.push(artists[i]);
+        catch(err) {
+            console.log(err);
         }
     }
     return filteredArtists;
@@ -135,7 +138,7 @@ async function getArtistsForRecommendations() {
     let pageNumber = Math.floor(Math.random()*2 + 1); //Used to vary the recommendations
     let requestURL = baseURL + `chart.getTopArtists&page=${pageNumber}`;
     let {data} = await axios.get(requestURL);
-    let artists = data.results.artists.artist;
+    let artists = data.artists.artist;
     return artists;
 }
 
@@ -188,7 +191,7 @@ async function getArtistTags(artistName) {
     }
 
     let artistInfo = await axios.get(baseURL + `artist.getInfo&artist=${artistName}`);
-    return artistInfo.data.track.tags.tag.map(tagData => tagData.name);
+    return artistInfo.data.artist.tags.tag.map(tagData => tagData.name);
 }
 
 async function getSongInfo(song, artist){

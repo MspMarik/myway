@@ -447,9 +447,8 @@ router.get("/myrecommendedartists", async (request, response) => {
     }
     else {
         let recs;
-        if(request.session.cachedRecommendations) { //Getting recommendations is pretty expensive, so cache it once per session
+        if(!request.session.cachedRecommendations) { //Getting recommendations is pretty expensive, so cache it once per session
             recs = await metricsFunctions.getRecommendations(request.session.userId);
-            console.log(recs);
             request.session.cachedRecommendations = recs;
         }
         else {

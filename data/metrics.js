@@ -46,22 +46,22 @@ async function getRecommendations(userId) {
     let artistList = user.favorites.artists;
     let tagsList = [];
     let topArtists = await getArtistsForRecommendations();
-    for(let i = 0; i < artistList.length; i++) {
+    for(let i = 0; i < artistList.length; i++) { //Get all the tags from the user's liked artists
         let artistTags = await getArtistTags(artistList[i].artistName);
         if(!artistList[i].disliked) {
-            tagsList.concat(artistTags);
+            tagsList = tagsList.concat(artistTags);
         }
     }
     let countedList = countTags(tagsList);
     countedList.shift(); //Removes the labels put there for the metrics
-    let tagAvgOccurence = 0; 
+    let tagAvgOccurence = 0; //Get the average number of times a tag occurs
     for(let i = 0; i < countedList.length; i++) {
         tagAvgOccurence += countedList[i][1];
     }
     tagAvgOccurence /= countedList.length;
-    countedList = countedList.filter(tagCounter => {return tagCounter[1] >= tagAvgOccurence}) //Keep tag only if the tag is present higher or equal to average
-    let filteringTags = countedList.map(tagCounter => tagCounter[0]);
-    let recommendationList = filterArtistsForRecommendations(topArtists, filteringTags);
+    countedList = countedList.filter(tagCounter => {return tagCounter[1] >= tagAvgOccurence}) //Keep tag only if the number of times the tag appears is higher than or equal to the average number of times any tag appears
+    let filteringTags = countedList.map(tagCounter => tagCounter[0]); //Remove the numbers from the tag names
+    let recommendationList = await filterArtistsForRecommendations(topArtists, filteringTags);
     return recommendationList;
 }
 
