@@ -24,14 +24,30 @@
             {{! might need some tweaking based on variable names }}
             <span>{{this.name}}: {{this.release}}</span>
             {{!-- <span>{{this.artist}}</span> --}}
-            {{#if album}}
-                <span>{{this.release}}: {{this.release}}</span>
-            {{/if}}
-            {{#if song}}
-                <span>{{this.release}}</span>
-            {{/if}}
-            <button id="add" onclick="add{{#if song}}Song({{this.song}}){{/if}}{{#if artist}}Artist({{this.name}}){{/if}}{{#if album}}Album({{albumID}}){{/if}}">&#10133;</button>
+            {{!-- <button id="add" onclick="add{{#if song}}Song({{this}}){{/if}}{{#if artist}}Artist({{this}}){{/if}}{{#if album}}Album({{albumID}}){{/if}}">&#10133;</button> --}}
             {{!-- once added made plus emoji into check emoji --}}
+            {{#if this.song}}
+            <form class = "addForm" action = "/search/addSong" id = "add-form" method = "POST">
+                <input type="text" name = "songName" value ="{{this.name}}" hidden>
+                <input type="text" name = "artistName" value ="{{this.artist}}" hidden>
+                <button type="submit" id="submitAdd" name="submitAdd">&#10133;</button>
+            </form>
+            {{/if}}
+            {{#if this.album}}
+            <form class = "addForm" action = "/search/addAlbum" id = "add-form" method = "POST">
+                <input type="text" name = "albumName" value ="{{this.name}}" hidden>
+                <input type="text" name = "artistName" value ="{{this.artist}}" hidden>
+                <button type="submit" id="submitAdd" name="submitAdd">&#10133;</button>
+            </form>
+            {{/if}}
+            {{#if this.art}}
+            <form class = "addForm" action = "/search/addArtist" id = "add-form" method = "POST">
+                <input type="text" name = "artistName" value ="{{this.name}}" hidden>
+                <button type="submit" id="submitAdd" name="submitAdd">&#10133;</button>
+            </form>
+            {{/if}}
+
+
         </div>
         <div id="album{{this.albumID}}" hidden>
             <h3>{{this.albumName}} by {{this.artistName}}</h3>
@@ -48,9 +64,7 @@
     <a href="/search">Search for something else?</a>
 {{/if}}
 
-  <div id="error">
-      {{!-- <p>We're sorry but we couldn't find anything for {{searchTerm}}{{#if prodYear}} produced in {{prodYear}}{{/if}}.</p> --}}
-      {{#if error}}
-          {{error}}
-      {{/if}}
-  </div>
+    <div>
+        {{!-- <p>We're sorry but we couldn't find anything for {{searchTerm}}{{#if prodYear}} produced in {{prodYear}}{{/if}}.</p> --}}
+        <p>{{error}}</p>
+    </div>
