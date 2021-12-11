@@ -1,18 +1,19 @@
-<h1>Login to <span class="specialMy">My</span> Way</h1>
+<h1>Login</h1>
 {{! ADD FORM ACTION }}
-<form class = "loginForm" action = "/loginlogout" id = 'login-form' method = "POST">
-    <label>
-        Username:
-        <input type="text" id="username" name="username" />
-    </label>
-    <label>
-        Password:
-        <input type="password" id="password" name="password" />
-    </label>
-    <button type="submit">Login!</button>
-</form>
+<div id="lbigDiv"><div id="loginDiv"><form class="loginForm" action="/loginlogout" id="login-form" method="POST">
+            <label>
+                Username:
+                <input type="text" id="username" name="username" />
+            </label>
+            <br />
+            <label>
+                Password:
+                <input type="password" id="password" name="password" />
+            </label>
+            <br />
+            <button type="submit">Login!</button>
+        </form></div>
 
-<div id="error">{{errorStr}}</div>
+    <div id="error">{{errorStr}}</div>
 
-<p>Not a user yet? Click <a href="/signup">here</a> to signup!</p>
-
+    <p id="newUserClick">Not a user yet? Click <a href="/signup">here</a> to signup!</p></div>
