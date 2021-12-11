@@ -152,20 +152,69 @@ div {
 #loginDiv {
     padding-top: 30px;
     font-size: 30px;
+    color: #2c37a1;
+    font-family: "Chivo", sans-serif;
+    font-style: italic;
 }
 
 #newUserClick {
-    color: red;
+    color: #646eca;
     font-family: "Mulish", sans-serif;
-}
-#lbigDiv {
-    background-color: white;
-    text-align: center;
-    width: 600px;
-    height: 600px;
-    margin: auto;
+    font-size: 20px;
+    font-weight: 700;
 }
 
-#username {
-    height: 20px;
+#lbigDiv {
+    background-color: #ffecba;
+    text-align: center;
+    width: 500px;
+    height: 300px;
+    margin: auto;
+    position: relative;
+    border-radius: 25px;
+}
+
+#username,
+#password {
+    height: 25px;
+    font-family: "Chivo", sans-serif;
+    font-style: italic;
+    color: #2c37a1;
+    border-color: #646eca;
+    border-style: solid;
+    font-size: 20px;
+}
+
+#loginLogo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.yelink {
+    display: flex;
+    flex-direction: column-reverse;
+    flex-wrap: wrap-reverse;
+    justify-content: space-between;
+    align-items: baseline;
+    align-content: stretch;
+}
+
+#here {
+    color: #646eca;
+    font-style: italic;
+}
+
+#here:hover {
+    color: #2c37a1;
+}
+
+#logButt {
+    font-family: "Chivo", sans-serif;
+    font-style: italic;
+    background-color: #2c37a1;
+    color: white;
+    border-radius: 5px;
+    padding: 5px 20px 5px 20px;
+    margin-top: 10px;
 }
