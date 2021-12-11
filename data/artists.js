@@ -49,7 +49,7 @@ async function addArtist(userId, artistName, dislikeFlag=false) {
     }
     
     //return user;
-    return {ok: 'Album successfully added'}
+    return {ok: 'Artist successfully added'}
 }
 
 async function removeArtist(userId, artistName) {
