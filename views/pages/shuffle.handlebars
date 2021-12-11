@@ -3,17 +3,19 @@
 <p>Choose from the options below and find a song or artist you may not have heard from before.</p>
 
 {{! ADD FORM ACTION }}
-<form>
+<form id = "shuffleForm">
     <label for="songOrArtist">Song or Artist?</label>
     <select id="songOrArtist" name="songOrArtist">
-        <option value="song">Song</option>
-        <option value="artist">Artist</option>
+        <option value="song" id = "song">Song</option>
+        <option value="artist" id = "artist">Artist</option>
     </select>
     <label for="tag">Tag</label>
     <input type="text" name="tag" id="tag" />
 </form>
+<div id = "add"></div>
+<ul id = "shuffleList" hidden></ul>
 
-{{#if shuffleResult}}
+{{!-- {{#if shuffleResult}}
     {{#if shuffleResult.song}}
         <h3>Your shuffled song:</h3>
         <p>{{shuffleResult.songName}}</p>
@@ -24,4 +26,5 @@
         <h3>Your shuffled artist:</h3>
         <p>{{shuffleResult.artistName}}</p>
     {{/if}}
-{{/if}}
+{{/if}} --}}
+<script src="/public/js/shuffleScript.js"></script>

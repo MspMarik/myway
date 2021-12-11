@@ -574,6 +574,64 @@ router.get("/myrecommendedartists", async (request, response) => {
     }
 });
 
+router.post("/removeSong", async (request, response) =>{
+    if (!request.session.userId) {
+        //do nothing?
+     } else {
+         let cleanSongName = request.body.songName;
+         let cleanArtistName = request.body.artistName;
+         let addData = await songsFunctions.removeSong(request.session.userId,cleanSongName, cleanArtistName);
+         if(addData.ok){
+             console.log(addData.ok);
+             response.redirect("/mysongs")
+         }else{
+             console.log("something is amuck");
+         }
+     }
+});
+
+router.post("/removeArtist", async (request, response) =>{
+    if (!request.session.userId) {
+        //do nothing?
+     } else {
+         let cleanArtistName = request.body.artistName;
+         let addData = await artistsFunctions.removeArtist(request.session.userId, cleanArtistName);
+         if(addData.ok){
+             console.log(addData.ok);
+             response.redirect("/myartists")
+         }else{
+             console.log("something is amuck");
+         }
+     }
+});
+
+router.post("/removeAlbum", async (request, response) =>{
+    if (!request.session.userId) {
+        //do nothing?
+     } else {
+         let cleanAlbumName = request.body.albumName;
+         let cleanArtistName = request.body.artistName;
+         let addData = await albumsFunctions.removeAlbum(request.session.userId,cleanAlbumName, cleanArtistName);
+         if(addData.ok){
+             console.log(addData.ok);
+             response.redirect("/myalbums")
+         }else{
+             console.log("something is amuck");
+         }
+     }
+});
+
+// router.get("/reccomend", async (request, response) => {
+//     if (!request.session.userId) {
+//         response.redirect("/loginlogout");
+//     } else {
+//         let userSongMetrics = await metricsFunctions.getSongDataForMetrics(request.session.userId);
+//         let likedData = userSongMetrics.likedTags;
+//         let dislikedData = userSongMetrics.dislikedTags;
+//         response.render("pages/mymetrics", { likedData: likedData, dislikedData: dislikedData });
+//     }
+// });
+
 const constructorMethod = (app) => {
     app.use("/", router);
 

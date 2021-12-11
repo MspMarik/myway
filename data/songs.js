@@ -107,6 +107,7 @@ async function removeSong(userId, songName, artistName) {
     }
     
     //return user;
+    return {ok: "Song successfully deleted"};
 }
 
 module.exports = {addSong, removeSong};
