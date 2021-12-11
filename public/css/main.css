@@ -14,7 +14,7 @@ h2 {
     color: #ffecba;
 }
 
-/* header {
+header {
     text-align: center;
 } */
 
@@ -45,12 +45,14 @@ li {
     display: inline;
 }
 
-/* ul {
+ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
     
-} */
+#homeBar {
+    text-align: center;
+}
 
 a:link {
     text-decoration: none;

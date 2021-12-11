@@ -29,13 +29,18 @@ async function addArtist(userId, artistName, dislikeFlag=false) {
     
     let user = await getUserByID(userId);
     let currentArtistList = user.favorites.artists;
-    for(let i = 0; i < currentArtistList.length; i++) { //Make sure artist isn't in the list already
-        if(artistName == currentArtistList[i].artistName) { //TODO: If the user wants to change artist to liked or disliked, still throw, or just take alternate action?
-            throw "This artist is already on your list."
+    let artistFound = false;
+    for(let i = 0; i < currentArtistList.length; i++) { //Alter album liking if it's already present
+        if(artistName == currentArtistList[i].artistName) {
+            user.favorites.artists[i].disliked = dislikeFlag;
+            artistFound = true;
+            break;
         }
     }
 
-    user.favorites.artists.push({artistName: artistName, disliked: dislikeFlag});
+    if(!artistFound) {
+        user.favorites.artists.push({artistName: artistName, disliked: dislikeFlag});
+    }
 
     const userCollection = await users();
     const updateStatus = await userCollection.updateOne({_id: ObjID}, {$set: user})
@@ -44,6 +49,7 @@ async function addArtist(userId, artistName, dislikeFlag=false) {
     }
     
     //return user;
+    return {ok: 'Artist successfully added'}
 }
 
 async function removeArtist(userId, artistName) {

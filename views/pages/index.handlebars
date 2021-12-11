@@ -2,67 +2,58 @@
 
 <div>
     <h2>What would you like to do?</h2>
-    <ul id="indexBar"><li><a href="/myprofile"><span class="specialMy">My</span> Profile</a></li>
-        <li> <a href="/mysongs"><span class="specialMy">My</span> Songs</a></li>
-        <li>
-            <a href="/myartists"><span class="specialMy">My</span> Artists</a>
-        </li>
-        <li>
-            <a href="/myalbums"><span class="specialMy">My</span> Albums</a>
-        </li>
-        <li>
-            <a href="/mymetrics"><span class="specialMy">My</span> Metrics</a>
-        </li>
-        <li>
-            <a href="/chooseWhatToSearch">Search</a>
-        </li>
-    </ul>
+    <ul id:"indexBar"><li><a href="/myprofile"><span class="specialMy">My</span> Profile</a></li>
+        <li><a href="/mysongs"><span class="specialMy">My</span> Songs</a></li>
+        <li><a href="/myartists"><span class="specialMy">My</span> Artists</a></li>
+        <li><a href="/myalbums"><span class="specialMy">My</span> Albums</a></li>
+        <li><a href="/mymetrics"><span class="specialMy">My</span> Metrics</a></li>
+        <li><a href="/search">Search</a></li></ul>
 </div>
+    <h2>Here's some stuff the creators of <span id="creators">My Way</span> recommend!</h2>
 
-<div class="creatorRecc">
-    <h2>Here's some stuff the creators of My Way reccomend!</h2>
-    <div>
+<div class="flex-container">
+    <div class="flex-child mark">
         {{! these elements side by side }}
-        <img class="200pxwide" src="/static/creator_recc_imgs/igor.jpg" alt="IGOR by Tyler, The Creator" />
+        <img class="creatPic" src="/public/creator_recc_imgs/igor.jpg" alt="IGOR by Tyler, The Creator" height=300px width=300px />
         <p>
             {{! bold this please }}
-            <span class="bold">Album</span>
+            <span id="songSpan"><span id=myCreators>My</span> Album</span>
             <br />
             IGOR
             <br />
             Tyler, The Creator
         </p>
     </div>
-    <div>
+    <div class="flex-child bri">
         {{! these elements side by side }}
-        <img class="200pxwide" src="/static/creator_recc_imgs/havemercy.png" alt="Have Mercy by Chlöe" />
+        <img class="creatPic" src="/public/creator_recc_imgs/havemercy.png" alt="Have Mercy by Chlöe" height=300px width=300px />
         <p>
             {{! bold this please }}
-            <span class="bold">Song</span>
+            <span id="songSpan"><span id=myCreators>My</span> Song</span>
             <br />
             Have Mercy
             <br />
             Chlöe
         </p>
     </div>
-    <div>
+    <div class="flex-child walker">
         {{! these elements side by side }}
-        <img class="200pxwide" src="/static/creator_recc_imgs/wakeoftheflood.jpg" alt="Wake of the Flood by The Grateful Dead" />
+        <img class="creatPic" src="/public/creator_recc_imgs/wakeoftheflood.jpg" alt="Wake of the Flood by The Grateful Dead" height=300px width=300px />
         <p>
             {{! bold this please }}
-            <span class="bold">Song</span>
+            <span id="songSpan"><span id=myCreators>My</span> Song</span>
             <br />
             Eyes of the World
             <br />
             The Grateful Dead
         </p>
     </div>
-    <div>
+    <div class="flex-child zane">
         {{! these elements side by side }}
-        <img class="200pxwide" src="/static/creator_recc_imgs/renegade.jpg" alt="Renegade by Styx" />
+        <img class="creatPic" src="/public/creator_recc_imgs/renegade.jpg" alt="Renegade by Styx" height=300px width=300px/>
         <p>
             {{! bold this please }}
-            <span class="bold">Song</span>
+            <span id="songSpan"><span id=myCreators>My</span> Song</span>
             <br />
             Renegade
             <br />

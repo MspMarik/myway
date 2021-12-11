@@ -1,30 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@600&display=swap" rel="stylesheet">        <meta charset="utf-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Mulish:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+        <meta charset="utf-8" />
         <title>{{title}}</title>
-         <link rel="stylesheet" href="/public/css/main.css" /> 
+        <link rel="stylesheet" href="/public/css/main.css" /> 
+        <link rel="stylesheet" href="/public/css/yeLink.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     </head>
     <body>
         <header>
-            {{! make all elements below (except login/logout) float left }}
-            {{!-- <img src="/static/MY_WAY_logos/record_w_text.png" alt="My Way Logo With Text" class="topnavLogo" /> --}}
-            <ul id="navBar"><a href="/index">Home</a>
-            <li><a href="/myprofile"><span class="specialMy">My</span> Profile</a></li>
-            <li><a href="/mysongs"><span class="specialMy">My</span> Songs</a></li>
-            <li><a href="/myartists"><span class="specialMy">My</span> Artists</a></li>
-            <li><a href="/myalbums"><span class="specialMy">My</span> Albums</a></li>
-            <li><a href="/mymetrics"><span class="specialMy">My</span> Metrics</a></li>
-            <li><a href="/search">Search</a></li>
-            {{! make login/logout link float right }}
-            <li id=logB ><a href="/loginlogout">Login/Logout</a></li></ul>    
-
+                <ul id="navbar"><li><a href="/">Home</a></li>
+                <li><a href="/myprofile"><span class="specialMy">My</span> Profile</a></li>
+                <li><a href="/mysongs"><span class="specialMy">My</span> Songs</a></li>
+                <li><a href="/myartists"><span class="specialMy">My</span> Artists</a></li>
+                <li><a href="/myalbums"><span class="specialMy">My</span> Albums</a></li>
+                <li><a href="/mymetrics"><span class="specialMy">My</span> Metrics</a></li>
+                <li><a href="/myrecommendedartists"><span class="specialMy">My</span> Recommendations</a></li>
+                <li><a href="/search">Search</a></li>
+                <li><a href="/loginlogout">Login/Logout</a></li></ul>
+                {{! make all elements below (except login/logout) float left }}
+                {{! make login/logout link float right }}   
         </header>
         <main>
             {{{body}}}
         </main>
+        <footer>
+            <a class="yeLink" href="/ye">&#128081;</a>
+        </footer>
+        <script src="/public/js/index.js"></script>
     </body>
 </html>
