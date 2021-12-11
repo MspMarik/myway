@@ -23,6 +23,7 @@
         <div>
             {{!-- once added made plus emoji into check emoji --}}
             {{#if this.song}}
+            <span>{{this.name}}: {{this.release}}</span>
             <form class = "addForm" action = "/search/addLikedSong" id = "add-form" method = "POST">
                 <input type="text" name = "songName" value ="{{this.name}}" hidden>
                 <input type="text" name = "artistName" value ="{{this.artist}}" hidden>
