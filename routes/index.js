@@ -10,7 +10,7 @@ const lastfmFunctions = require("../data/lastfm");
 const metricsFunctions = require("../data/metrics");
 const { validUsername, validPassword } = require("../data/fieldValidations");
 
-//Fetch main pa
+//Fetch main page
 router.get("/", async (request, response) => {
     //Check if the user is logged in. If so, redirect to profile page. Else render logout page.
     // if(request.session.userId) {
@@ -399,7 +399,10 @@ router.get("/mysongs", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
-        response.render("pages/mypage", { song: "Example" });
+        let userData = await userFunctions.getUserByID(request.session.userId);
+        let likedSongs = userData.favorites.songs.filter((song) => {return !song.disliked});
+        let dislikedSongs = userData.favorites.songs.filter((song) => {return song.disliked});
+        response.render("pages/mypage", { song: "Example", liked: likedSongs, disliked: dislikedSongs });
     }
 });
 
@@ -407,7 +410,8 @@ router.get("/myalbums", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
-        response.render("pages/mypage", { album: "Example" });
+        let userData = await userFunctions.getUserByID(request.session.userId);
+        response.render("pages/mypage", { album: "Example", albumList: userData.favorites.albums });
     }
 });
 
@@ -415,7 +419,10 @@ router.get("/myartists", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
-        response.render("pages/mypage", { artist: "Example" });
+        let userData = await userFunctions.getUserByID(request.session.userId);
+        let likedArtists = userData.favorites.artists.filter((artist) => {return !artist.disliked});
+        let dislikedArtists = userData.favorites.artists.filter((artist) => {return artist.disliked});
+        response.render("pages/mypage", { artist: "Example", liked: likedArtists, disliked: dislikedArtists });
     }
 });
 
@@ -496,6 +503,43 @@ router.post("/search/addDislikedArtist", async (request, response) => {
             console.log(addData.ok);
         }else{
             console.log("something is amuck");
+        }
+    }
+});
+
+router.get("/mymetrics", async (request, response) => {
+    if (!request.session.userId) {
+        response.redirect("/loginlogout");
+    } else {
+        let userSongMetrics = await metricsFunctions.getSongDataForMetrics(request.session.userId);
+        let likedData = userSongMetrics.likedTags;
+        let dislikedData = userSongMetrics.dislikedTags;
+        response.render("pages/mymetrics", { likedData: likedData, dislikedData: dislikedData });
+    }
+});
+
+router.get("/artistinfo/:artistName", async (request, response) => {
+    if(!request.session.userId) {
+        response.redirect("/loginlogout");
+    }
+    else {
+        try {
+            if(!request.params.artistName) {
+                throw "Artist name not provided";
+            }
+            if(typeof request.params.artistName != "string") {
+                throw "Provided artist name not a string";
+            }
+            let cleanedName = xss(request.params.artistName.trim());
+            if(!cleanedName) {
+                throw "Artist name provided is whitespace";
+            }
+
+            let artist = await lastfmFunctions.getArtist(cleanedName);
+            response.render("pages/artistInfo", {artistData: artist});
+        }
+        catch(err) {
+            response.status(404).render("pages/404");
         }
     }
 });
