@@ -446,13 +446,28 @@ router.get("/shuffle", async (request, response) => {
         response.render("pages/shuffle", {});
     }
 });
-router.post("/search/addSong", async (request, response) => {
+router.post("/search/addLikedSong", async (request, response) => {
     if (!request.session.userId) {
        //do nothing?
     } else {
         let cleanSongName = request.body.songName;
         let cleanArtistName = request.body.artistName;
-        let addData = await songsFunctions.addSong(request.session.userId,cleanSongName, cleanArtistName);
+        let addData = await songsFunctions.addSong(request.session.userId,cleanSongName, cleanArtistName, false);
+        if(addData.ok){
+            console.log(addData.ok);
+        }else{
+            console.log("something is amuck");
+        }
+    }
+});
+
+router.post("/search/addDislikedSong", async (request, response) => {
+    if (!request.session.userId) {
+       //do nothing?
+    } else {
+        let cleanSongName = request.body.songName;
+        let cleanArtistName = request.body.artistName;
+        let addData = await songsFunctions.addSong(request.session.userId,cleanSongName, cleanArtistName, true);
         if(addData.ok){
             console.log(addData.ok);
         }else{
@@ -467,7 +482,8 @@ router.post("/search/addAlbum", async (request, response) => {
     } else {
         let cleanAlbumName = request.body.albumName;
         let cleanArtistName = request.body.artistName;
-        let addData = await albumsFunctions.addAlbum(request.session.userId,cleanAlbumName, cleanArtistName);
+        let cleanRating = request.body.ranking;
+        let addData = await albumsFunctions.addAlbum(request.session.userId,cleanAlbumName, cleanArtistName, Number.parseInt(cleanRating));
         if(addData.ok){
             console.log(addData.ok);
         }else{
@@ -476,12 +492,26 @@ router.post("/search/addAlbum", async (request, response) => {
     }
 });
 
-router.post("/search/addArtist", async (request, response) => {
+router.post("/search/addLikedArtist", async (request, response) => {
     if (!request.session.userId) {
        //do nothing?
     } else {
         let cleanArtistName = request.body.artistName;
-        let addData = await artistsFunctions.addArtist(request.session.userId, cleanArtistName);
+        let addData = await artistsFunctions.addArtist(request.session.userId, cleanArtistName, false);
+        if(addData.ok){
+            console.log(addData.ok);
+        }else{
+            console.log("something is amuck");
+        }
+    }
+});
+
+router.post("/search/addDislikedArtist", async (request, response) => {
+    if (!request.session.userId) {
+       //do nothing?
+    } else {
+        let cleanArtistName = request.body.artistName;
+        let addData = await artistsFunctions.addArtist(request.session.userId, cleanArtistName, true);
         if(addData.ok){
             console.log(addData.ok);
         }else{
