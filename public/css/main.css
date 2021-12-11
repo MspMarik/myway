@@ -3,69 +3,111 @@ body {
 }
 
 h1 {
-    font-family: "Readex Pro", sans-serif;
+    font-family: "Ubuntu Mono", monospace;
     text-align: center;
     color: white;
+    font-style: italic;
+    font-size: 60px;
+    margin: 20px;
+}
+h1 {
+    animation-duration: 2s;
+    animation-name: slidein;
+}
+
+@keyframes slidein {
+    from {
+        margin-left: 100%;
+        width: 300%;
+    }
+
+    to {
+        margin-left: 0%;
+        width: 100%;
+    }
 }
 
 h2 {
-    font-family: "Readex Pro", sans-serif;
+    font-family: "Chivo", sans-serif;
     text-align: center;
     color: #ffecba;
+    margin-top: 0px;
+    padding: 0%;
 }
 
 header {
     text-align: center;
-} */
+}
 
-#navBar {
+ul {
     list-style-type: none;
-    margin: 0;
-    padding: 12;
+    margin: 10px;
     text-align: center;
     overflow: hidden;
     background-color: #646eca;
     display: block;
     padding: 12px;
     color: white;
+    list-style-type: none;
+    font-weight: 700;
+    font-size: 20px;
 }
 
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 12;
-    text-align: center;
-    overflow: hidden;
-    background-color: #646eca;
-    display: block;
-    padding: 12px;
+#indexBar {
+    padding: 24;
 }
 
 li {
     display: inline;
-}
-
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    
-#homeBar {
-    text-align: center;
+    margin: 24px;
 }
 
 a:link {
     text-decoration: none;
+    color: white;
+    font-family: "Chivo", sans-serif;
 }
 
 a:visited {
     text-decoration: none;
+    color: white;
+    font-family: "Chivo", sans-serif;
 }
 
 a:hover {
-    text-decoration: underline;
+    text-decoration: none;
+    color: #ffecba;
+    font-family: "Chivo", sans-serif;
 }
 
 a:active {
     text-decoration: underline;
+    color: white;
+    font-family: "Chivo", sans-serif;
+}
+
+#creators {
+    font-style: italic;
+}
+
+.specialMy {
+    font-style: italic;
+}
+div {
+    font-family: "Mulish", sans-serif;
+    color: #ffe08f;
+}
+
+#songSpan {
+    font-size: 20px;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-items: stretch;
+    align-content: stretch;
+    text-align: center;
 }
