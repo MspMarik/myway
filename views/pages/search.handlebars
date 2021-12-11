@@ -27,7 +27,12 @@
             {{!-- <button id="add" onclick="add{{#if song}}Song({{this}}){{/if}}{{#if artist}}Artist({{this}}){{/if}}{{#if album}}Album({{albumID}}){{/if}}">&#10133;</button> --}}
             {{!-- once added made plus emoji into check emoji --}}
             {{#if this.song}}
-            <form class = "addForm" action = "/search/addSong" id = "add-form" method = "POST">
+            <form class = "addForm" action = "/search/addLikedSong" id = "add-form" method = "POST">
+                <input type="text" name = "songName" value ="{{this.name}}" hidden>
+                <input type="text" name = "artistName" value ="{{this.artist}}" hidden>
+                <button type="submit" id="submitAdd" name="submitadd">&#10133;</button>
+            </form>
+                <form class = "addForm" action = "/search/addDislikedSong" id = "add-form" method = "POST">
                 <input type="text" name = "songName" value ="{{this.name}}" hidden>
                 <input type="text" name = "artistName" value ="{{this.artist}}" hidden>
                 <button type="submit" id="submitAdd" name="submitAdd">&#10133;</button>
@@ -37,11 +42,17 @@
             <form class = "addForm" action = "/search/addAlbum" id = "add-form" method = "POST">
                 <input type="text" name = "albumName" value ="{{this.name}}" hidden>
                 <input type="text" name = "artistName" value ="{{this.artist}}" hidden>
+                <span>Input your ranking of {{albumName}}</span>
+                <label><input type="number" id="ranking" name="ranking" min="0" max="10" step="1" required />/10</label>
                 <button type="submit" id="submitAdd" name="submitAdd">&#10133;</button>
             </form>
             {{/if}}
             {{#if this.art}}
-            <form class = "addForm" action = "/search/addArtist" id = "add-form" method = "POST">
+            <form class = "addForm" action = "/search/addLikedArtist" id = "add-form" method = "POST">
+                <input type="text" name = "artistName" value ="{{this.name}}" hidden>
+                <button type="submit" id="submitAdd" name="submitAdd">&#10133;</button>
+            </form>
+                <form class = "addForm" action = "/search/addDislikedArtist" id = "add-form" method = "POST">
                 <input type="text" name = "artistName" value ="{{this.name}}" hidden>
                 <button type="submit" id="submitAdd" name="submitAdd">&#10133;</button>
             </form>
