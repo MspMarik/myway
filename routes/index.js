@@ -450,8 +450,8 @@ router.post("/search/addSong", async (request, response) => {
     if (!request.session.userId) {
        //do nothing?
     } else {
-        let cleanSongName = request.body.songName;
-        let cleanArtistName = request.body.artistName;
+        let cleanSongName = xss(request.body.songName);
+        let cleanArtistName = xss(request.body.artistName);
         let addData = await songsFunctions.addSong(request.session.userId,cleanSongName, cleanArtistName);
         if(addData.ok){
             console.log(addData.ok);
@@ -465,8 +465,8 @@ router.post("/search/addAlbum", async (request, response) => {
     if (!request.session.userId) {
        //do nothing?
     } else {
-        let cleanAlbumName = request.body.albumName;
-        let cleanArtistName = request.body.artistName;
+        let cleanAlbumName = xss(request.body.albumName);
+        let cleanArtistName = xss(request.body.artistName);
         let addData = await albumsFunctions.addAlbum(request.session.userId,cleanAlbumName, cleanArtistName);
         if(addData.ok){
             console.log(addData.ok);
@@ -480,7 +480,7 @@ router.post("/search/addArtist", async (request, response) => {
     if (!request.session.userId) {
        //do nothing?
     } else {
-        let cleanArtistName = request.body.artistName;
+        let cleanArtistName = xss(request.body.artistName);
         let addData = await artistsFunctions.addArtist(request.session.userId, cleanArtistName);
         if(addData.ok){
             console.log(addData.ok);

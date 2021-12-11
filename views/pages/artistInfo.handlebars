@@ -3,11 +3,19 @@
 <button onclick="addArtist({{artistID}})">Add to <span class="specialMy">My</span> Artists</button>
 
 <h2>Similar Artists</h2>
-<ul>
-    {{#each artistData.similar.artist}}
-        <li><a href="/artistinfo/{{this.name}}">{{this.name}}</a></li>
-    {{/each}}
-</ul>
+{{#if artistData.similar.artist}}
+    <ul>
+        {{#each artistData.similar.artist}}
+            <li><a href="/artistinfo/{{this.name}}">{{this.name}}</a></li>
+        {{/each}}
+    </ul>
+{{else}}
+    <p>No similar artists found.</p>
+{{/if}}
 
 <h2>Artist Information</h2>
-<p>{{{artistData.bio.content}}}</p>
+{{#if artistData.bio.content}}
+    <p>{{{artistData.bio.content}}}</p>
+{{else}}
+    <p>No information available.</p>
+{{/if}}
