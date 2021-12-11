@@ -56,7 +56,7 @@ async function addSong(userId, songName, artistName, dislikeFlag) {
     }
     
     //return user;
-    return {ok: "successfully added"};
+    return {ok: "Song successfully added"};
 }
 
 async function removeSong(userId, songName, artistName) {
