@@ -5,25 +5,66 @@
     {{#unless liked}}
         <p>Looks like you don't have any liked {{#if song}}songs{{/if}}{{#if artist}}artists{{/if}} saved &#128532;</p>
     {{else}}
+        {{#if song}}
         {{#each liked}}
             <div>
                 <span>{{this.songName}}</span>
                 <span>{{this.artistName}}</span>
-                <button class="remove">&#128465;</button> {{! Changed remove from id to class, since there will be multiple of them}}
+                <form class = "removeForm" action = "/removeSong" method = "POST">
+                <input type="text" name = "songName" value ="{{this.songName}}" hidden>
+                <input type="text" name = "artistName" value ="{{this.artistName}}" hidden>
+                <button class="remove">&#128465;</button>
+                </form>
             </div>
         {{/each}}
+        {{/if}}
+
+        {{#if artist}}
+        {{#each liked}}
+            <div>
+                <span>{{this.songName}}</span>
+                <span>{{this.artistName}}</span>
+                <form class = "removeForm" action = "/removeArtist" method = "POST">
+                <input type="text" name = "songName" value ="{{this.songName}}" hidden>
+                <input type="text" name = "artistName" value ="{{this.artistName}}" hidden>
+                <button class="remove">&#128465;</button>
+                </form>
+            </div>
+        {{/each}}
+        {{/if}}
+
     {{/unless}}
 <h2>Disliked</h2>
     {{#unless disliked}}
         <p>Looks like you don't have any disliked {{#if song}}songs{{/if}}{{#if artist}}artists{{/if}} saved &#128513;</p>
     {{else}}
+         {{#if song}}
         {{#each disliked}}
             <div>
                 <span>{{this.songName}}</span>
                 <span>{{this.artistName}}</span>
+                <form class = "removeForm" action = "/removeSong" method = "POST">
+                <input type="text" name = "songName" value ="{{this.songName}}" hidden>
+                <input type="text" name = "artistName" value ="{{this.artistName}}" hidden>
                 <button class="remove">&#128465;</button>
+                </form>
             </div>
         {{/each}}
+        {{/if}}
+
+        {{#if artist}}
+        {{#each disliked}}
+            <div>
+                <span>{{this.songName}}</span>
+                <span>{{this.artistName}}</span>
+                <form class = "removeForm" action = "/removeArtist" method = "POST">
+                <input type="text" name = "songName" value ="{{this.songName}}" hidden>
+                <input type="text" name = "artistName" value ="{{this.artistName}}" hidden>
+                <button class="remove">&#128465;</button>
+                </form>
+            </div>
+        {{/each}}
+        {{/if}}
     {{/unless}}
 {{else}}
     {{#unless albumList}}
@@ -34,8 +75,12 @@
                 <span>{{this.albumName}}</span>
                 <span>{{this.artistName}}</span>
                 <span>Rating: {{this.rating}}</span>
+                <form class = "removeForm" action = "/removeAlbum" method = "POST">
+                <input type="text" name = "albumName" value ="{{this.albumName}}" hidden>
+                <input type="text" name = "artistName" value ="{{this.artistName}}" hidden>
                 <a href="/editRating"><button>&#9999; Edit Ranking</button></a>
                 <button class="remove">&#128465;</button>
+                </form>
             </div>
         {{/each}}
     {{/unless}}

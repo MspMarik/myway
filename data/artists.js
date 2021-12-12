@@ -23,6 +23,11 @@ async function addArtist(userId, artistName, dislikeFlag=false) {
         throw "Artist's name is not a string";
     }
 
+    let trimmedArtist = artistName.trim();
+    if(!trimmedArtist) {
+        throw "Artist name cannot be whitespace";
+    }
+
     if(typeof dislikeFlag != "boolean") {
         throw "If provided, dislike flag should be a boolean";
     }
@@ -31,7 +36,7 @@ async function addArtist(userId, artistName, dislikeFlag=false) {
     let currentArtistList = user.favorites.artists;
     let artistFound = false;
     for(let i = 0; i < currentArtistList.length; i++) { //Alter album liking if it's already present
-        if(artistName == currentArtistList[i].artistName) {
+        if(trimmedArtist == currentArtistList[i].artistName) {
             user.favorites.artists[i].disliked = dislikeFlag;
             artistFound = true;
             break;
@@ -72,11 +77,16 @@ async function removeArtist(userId, artistName) {
         throw "Artist's name is not a string";
     }
 
+    let trimmedArtist = artistName.trim();
+    if(!trimmedArtist) {
+        throw "Artist name cannot be whitespace";
+    }
+
     let user = await getUserByID(userId);
     let currentArtistList = user.favorites.artists;
     let artistFound = false;
     for(let i = 0; i < currentArtistList.length; i++) { //Make sure artist is in the list already
-        if(artistName == currentArtistList[i].artistName) { 
+        if(trimmedArtist == currentArtistList[i].artistName) { 
             artistFound = true;
             user.favorites.artists.splice(i, 1);
             break;
@@ -93,6 +103,7 @@ async function removeArtist(userId, artistName) {
     }
     
     //return user;
+    return {ok: 'Artist successfully removed'}
 }
 
 module.exports = {addArtist, removeArtist};

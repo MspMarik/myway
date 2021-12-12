@@ -1,6 +1,24 @@
 google.charts.load("current", { packages: ["corechart"] });
 google.charts.setOnLoadCallback(drawChart);
 
+function addLikedArtist(name) {
+    let addRequest = {
+        method: "POST",
+        url: "/search/addLikedArtist",
+        data: {artistName: name}
+    };
+    $.ajax(addRequest);
+}
+
+function addDislikedArtist(name) {
+    let addRequest = {
+        method: "POST",
+        url: "/search/addDislikedArtist",
+        data: {artistName: name}
+    };
+    $.ajax(addRequest);
+}
+
 function drawChart() {
     let liked = $("#liked").text().split(",");
     let disliked = $("#disliked").text().split(",");
