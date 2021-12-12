@@ -1,6 +1,24 @@
 google.charts.load("current", { packages: ["corechart"] });
 google.charts.setOnLoadCallback(drawChart);
 
+function addLikedArtist(name) {
+    let addRequest = {
+        method: "POST",
+        url: "/search/addLikedArtist",
+        data: {artistName: name}
+    };
+    $.ajax(addRequest);
+}
+
+function addDislikedArtist(name) {
+    let addRequest = {
+        method: "POST",
+        url: "/search/addDislikedArtist",
+        data: {artistName: name}
+    };
+    $.ajax(addRequest);
+}
+
 function drawChart() {
     let liked = $("#liked").text().split(",");
     let disliked = $("#disliked").text().split(",");
@@ -27,9 +45,6 @@ function drawChart() {
             dislikedArr[i][1] = parseInt(dislikedArr[i][1]);
         }
     }
-
-    console.log(likedArr);
-    console.log(dislikedArr);
 
     var data;
     if(likedArr[0][1] != undefined) {
@@ -98,7 +113,6 @@ let passwordInput = document.getElementById("password");
 
 //Login Form
 let loginForm = document.getElementById("login-form");
-console.log(loginForm);
 if (loginForm) {
     loginForm.addEventListener("submit", (event) => {
         let providedUsername = usernameInput.value;
@@ -236,3 +250,50 @@ if (searchForm) {
         }
     });
 }
+
+/*
+AJAX Request for My Recommendations
+*/
+$(function() {
+    let recForm = $("#recForm");
+    let numRecsContainer = $("#numRecs");
+    let recInfoDiv = $("#recInfoDiv");
+    let recList = $("#recList");
+
+    recForm.on("submit", (event) => {
+        event.preventDefault();
+        let numRecs = numRecsContainer.val();
+        if(!numRecs || typeof numRecs != "number" || numRecs < 1) {
+            recInfoDiv.text("Number of recommendations must be a number greater than or equal to 1");
+            recInfoDiv.show();
+        }
+        let recommendationRequest = {
+            method: "POST",
+            url: "/myrecommendedartists",
+            data: {numRecs: numRecs}
+        }
+        recInfoDiv.text("Getting your recommendations...");
+        recInfoDiv.show();
+        $.ajax(recommendationRequest).then(response => {
+            let recommendations = response.recommendations;
+            recList.empty();
+            if(!recommendations.length) {
+                 recInfoDiv.text("Sorry, no recommendations were found...");
+                 recInfoDiv.show();
+            }
+            else {
+                console.log(numRecs);
+                console.log(recommendations.length);
+                if(numRecs > recommendations.length) {
+                    recInfoDiv.text("These are all the recommendations we have!");
+                }
+                else {
+                    recInfoDiv.hide();
+                }
+                for(let i = 0; i < recommendations.length; i++) {
+                    recList.append(`<li>${recommendations[i]}</li>`);
+                }
+            }
+        });
+    });
+});
