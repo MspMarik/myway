@@ -163,7 +163,9 @@ div {
     color: #ffe08f;
 }
 
-#loginDiv {
+#loginDiv,
+#ssFormDiv,
+#recSmalLDiv {
     padding-top: 30px;
     font-size: 30px;
     color: #2c37a1;
@@ -173,7 +175,7 @@ div {
 
 #newUserClick,
 #oldUserClick {
-    color: #646eca;
+    color: #2c37a1;
     font-family: "Mulish", sans-serif;
     font-size: 20px;
     font-weight: 700;
@@ -181,7 +183,9 @@ div {
 }
 
 #lbigDiv,
-#signDiv {
+#signDiv,
+#searchFormDiv,
+#recBigDiv {
     background-color: #ffecba;
     text-align: center;
     width: 500px;
@@ -190,10 +194,19 @@ div {
     position: relative;
     border-radius: 25px;
 }
+#searchFormDiv {
+    height: 250px;
+}
+#recBigDiv {
+    height: 175px;
+}
 
 #username,
 #password,
-#password2 {
+#password2,
+#searchbox,
+#prodYear,
+#numRecs {
     height: 25px;
     font-family: "Chivo", sans-serif;
     font-style: italic;
@@ -201,6 +214,7 @@ div {
     border-color: #646eca;
     border-style: solid;
     font-size: 20px;
+    text-align: center;
 }
 
 #loginLogo {
@@ -228,17 +242,20 @@ div {
 }
 
 #here {
-    color: #646eca;
+    color: #2c37a1;
     font-style: italic;
 }
 
 #here:hover {
     color: #2c37a1;
+    font-weight: 900;
 }
 
 #logButt,
 #subButt,
-#submitRank {
+#submitRank,
+#submitSearch,
+#submitRecs {
     font-family: "Chivo", sans-serif;
     font-style: italic;
     background-color: #2c37a1;
@@ -394,4 +411,8 @@ div {
 
 #addArtDiv {
     text-align: center;
+}
+
+#recList {
+    background-color: transparent;
 }
