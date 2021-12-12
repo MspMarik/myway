@@ -30,17 +30,19 @@ let getYear = (content) => {
 async function filterArtists(artists, filterString) {
     let filteredArtists = []; //Start with empty list (assume no artists will make it through)
     for (let i = 0; i < artists.length; i++) {
-        let artistInfo = await axios.get(baseURL + `artist.getInfo&artist=${artists[i].name}`); //I don't think there will be a way around this
-        let tagsList = artistInfo.data.artist.tags.tag;
-        let tagPresent = false;
-        for (let j = 0; j < tagsList.length; j++) {
-            tagPresent = filterString == tagsList[j].name;
-            if (tagPresent) {
-                break;
+        let artistInfo = await axios.get(baseURL + `artist.getInfo&artist=${encodeURIComponent(artists[i].name)}`); //I don't think there will be a way around this
+        if (artistInfo && artistInfo.data && artistInfo.data.artist && artistInfo.data.artist.tags && artistInfo.data.artist.tags.tag) {
+            let tagsList = artistInfo.data.artist.tags.tag;
+            let tagPresent = false;
+            for (let j = 0; j < tagsList.length; j++) {
+                tagPresent = filterString == tagsList[j].name;
+                if (tagPresent) {
+                    break;
+                }
             }
-        }
-        if (tagPresent) {
-            filteredArtists.push(artists[i]);
+            if (tagPresent) {
+                filteredArtists.push(artists[i]);
+            }
         }
     }
     return filteredArtists;
@@ -51,7 +53,7 @@ async function filterArtistsForRecommendations(artists, filters) {
     let filteredArtists = []; //Start with empty list (assume no artists will make it through)
     for (let i = 0; i < artists.length; i++) {
         try {
-            let artistInfo = await axios.get(baseURL + `artist.getInfo&artist=${artists[i].name}`);
+            let artistInfo = await axios.get(baseURL + `artist.getInfo&artist=${encodeURIComponent(artists[i].name)}`);
             let tagsList = artistInfo.data.artist.tags.tag;
             let filteringMap = new Map();
             for (let j = 0; j < tagsList.length; j++) {
@@ -81,17 +83,19 @@ async function filterArtistsForRecommendations(artists, filters) {
 async function filterSongs(songs, filterString) {
     let filteredSongs = []; //Start with empty list (assume no songs will make it through)
     for (let i = 0; i < songs.length; i++) {
-        let songInfo = await axios.get(baseURL + `track.getInfo&artist=${songs[i].artist}&track=${songs[i].name}`);
-        let tagsList = songInfo.data.track.tags.tag;
-        let tagPresent = false;
-        for (let j = 0; j < tagsList.length; j++) {
-            tagPresent = filterString == tagsList[j].name;
-            if (tagPresent) {
-                break;
+        let songInfo = await axios.get(baseURL + `track.getInfo&artist=${encodeURIComponent(songs[i].artist)}&track=${encodeURIComponent(songs[i].name)}`);
+        if (songInfo && songInfo.data && songInfo.data.track && songInfo.data.track.toptags && songInfo.data.track.toptags.tag) {
+            let tagsList = songInfo.data.track.toptags.tag;
+            let tagPresent = false;
+            for (let j = 0; j < tagsList.length; j++) {
+                tagPresent = filterString == tagsList[j].name;
+                if (tagPresent) {
+                    break;
+                }
             }
-        }
-        if (tagPresent) {
-            filteredSongs.push(songs[i]);
+            if (tagPresent) {
+                filteredSongs.push(songs[i]);
+            }
         }
     }
     return filteredSongs;
@@ -100,7 +104,7 @@ async function filterSongs(songs, filterString) {
 async function filterAlbums(albums, filterString) {
     let filteredAlbums = []; //Start with empty list (assume no albums will make it through)
     for (let i = 0; i < songs.length; i++) {
-        let albumInfo = await axios.get(baseURL + `album.getInfo&artist=${album.artist}&album=${album.name}`);
+        let albumInfo = await axios.get(baseURL + `album.getInfo&artist=${encodeURIComponent(album.artist)}&album=${encodeURIComponent(album.name)}`);
         let tagsList = albumInfo.data.album.tags.tag;
         let tagPresent = false;
         for (let j = 0; j < tagsList.length; j++) {
@@ -128,7 +132,7 @@ async function getArtist(artistName) {
         throw "Artist name cannot be whitespace";
     }
 
-    let artistInfo = await axios.get(baseURL + `artist.getInfo&artist=${artistName}`);
+    let artistInfo = await axios.get(baseURL + `artist.getInfo&artist=${encodeURIComponent(artistName)}`);
     return artistInfo.data.artist;
 }
 
@@ -196,7 +200,7 @@ async function getArtistTags(artistName) {
         throw "Artist name cannot be whitespace";
     }
 
-    let artistInfo = await axios.get(baseURL + `artist.getInfo&artist=${artistName}`);
+    let artistInfo = await axios.get(baseURL + `artist.getInfo&artist=${encodeURIComponent(artistName)}`);
     return artistInfo.data.artist.tags.tag.map((tagData) => tagData.name);
 }
 
@@ -291,7 +295,7 @@ async function getSongTags(songName, artistName) {
         throw "Artist name cannot be whitespace";
     }
 
-    let songInfo = await axios.get(baseURL + `track.getInfo&artist=${artistName}&track=${songName}`);
+    let songInfo = await axios.get(baseURL + `track.getInfo&artist=${encodeURIComponent(artistName)}&track=${encodeURIComponent(songName)}`);
     return songInfo.data.track.toptags.tag.map((tagData) => tagData.name);
 }
 
