@@ -3,13 +3,8 @@ const { ObjectId } = require("mongodb");
 //const {validUserObject} = require("./fieldValidations");
 const { getUserByID } = require("./users");
 
-<<<<<<< HEAD
 async function addArtist(userId, artistName, dislikeFlag = false) {
     if (!userId) {
-=======
-async function addArtist(userId, artistName, dislikeFlag=false) {
-    if(!userId) {
->>>>>>> c65feffed5a32fc970c63c62e8e433292d93f266
         throw "User ID not provided";
     }
     if (typeof userId != "string") {
@@ -28,30 +23,21 @@ async function addArtist(userId, artistName, dislikeFlag=false) {
         throw "Artist's name is not a string";
     }
 
-<<<<<<< HEAD
-    if (typeof dislikeFlag != "boolean") {
-=======
     let trimmedArtist = artistName.trim();
-    if(!trimmedArtist) {
+    if (!trimmedArtist) {
         throw "Artist name cannot be whitespace";
     }
 
-    if(typeof dislikeFlag != "boolean") {
->>>>>>> c65feffed5a32fc970c63c62e8e433292d93f266
+    if (typeof dislikeFlag != "boolean") {
         throw "If provided, dislike flag should be a boolean";
     }
 
     let user = await getUserByID(userId);
     let currentArtistList = user.favorites.artists;
     let artistFound = false;
-<<<<<<< HEAD
     for (let i = 0; i < currentArtistList.length; i++) {
         //Alter album liking if it's already present
-        if (artistName == currentArtistList[i].artistName) {
-=======
-    for(let i = 0; i < currentArtistList.length; i++) { //Alter album liking if it's already present
-        if(trimmedArtist == currentArtistList[i].artistName) {
->>>>>>> c65feffed5a32fc970c63c62e8e433292d93f266
+        if (trimmedArtist == currentArtistList[i].artistName) {
             user.favorites.artists[i].disliked = dislikeFlag;
             artistFound = true;
             break;
@@ -93,21 +79,16 @@ async function removeArtist(userId, artistName) {
     }
 
     let trimmedArtist = artistName.trim();
-    if(!trimmedArtist) {
+    if (!trimmedArtist) {
         throw "Artist name cannot be whitespace";
     }
 
     let user = await getUserByID(userId);
     let currentArtistList = user.favorites.artists;
     let artistFound = false;
-<<<<<<< HEAD
     for (let i = 0; i < currentArtistList.length; i++) {
         //Make sure artist is in the list already
-        if (artistName == currentArtistList[i].artistName) {
-=======
-    for(let i = 0; i < currentArtistList.length; i++) { //Make sure artist is in the list already
-        if(trimmedArtist == currentArtistList[i].artistName) { 
->>>>>>> c65feffed5a32fc970c63c62e8e433292d93f266
+        if (trimmedArtist == currentArtistList[i].artistName) {
             artistFound = true;
             user.favorites.artists.splice(i, 1);
             break;
@@ -124,7 +105,7 @@ async function removeArtist(userId, artistName) {
     }
 
     //return user;
-    return {ok: 'Artist successfully removed'}
+    return { ok: "Artist successfully removed" };
 }
 
 module.exports = { addArtist, removeArtist };

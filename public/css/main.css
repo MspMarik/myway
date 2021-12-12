@@ -221,13 +221,10 @@ div {
     padding: 0px;
 }
 
-.yelink {
-    display: flex;
-    flex-direction: column-reverse;
-    flex-wrap: wrap-reverse;
-    justify-content: space-between;
-    align-items: baseline;
-    align-content: stretch;
+.yeLink {
+    position: absolute;
+    right: -10px;
+    bottom: 0;
 }
 
 #here {
