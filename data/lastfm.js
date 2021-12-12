@@ -149,7 +149,7 @@ async function getSimilarArtists(artistName) {
     if(!trimmedName) {
         throw "Artist name cannot be whitespace";
     }
-    let requestURL = baseURL + `artist.getSimilar&artist=${trimmedName}`;
+    let requestURL = baseURL + `artist.getSimilar&artist=${encodeURIComponent(trimmedName)}`;
     let {data} = await axios.get(requestURL);
     let artists = data.similarartists.artist;
     return artists;
@@ -175,7 +175,7 @@ async function getArtistsByTextInput(input, userTag = undefined) {
         trimmedTag = userTag.trim();
     } 
 
-    let requestURL = baseURL + `artist.search&artist=${trimmedInput}`;
+    let requestURL = baseURL + `artist.search&artist=${encodeURIComponent(trimmedInput)}`;
     if(userTag) { //Limits returned results to 10 when using filter to prevent overuse of API
         requestURL += "&limit=10";
     }
@@ -221,7 +221,7 @@ async function getSongInfo(song, artist){
     }   
     
     ///2.0/?method=track.getInfo&api_key=YOUR_API_KEY&artist=cher&track=believe&format=json 
-    let requestURL = baseURL + `track.getInfo&track=${trimmedsong}&artist=${trimmedartist}`;
+    let requestURL = baseURL + `track.getInfo&track=${encodeURIComponent(trimmedsong)}&artist=${encodeURIComponent(trimmedartist)}`;
     const {data} = await axios.get(requestURL);
     
     if(data.error !== undefined){
@@ -262,7 +262,7 @@ async function getSongsByTextInput(input, userTag = undefined) {
         trimmedTag = userTag.trim();
     } 
 
-    let requestURL = baseURL + `track.search&track=${trimmedInput}`;
+    let requestURL = baseURL + `track.search&track=${encodeURIComponent(trimmedInput)}`;
     if(userTag) { //Limits returned results to 10 when using filter to prevent overuse of API
         requestURL += "&limit=10";
     }
@@ -318,7 +318,7 @@ async function getAlbumInfo(album, artist){
     }   
     
     ///2.0/?method=track.getInfo&api_key=YOUR_API_KEY&artist=cher&track=believe&format=json 
-    let requestURL = baseURL + `album.getInfo&album=${trimmedalbum}&artist=${trimmedartist}`;
+    let requestURL = baseURL + `album.getInfo&album=${encodeURIComponent(trimmedalbum)}&artist=${encodeURIComponent(trimmedartist)}`;
     const {data} = await axios.get(requestURL);
     
     if(data.error !== undefined){
@@ -357,7 +357,7 @@ async function getAlbumsByTextInput(input, userTag = undefined) {
         trimmedTag = userTag.trim();
     } 
 
-    let requestURL = baseURL + `album.search&album=${trimmedInput}`;
+    let requestURL = baseURL + `album.search&album=${encodeURIComponent(trimmedInput)}`;
     if(userTag) { //Limits returned results to 10 when using filter to prevent overuse of API
         requestURL += "&limit=10";
     }
