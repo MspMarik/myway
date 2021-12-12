@@ -289,7 +289,7 @@ router.post("/search/albums", async (request, response) => {
         if (!request.session.userId) {
             response.redirect("/loginlogout");
         } else {
-            //Search Term Checkint
+            //Search Term Checking
             if (!request.body.searchbox) {
                 throw "Search term not provided";
             }
@@ -434,7 +434,7 @@ router.get("/shuffle", async (request, response) => {
 });
 router.post("/search/addLikedSong", async (request, response) => {
     if (!request.session.userId) {
-       //do nothing?
+        response.redirect("/loginlogout");
     } else {
         let cleanSongName = xss(request.body.songName.trim());
         let cleanArtistName = xss(request.body.artistName.trim());
@@ -449,7 +449,7 @@ router.post("/search/addLikedSong", async (request, response) => {
 
 router.post("/search/addDislikedSong", async (request, response) => {
     if (!request.session.userId) {
-       //do nothing?
+        response.redirect("/loginlogout");
     } else {
         let cleanSongName = xss(request.body.songName.trim());
         let cleanArtistName = xss(request.body.artistName.trim());
@@ -464,7 +464,7 @@ router.post("/search/addDislikedSong", async (request, response) => {
 
 router.post("/search/addAlbum", async (request, response) => {
     if (!request.session.userId) {
-       //do nothing?
+        response.redirect("/loginlogout");
     } else {
         try {
             let cleanAlbumName = xss(request.body.albumName.trim());
@@ -488,7 +488,7 @@ router.post("/search/addAlbum", async (request, response) => {
 
 router.post("/search/addLikedArtist", async (request, response) => {
     if (!request.session.userId) {
-       //do nothing?
+        response.redirect("/loginlogout");
     } else {
         let cleanArtistName = xss(request.body.artistName);
         let addData = await artistsFunctions.addArtist(request.session.userId, cleanArtistName, false);
@@ -502,7 +502,7 @@ router.post("/search/addLikedArtist", async (request, response) => {
 
 router.post("/search/addDislikedArtist", async (request, response) => {
     if (!request.session.userId) {
-       //do nothing?
+        response.redirect("/loginlogout");
     } else {
         let cleanArtistName = xss(request.body.artistName);
         let addData = await artistsFunctions.addArtist(request.session.userId, cleanArtistName, true);
@@ -590,7 +590,7 @@ router.post("/myrecommendedartists", async (request, response) => {
 
 router.post("/removeSong", async (request, response) =>{
     if (!request.session.userId) {
-        //do nothing?
+        response.redirect("/loginlogout");
      } else {
          let cleanSongName = request.body.songName;
          let cleanArtistName = request.body.artistName;
@@ -606,7 +606,7 @@ router.post("/removeSong", async (request, response) =>{
 
 router.post("/removeArtist", async (request, response) =>{
     if (!request.session.userId) {
-        //do nothing?
+        response.redirect("/loginlogout");
      } else {
          let cleanArtistName = request.body.artistName;
          let addData = await artistsFunctions.removeArtist(request.session.userId, cleanArtistName);
@@ -621,7 +621,7 @@ router.post("/removeArtist", async (request, response) =>{
 
 router.post("/removeAlbum", async (request, response) =>{
     if (!request.session.userId) {
-        //do nothing?
+        response.redirect("/loginlogout");
      } else {
          let cleanAlbumName = request.body.albumName;
          let cleanArtistName = request.body.artistName;
@@ -637,7 +637,7 @@ router.post("/removeAlbum", async (request, response) =>{
 
 router.post("/editRanking", async (request, response) =>{
     if (!request.session.userId) {
-        //do nothing?
+        response.redirect("/loginlogout");
      } else {
         let cleanAlbumName = xss(request.body.albumName);
         let cleanArtistName = xss(request.body.artistName);
@@ -647,7 +647,7 @@ router.post("/editRanking", async (request, response) =>{
 
 router.post("/updateRanking", async (request, response) =>{
     if (!request.session.userId) {
-        //do nothing?
+        response.redirect("/loginlogout");
      } else {
         let cleanAlbumName = xss(request.body.albumName);
         let cleanArtistName = xss(request.body.artistName);
@@ -664,34 +664,67 @@ router.post("/updateRanking", async (request, response) =>{
 
 router.post("/shuffle", async (request, response) =>{
 if (!request.session.userId){
-
+    response.redirect("/loginlogout");
 }else{
-    const alphabet = "abcdefghijklmnopqrstuvwxyz"
-    const randomCharacter = alphabet[Math.floor(Math.random() * alphabet.length)]
+    const alphabet = "abcdefghijklmnopqrstuvwxyz";
+    const randomCharacter = Math.floor(Math.random() * alphabet.length);
     let pick = request.body.songOrArtist;
     let tag =  xss(request.body.tag);
+    let noneFound = true;
     if(pick == "song"){
-        let addData = await lastfmFunctions.getSongsByTextInput(randomCharacter, tag);
-        //console.log(addData);
-        if(addData.length == 0){
-            response.render("pages/shuffle", {error: true})
-        }else{
-        let random = addData[Math.floor(Math.random()*addData.length)];
-        response.render("pages/shuffle", {shuffleResults: random, song: true});
+        let addData;
+        for(let i = 0; i < 26; i++) {
+            let char = alphabet[(randomCharacter + i) % 26];
+            addData = await lastfmFunctions.getSongsByTextInput(char, tag);
+            if(addData.length > 0) {
+                noneFound = false;
+                break;
+            }
         }
+
+        if(noneFound) {
+            response.render("pages/shuffle", {error: true});
+        }
+        else {
+            let random = addData[Math.floor(Math.random()*addData.length)];
+            response.render("pages/shuffle", {shuffleResults: random, song: true});
+        }
+        
+        //console.log(addData);
+        // if(addData.length == 0){
+        //     response.render("pages/shuffle", {error: true})
+        // }else{
+        // let random = addData[Math.floor(Math.random()*addData.length)];
+        // response.render("pages/shuffle", {shuffleResults: random, song: true});
+        // }
     }
 
     if(pick == "artist"){
-        let addData = await lastfmFunctions.getArtistsByTextInput(randomCharacter, tag);
-        //console.log(addData);
-        if(addData.length == 0){
-            response.render("pages/shuffle", {error: true})
-        }else{
-        let random = addData[Math.floor(Math.random()*addData.length)];
-        response.render("pages/shuffle", {shuffleResults: random, artist: true});
+        let addData;
+        for(let i = 0; i < 26; i++) {
+            let char = alphabet[(randomCharacter + i) % 26];
+            addData = await lastfmFunctions.getArtistsByTextInput(char, tag);
+            if(addData.length > 0) {
+                noneFound = false;
+                break;
+            }
+        }
+
+        if(noneFound) {
+            response.render("pages/shuffle", {error: true});
+        }
+        else {
+            let random = addData[Math.floor(Math.random()*addData.length)];
+            response.render("pages/shuffle", {shuffleResults: random, artist: true});
+        }
+        
+        // if(addData.length == 0){
+        //     response.render("pages/shuffle", {error: true})
+        // }else{
+        // let random = addData[Math.floor(Math.random()*addData.length)];
+        // response.render("pages/shuffle", {shuffleResults: random, artist: true});
         }
     }
-}
 });
 
 
