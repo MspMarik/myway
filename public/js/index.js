@@ -282,7 +282,9 @@ $(function() {
                  recInfoDiv.show();
             }
             else {
-                if(numRecs >= recommendations.length) {
+                console.log(numRecs);
+                console.log(recommendations.length);
+                if(numRecs > recommendations.length) {
                     recInfoDiv.text("These are all the recommendations we have!");
                 }
                 else {

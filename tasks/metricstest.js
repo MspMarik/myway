@@ -14,6 +14,7 @@ async function main() {
     console.log(songData);
 
     await deleteUser(userOneID);
+    console.log("All done!");
 }
 
 main();
