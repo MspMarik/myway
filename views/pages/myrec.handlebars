@@ -1,10 +1,9 @@
 <h1><span class="specialMy">My</span> Recommended Artists</h1>
-{{#if recommendations}}
-    <ul>
-    {{#each recommendations}}
-        <li><a href="/artistinfo/{{this.name}}">{{this.name}}</a></li>
-    {{/each}}
-    </ul>
-{{else}}
-    <p>We're sorry, we have no recommendations for you at the moment...</p>
-{{/if}}
+<form id="recForm">
+    <label>How many recommendations do you want?
+        <input type="number" id="numRecs" name="numRecs" min="1" step="1" required />
+        <button type="submit" id="submitRecs" name="Get Your Recommendations"></button>
+    </label>
+</form>
+<p id="recInfoDiv" hidden>{{errString}}</p>
+<ul id="recList"></ul>

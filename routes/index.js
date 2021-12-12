@@ -12,14 +12,6 @@ const { validUsername, validPassword } = require("../data/fieldValidations");
 
 //Fetch main page
 router.get("/", async (request, response) => {
-    //Check if the user is logged in. If so, redirect to profile page. Else render logout page.
-    // if(request.session.userId) {
-    //     response.redirect("/myprofile") //INC: Route for the profile page
-    // }
-    // else {
-    //     response.render("pages/login", {}) //INC: Path to login page, remember to include handlebar fields
-    // }
-
     response.render("pages/index", {});
 });
 router.get("/loginlogout", async (request, response) => {
@@ -250,7 +242,7 @@ router.post("/search/songs", async (request, response) => {
             let yep = false;
             let cleanedYear
             if(request.body.prodYear){
-                cleanedYear = request.body.prodYear;
+                cleanedYear = xss(request.body.prodYear);
                 yep = true;
             }
             let retrievedSongs = await lastfmFunctions.getSongsByTextInput(cleanedSearchTerm, cleanedTag);
@@ -320,7 +312,7 @@ router.post("/search/albums", async (request, response) => {
             let yep = false;
             let cleanedYear;
             if(request.body.prodYear){
-                cleanedYear = request.body.prodYear;
+                cleanedYear = xss(request.body.prodYear);
                 yep = true;
             }
 
@@ -361,7 +353,8 @@ router.get("/myprofile", async (request, response) => {
     if(!request.session.userId) {
         response.redirect("/loginlogout");
     }else{
-        response.render("pages/myprofile", {});
+        let {username} = await userFunctions.getUserByID(request.session.userId)
+        response.render("pages/myprofile", {username: username});
     }
 });
 
@@ -393,20 +386,13 @@ router.get("/myprofile", async (request, response) => {
 // });
 
 router.get("/ye", async (request, response) => {
-    response.sendFile(path.resolve("static/ye.html"));
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
+        response.sendFile(path.resolve("static/ye.html"));
     }
 });
 
-router.get("/myprofile", async (request, response) => {
-    if (!request.session.userId) {
-        response.redirect("/loginlogout");
-    } else {
-        response.render("pages/myprofile", {});
-    }
-});
 
 router.get("/mysongs", async (request, response) => {
     if (!request.session.userId) {
@@ -450,8 +436,8 @@ router.post("/search/addLikedSong", async (request, response) => {
     if (!request.session.userId) {
        //do nothing?
     } else {
-        let cleanSongName = request.body.songName;
-        let cleanArtistName = request.body.artistName;
+        let cleanSongName = xss(request.body.songName.trim());
+        let cleanArtistName = xss(request.body.artistName.trim());
         let addData = await songsFunctions.addSong(request.session.userId,cleanSongName, cleanArtistName, false);
         if(addData.ok){
             console.log(addData.ok);
@@ -465,8 +451,8 @@ router.post("/search/addDislikedSong", async (request, response) => {
     if (!request.session.userId) {
        //do nothing?
     } else {
-        let cleanSongName = request.body.songName;
-        let cleanArtistName = request.body.artistName;
+        let cleanSongName = xss(request.body.songName.trim());
+        let cleanArtistName = xss(request.body.artistName.trim());
         let addData = await songsFunctions.addSong(request.session.userId,cleanSongName, cleanArtistName, true);
         if(addData.ok){
             console.log(addData.ok);
@@ -480,14 +466,22 @@ router.post("/search/addAlbum", async (request, response) => {
     if (!request.session.userId) {
        //do nothing?
     } else {
-        let cleanAlbumName = request.body.albumName;
-        let cleanArtistName = request.body.artistName;
-        let cleanRating = request.body.ranking;
-        let addData = await albumsFunctions.addAlbum(request.session.userId,cleanAlbumName, cleanArtistName, Number.parseInt(cleanRating));
-        if(addData.ok){
-            console.log(addData.ok);
-        }else{
-            console.log("something is amuck");
+        try {
+            let cleanAlbumName = xss(request.body.albumName.trim());
+            let cleanArtistName = xss(request.body.artistName.trim());
+            if(!request.body.ranking) {
+                throw "Ranking not provided";
+            } 
+            let cleanRating = xss(request.body.ranking);
+            let addData = await albumsFunctions.addAlbum(request.session.userId,cleanAlbumName, cleanArtistName, Number.parseInt(cleanRating));
+            if(addData.ok){
+                console.log(addData.ok);
+            }else{
+                console.log("something is amuck");
+            }
+        }
+        catch(err) {
+            console.log(err);
         }
     }
 });
@@ -496,7 +490,7 @@ router.post("/search/addLikedArtist", async (request, response) => {
     if (!request.session.userId) {
        //do nothing?
     } else {
-        let cleanArtistName = request.body.artistName;
+        let cleanArtistName = xss(request.body.artistName);
         let addData = await artistsFunctions.addArtist(request.session.userId, cleanArtistName, false);
         if(addData.ok){
             console.log(addData.ok);
@@ -510,7 +504,7 @@ router.post("/search/addDislikedArtist", async (request, response) => {
     if (!request.session.userId) {
        //do nothing?
     } else {
-        let cleanArtistName = request.body.artistName;
+        let cleanArtistName = xss(request.body.artistName);
         let addData = await artistsFunctions.addArtist(request.session.userId, cleanArtistName, true);
         if(addData.ok){
             console.log(addData.ok);
@@ -562,15 +556,35 @@ router.get("/myrecommendedartists", async (request, response) => {
         response.redirect("/loginlogout");
     }
     else {
-        let recs;
-        if(!request.session.cachedRecommendations) { //Getting recommendations is pretty expensive, so cache it once per session
-            recs = await metricsFunctions.getRecommendations(request.session.userId);
-            request.session.cachedRecommendations = recs;
+        // let recs;
+        // if(!request.session.cachedRecommendations) { //Getting recommendations is pretty expensive, so cache it once per session
+        //     recs = await metricsFunctions.getRecommendations(request.session.userId);
+        //     request.session.cachedRecommendations = recs;
+        // }
+        // else {
+        //     recs = request.session.cachedRecommendations;
+        // }
+        // response.render("pages/myrec", {recommendations: recs})
+        response.render("pages/myrec", {});
+    }
+});
+
+router.post("/myrecommendedartists", async (request, response) => {
+    if(!request.session.userId) {
+        response.redirect("/loginlogout");
+    }
+    else {
+        try {
+            let numRecs = Number.parseInt(xss(request.body.numRecs));
+            if(!numRecs || Number.isNaN(numRecs) || numRecs < 1) {
+                throw "Number of recommendations must be a number greater than or equal to 1"
+            }
+            let recommendations = await metricsFunctions.getRecommendations(request.session.userId, numRecs);
+            response.send({recommendations: recommendations});
         }
-        else {
-            recs = request.session.cachedRecommendations;
+        catch(err) {
+            response.send({recommendations: ["error"]});
         }
-        response.render("pages/myrec", {recommendations: recs})
     }
 });
 

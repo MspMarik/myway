@@ -3,7 +3,7 @@ const {ObjectId} = require("mongodb");
 //const {validUserObject} = require("./fieldValidations");
 const {getUserByID} = require("./users");
 
-async function addSong(userId, songName, artistName, dislikeFlag) {
+async function addSong(userId, songName, artistName, dislikeFlag=false) {
     if(!userId) {
         throw "User ID not provided";
     }
@@ -30,6 +30,16 @@ async function addSong(userId, songName, artistName, dislikeFlag) {
         throw "Artist's name is not a string";
     }
 
+    let trimmedSong = songName.trim();
+    let trimmedArtist = artistName.trim();
+
+    if(!trimmedSong) {
+        throw "Song name cannot be whitespace";
+    }
+    if(!trimmedArtist) {
+        throw "Artist name cannot be whitespace";
+    }
+
     if(typeof dislikeFlag != "boolean") {
         throw "If provided, dislike flag should be a boolean";
     }
@@ -38,7 +48,7 @@ async function addSong(userId, songName, artistName, dislikeFlag) {
     let currentSongList = user.favorites.songs;
     let songFound = false;
     for(let i = 0; i < currentSongList.length; i++) { //Alter song liking if it's already present
-        if(songName == currentSongList[i].songName && artistName == currentSongList[i].artistName) {
+        if(trimmedSong == currentSongList[i].songName && trimmedArtist == currentSongList[i].artistName) {
             user.favorites.songs[i].disliked = dislikeFlag;
             songFound = true;
             break;
@@ -46,7 +56,7 @@ async function addSong(userId, songName, artistName, dislikeFlag) {
     }
 
     if(!songFound) {
-        user.favorites.songs.push({songName: songName, artistName: artistName, disliked: dislikeFlag});
+        user.favorites.songs.push({songName: trimmedSong, artistName: trimmedArtist, disliked: dislikeFlag});
     }
 
     const userCollection = await users();
@@ -86,11 +96,25 @@ async function removeSong(userId, songName, artistName) {
         throw "Artist's name is not a string";
     }
 
+    let trimmedSong = songName.trim();
+    let trimmedArtist = artistName.trim();
+
+    if(!trimmedSong) {
+        throw "Song name cannot be whitespace";
+    }
+    if(!trimmedArtist) {
+        throw "Artist name cannot be whitespace";
+    }
+
+    if(typeof dislikeFlag != "boolean") {
+        throw "If provided, dislike flag should be a boolean";
+    }
+
     let user = await getUserByID(userId);
     let currentSongList = user.favorites.songs;
     let songFound = false;
     for(let i = 0; i < currentSongList.length; i++) { //Make sure song is in the list already
-        if(songName == currentSongList[i].songName && artistName == currentSongList[i].artistName) { 
+        if(trimmedSong == currentSongList[i].songName && trimmedArtist == currentSongList[i].artistName) { 
             songFound = true;
             user.favorites.songs.splice(i, 1);
             break;
