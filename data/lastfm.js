@@ -130,7 +130,7 @@ async function getArtist(artistName) {
         throw "Artist name cannot be whitespace";
     }
 
-    let artistInfo = await axios.get(baseURL + `artist.getInfo&artist=${artistName}`);
+    let artistInfo = await axios.get(baseURL + `artist.getInfo&artist=${encodeURIComponent(artistName)}`);
     return artistInfo.data.artist;
 }
 
