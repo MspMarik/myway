@@ -663,10 +663,34 @@ router.post("/updateRanking", async (request, response) =>{
 });
 
 router.post("/shuffle", async (request, response) =>{
-if (!request.session.userid){
+if (!request.session.userId){
 
 }else{
-    console.log("we in this bitch?");
+    const alphabet = "abcdefghijklmnopqrstuvwxyz"
+    const randomCharacter = alphabet[Math.floor(Math.random() * alphabet.length)]
+    let pick = request.body.songOrArtist;
+    let tag =  xss(request.body.tag);
+    if(pick == "song"){
+        let addData = await lastfmFunctions.getSongsByTextInput(randomCharacter, tag);
+        //console.log(addData);
+        if(addData.length == 0){
+            response.render("pages/shuffle", {error: true})
+        }else{
+        let random = addData[Math.floor(Math.random()*addData.length)];
+        response.render("pages/shuffle", {shuffleResults: random, song: true});
+        }
+    }
+
+    if(pick == "artist"){
+        let addData = await lastfmFunctions.getArtistsByTextInput(randomCharacter, tag);
+        //console.log(addData);
+        if(addData.length == 0){
+            response.render("pages/shuffle", {error: true})
+        }else{
+        let random = addData[Math.floor(Math.random()*addData.length)];
+        response.render("pages/shuffle", {shuffleResults: random, artist: true});
+        }
+    }
 }
 });
 

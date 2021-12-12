@@ -36,6 +36,7 @@ async function filterArtists(artists, filterString) {
     let filteredArtists = []; //Start with empty list (assume no artists will make it through)
     for(let i = 0; i < artists.length; i++) {
         let artistInfo = await axios.get(baseURL + `artist.getInfo&artist=${artists[i].name}`); //I don't think there will be a way around this
+        if( artistInfo && artistInfo.data && artistInfo.data.artist && artistInfo.data.artist.tags && artistInfo.data.artist.tags.tag){
         let tagsList = artistInfo.data.artist.tags.tag;
         let tagPresent = false;
         for(let j = 0; j < tagsList.length; j++) { 
@@ -48,6 +49,7 @@ async function filterArtists(artists, filterString) {
             filteredArtists.push(artists[i]);
         }
     }
+}
     return filteredArtists;
 }
 
@@ -84,7 +86,8 @@ async function filterSongs(songs, filterString) {
     let filteredSongs = []; //Start with empty list (assume no songs will make it through)
     for(let i = 0; i < songs.length; i++) {
         let songInfo = await axios.get(baseURL + `track.getInfo&artist=${songs[i].artist}&track=${songs[i].name}`);
-        let tagsList = songInfo.data.track.tags.tag;
+        if( songInfo && songInfo.data && songInfo.data.track && songInfo.data.track.toptags && songInfo.data.track.toptags.tag){
+        let tagsList = songInfo.data.track.toptags.tag;
         let tagPresent = false;
         for(let j = 0; j < tagsList.length; j++) { 
             tagPresent = (filterString == tagsList[j].name);
@@ -95,6 +98,7 @@ async function filterSongs(songs, filterString) {
         if(tagPresent) {
             filteredSongs.push(songs[i]);
         }
+    }
     }
     return filteredSongs;
 }
