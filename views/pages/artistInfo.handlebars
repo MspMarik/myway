@@ -1,6 +1,7 @@
 <h1>{{artistData.name}}</h1>
 <h2 id="great">Great Pick!</h2>
-</div>
+<button onclick="addLikedArtist('{{artistData.name}}')">Add to <span class="specialMy">My</span> Liked Artists</button>
+<button onclick="addDislikedArtist('{{artistData.name}}')">Add to <span class="specialMy">My</span> Disliked Artists</button>
 
 <h2>Similar Artists</h2>
 {{#if artistData.similar.artist}}

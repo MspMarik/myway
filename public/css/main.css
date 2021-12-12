@@ -356,7 +356,8 @@ div {
     color: #ffd76b;
 }
 
-.remove {
+.remove,
+.removeForm {
     background-color: transparent;
     border-style: none;
     color: white;
