@@ -377,20 +377,20 @@ router.get("/myprofile", async (request, response) => {
 // });
 
 //editRanking page for users of webstie
-router.get("/editRanking", async (request, response) => {
-    if (!request.session.userId) {
-        response.redirect("/loginlogout");
-    } else {
-        response.render("pages/editRanking", { album: true });
-    }
-});
+// router.get("/editRanking", async (request, response) => {
+//     if (!request.session.userId) {
+//         response.redirect("/loginlogout");
+//     } else {
+//         response.render("pages/editRanking", { album: true });
+//     }
+// });
 
-router.post("/editRanking", async (request, response) => {
-    if (!request.session.userId) {
-        response.redirect("/loginlogout");
-    } else {
-    }
-});
+// router.post("/editRanking", async (request, response) => {
+//     if (!request.session.userId) {
+//         response.redirect("/loginlogout");
+//     } else {
+//     }
+// });
 
 router.get("/ye", async (request, response) => {
     response.sendFile(path.resolve("static/ye.html"));
@@ -620,6 +620,42 @@ router.post("/removeAlbum", async (request, response) =>{
          }
      }
 });
+
+router.post("/editRanking", async (request, response) =>{
+    if (!request.session.userId) {
+        //do nothing?
+     } else {
+        let cleanAlbumName = xss(request.body.albumName);
+        let cleanArtistName = xss(request.body.artistName);
+        response.render("pages/editRanking", {albumName:cleanAlbumName, artistName:cleanArtistName});
+     }
+});
+
+router.post("/updateRanking", async (request, response) =>{
+    if (!request.session.userId) {
+        //do nothing?
+     } else {
+        let cleanAlbumName = xss(request.body.albumName);
+        let cleanArtistName = xss(request.body.artistName);
+        let addData = await albumsFunctions.removeAlbum(request.session.userId,cleanAlbumName, cleanArtistName);
+        if(addData.ok){
+            console.log("not this one!");
+        }
+        let cleanRating = xss(request.body.ranking);
+        let addData2 = await albumsFunctions.addAlbum(request.session.userId,cleanAlbumName, cleanArtistName,  Number.parseInt(cleanRating));
+        response.redirect("/myalbums")
+
+     }
+});
+
+router.post("/shuffle", async (request, response) =>{
+if (!request.session.userid){
+
+}else{
+    console.log("we in this bitch?");
+}
+});
+
 
 // router.get("/reccomend", async (request, response) => {
 //     if (!request.session.userId) {
