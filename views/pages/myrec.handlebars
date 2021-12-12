@@ -1,5 +1,6 @@
 <h1><span class="specialMy">My</span> Recommended Artists</h1>
 <h2 id="groovy">Groovy!</h2>
+<<<<<<< HEAD
 <form id="recForm">
     <label>How many recommendations do you want?
         <input type="number" id="numRecs" name="numRecs" min="1" step="1" required />
@@ -8,3 +9,15 @@
 </form>
 <p id="recInfoDiv" hidden>{{errString}}</p>
 <ul id="recList"></ul>
+=======
+
+{{#if recommendations}}
+    <ul>
+        {{#each recommendations}}
+            <li><a href="/artistinfo/{{this.name}}">{{this.name}}</a></li>
+        {{/each}}
+    </ul>
+{{else}}
+    <p id="sorry">We're sorry, we have no recommendations for you at the moment...</p>
+{{/if}}
+>>>>>>> f6d50325355ee535ce5c4a347c629c349bca1f44

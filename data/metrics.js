@@ -1,6 +1,6 @@
 //This file contains all the functions for calculating metrics data
 const {getUserByID} = require("./users");
-const {getSimilarArtists, getSongTags} = require("./lastfm");
+const {getArtistsForRecommendations, filterArtistsForRecommendations, getArtistTags, getSongTags} = require("./lastfm");
 
 function countTags(listOfTags) {
     let tagsObject = {};
@@ -41,30 +41,28 @@ async function getSongDataForMetrics(userId) {
     return countObject
 }
 
-async function getRecommendations(userId, numRecs) {
+async function getRecommendations(userId) {
     let user = await getUserByID(userId);
     let artistList = user.favorites.artists;
-    let recMap = new Map();
-    for(let i = 0; i < artistList.length; i++) {
+    let tagsList = [];
+    let topArtists = await getArtistsForRecommendations();
+    for(let i = 0; i < artistList.length; i++) { //Get all the tags from the user's liked artists
+        let artistTags = await getArtistTags(artistList[i].artistName);
         if(!artistList[i].disliked) {
-            let similarArtists = await getSimilarArtists(artistList[i].artistName);
-            for(let j = 0; j < similarArtists.length; j++) {
-                recMap.set(similarArtists[i].name, true);
-            }
+            tagsList = tagsList.concat(artistTags);
         }
     }
-    for(let i = 0; i < artistList.length; i++) {
-        recMap.delete(artistList[i].artistName);
+    let countedList = countTags(tagsList);
+    countedList.shift(); //Removes the labels put there for the metrics
+    let tagAvgOccurence = 0; //Get the average number of times a tag occurs
+    for(let i = 0; i < countedList.length; i++) {
+        tagAvgOccurence += countedList[i][1];
     }
-    let recommendations = Array.from(recMap.keys());
-    if(recommendations.length > numRecs) { //Reduce recommendations to the number of recommendations asked for
-        let initLength = recommendations.length;
-        for(let i = 0; i < (initLength - numRecs); i++) {
-            let removedIndex = Math.floor(Math.random()*recommendations.length); //Selects a random number from 0 to length-1
-            recommendations.splice(removedIndex, 1);
-        }
-    }
-    return recommendations;
+    tagAvgOccurence /= countedList.length;
+    countedList = countedList.filter(tagCounter => {return tagCounter[1] >= tagAvgOccurence}) //Keep tag only if the number of times the tag appears is higher than or equal to the average number of times any tag appears
+    let filteringTags = countedList.map(tagCounter => tagCounter[0]); //Remove the numbers from the tag names
+    let recommendationList = await filterArtistsForRecommendations(topArtists, filteringTags);
+    return recommendationList;
 }
 
 module.exports = {getSongDataForMetrics, getRecommendations};

@@ -58,8 +58,6 @@ async function populateDB() {
     await addAlbum(userFive, "Thank U, Next", "Ariana Grande", 5);
     await addAlbum(userFive, "Beethoven Greatest Hits", "Ludwig Van Beethoven", 5);
     await addAlbum(userFive, "In the Zone", "Britney Spears", 5);
-
-    console.log("All done!");
 }
 
 populateDB();

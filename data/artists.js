@@ -37,7 +37,7 @@ async function addArtist(userId, artistName, dislikeFlag = false) {
     let artistFound = false;
     for (let i = 0; i < currentArtistList.length; i++) {
         //Alter album liking if it's already present
-        if (trimmedArtist == currentArtistList[i].artistName) {
+        if (artistName == currentArtistList[i].artistName) {
             user.favorites.artists[i].disliked = dislikeFlag;
             artistFound = true;
             break;
@@ -82,15 +82,14 @@ async function removeArtist(userId, artistName) {
     if (!trimmedArtist) {
         throw "Artist name cannot be whitespace";
     }
-
     let user = await getUserByID(userId);
     let currentArtistList = user.favorites.artists;
     let artistFound = false;
     for (let i = 0; i < currentArtistList.length; i++) {
         //Make sure artist is in the list already
         if (trimmedArtist == currentArtistList[i].artistName) {
+            user.favorites.artists[i].disliked = dislikeFlag;
             artistFound = true;
-            user.favorites.artists.splice(i, 1);
             break;
         }
     }
@@ -105,6 +104,9 @@ async function removeArtist(userId, artistName) {
     }
 
     //return user;
+
+    return { ok: "Artist successfully removed" };
+
     return { ok: "Artist successfully removed" };
 }
 
