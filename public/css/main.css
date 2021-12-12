@@ -160,7 +160,8 @@ div {
 
 #loginDiv,
 #ssFormDiv,
-#recSmalLDiv {
+#recSmalLDiv,
+#shuffSDiv {
     padding-top: 30px;
     font-size: 30px;
     color: #2c37a1;
@@ -180,7 +181,8 @@ div {
 #lbigDiv,
 #signDiv,
 #searchFormDiv,
-#recBigDiv {
+#recBigDiv,
+#shuffDiv {
     background-color: #ffecba;
     text-align: center;
     width: 500px;
@@ -201,7 +203,8 @@ div {
 #password2,
 #searchbox,
 #prodYear,
-#numRecs {
+#numRecs,
+#tag {
     height: 25px;
     font-family: "Chivo", sans-serif;
     font-style: italic;
@@ -250,7 +253,8 @@ div {
 #subButt,
 #submitRank,
 #submitSearch,
-#submitRecs {
+#submitRecs,
+#submit {
     font-family: "Chivo", sans-serif;
     font-style: italic;
     background-color: #2c37a1;

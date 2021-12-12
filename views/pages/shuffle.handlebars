@@ -3,17 +3,19 @@
 <h2>Need something new? Click whatever you'd like.</h2>
 
 {{! ADD FORM ACTION }}
-<form>
-    <label for="songOrArtist">Song or Artist?</label>
-    <select id="songOrArtist" name="songOrArtist" onchange="selectValue">
-        <option value="song" id="song" name="song">Song</option>
-        <option value="artist" id="artist" name="artist">Artist</option>
-    </select>
-    <label for="tag">Tag</label>
-    <input type="text" name="tag" id="tag" />
-    <label for="submit">Shuffle!</label>
-    <input type="submit" name="submit" id="submit" />
-</form>
+<div id="shuffDiv"><div id="shuffSDiv"><form>
+            <label for="songOrArtist">Song or Artist?</label><br />
+            <div class="custom-select"><select id="songOrArtist" name="songOrArtist" onchange="selectValue">
+                    <option value="song" id="song" name="song">Song</option>
+                    <option value="artist" id="artist" name="artist">Artist</option>
+                </select><br /></div>
+
+            <label for="tag">Genre</label>
+            <br />
+            <input type="text" name="tag" id="tag" /><br />
+            <label for="submit">Shuffle!</label><br />
+            <input type="submit" name="submit" id="submit" />
+        </form></div></div>
 
 {{#if shuffleResults}}
     {{#if song}}
