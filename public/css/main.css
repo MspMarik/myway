@@ -32,7 +32,7 @@ h2 {
     font-family: "Chivo", sans-serif;
     text-align: center;
     color: #ffecba;
-    margin-top: 0px;
+    margin-top: 20px;
     padding: 0%;
 }
 
@@ -113,7 +113,9 @@ div {
     text-align: center;
 }
 
-#slogan {
+#slogan,
+#listen,
+#great {
     font-family: "Chivo", sans-serif;
     font-weight: 300;
     text-align: center;
@@ -121,7 +123,9 @@ div {
     margin-top: 20px;
 }
 
-#slogan {
+#slogan,
+#listen,
+#great {
     animation-duration: 2s;
     animation-name: slidein;
 }
@@ -165,6 +169,7 @@ div {
     font-family: "Mulish", sans-serif;
     font-size: 20px;
     font-weight: 700;
+    margin-top: 10px;
 }
 
 #lbigDiv,
@@ -255,4 +260,76 @@ div {
     font-family: "Mulish", sans-serif;
     font-weight: 700;
     font-size: 30px;
+}
+
+#error {
+    color: #2c37a1;
+    font-weight: 700;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    padding-top: 5px;
+}
+
+#profHello {
+    text-align: center;
+    font-size: 40px;
+    font-style: italic;
+    font-family: "Chivo", sans-serif;
+    color: #ffe08f;
+    font-weight: 300;
+}
+
+#profButts {
+    text-align: center;
+    margin: 0px 40px 40px 40px;
+    background-color: #2c37a1;
+    border-style: none;
+    padding: 40px 60px 40px 60px;
+    font-size: 40px;
+    color: #ffecba;
+    font-family: "Mulish", sans-serif;
+    font-weight: 700;
+}
+
+#profButts:hover {
+    color: #e9b425;
+}
+
+#profDiv {
+    text-align: center;
+}
+
+#songName {
+    color: #ffecba;
+    font-size: 30px;
+    text-align: center;
+    font-weight: 700;
+    font-style: italic;
+}
+
+#artistName {
+    color: #e9b425;
+    font-size: 30px;
+    text-align: center;
+    font-weight: 700;
+}
+
+#proRecs {
+    text-align: center;
+}
+
+#songBigDiv {
+    text-align: center;
+}
+
+#songT {
+    font-size: 30px;
+    color: #ffecba;
+    font-family: "Mulish", sans-serif;
+}
+
+#likeDislike {
+    font-size: 40px;
+    margin: 30px 0px 30px 0px;
+    color: #ffd76b;
 }

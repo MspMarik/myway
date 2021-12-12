@@ -1,33 +1,35 @@
 <h1><span class="specialMy">My</span> {{#if song}}Songs{{/if}}{{#if artist}}Artists{{/if}}{{#if album}}Albums{{/if}}</h1>
+<h2 id="great">You Look Great Today</h2>
 
-{{#unless album}}
-<h2>Liked</h2>
+<divn id="songBigDiv">{{#unless album}}
+    <h2 id="likeDislike">Liked</h2>
     {{#unless liked}}
         <p>Looks like you don't have any liked {{#if song}}songs{{/if}}{{#if artist}}artists{{/if}} saved &#128532;</p>
     {{else}}
         {{#each liked}}
-            <div>
-                <span>{{this.songName}}</span>
-                <span>{{this.artistName}}</span>
-                <button class="remove">&#128465;</button> {{! Changed remove from id to class, since there will be multiple of them}}
+            <div id="proRecs">
+                <span id="songName">{{this.songName}} </span>
+                <span id="artistName">{{this.artistName}}</span>
+                <button class="remove">&#128465;</button>
+                {{! Changed remove from id to class, since there will be multiple of them}}
             </div>
         {{/each}}
     {{/unless}}
-<h2>Disliked</h2>
+    <h2 id="likeDislike">Disliked</h2>
     {{#unless disliked}}
-        <p>Looks like you don't have any disliked {{#if song}}songs{{/if}}{{#if artist}}artists{{/if}} saved &#128513;</p>
+        <p id="songT">Looks like you don't have any disliked {{#if song}}songs{{/if}}{{#if artist}}artists{{/if}} saved </br>&#128513;</p>
     {{else}}
         {{#each disliked}}
             <div>
-                <span>{{this.songName}}</span>
-                <span>{{this.artistName}}</span>
+                <span id="songName">{{this.songName}}</span>
+                <span id="artistName">{{this.artistName}}</span>
                 <button class="remove">&#128465;</button>
             </div>
         {{/each}}
     {{/unless}}
 {{else}}
     {{#unless albumList}}
-    <p>Looks like you don't have any albums saved &#128532;</p>
+        <p id="songT">Looks like you don't have any albums saved &#128532;</p>
     {{else}}
         {{#each albumList}}
             <div>
@@ -39,5 +41,4 @@
             </div>
         {{/each}}
     {{/unless}}
-{{/unless}}
-
+{{/unless}}</div>

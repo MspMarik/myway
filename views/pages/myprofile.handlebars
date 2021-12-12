@@ -1,13 +1,13 @@
 <h1><span class="specialMy">My</span> Profile</h1>
+<h2 id="listen">Let's Listen</h2>
+<p id="profHello">Hello {{username}}!</p>
 
-<p>Hello {{username}}!</p>
-
-<div>
-    <a href="/mysongs"><button><span class="specialMy">My</span> Songs</button></a>
-    <a href="/myartists"><button><span class="specialMy">My</span> Artists</button></a>
-    <a href="/myalbums"><button><span class="specialMy">My</span> Albums</button></a>
-    <a href="/mymetrics"><button><span class="specialMy">My</span> Metrics</button></a>
-    <a href="/search"><button>Search</button></a>
+<div id="profDiv">
+    <a href="/mysongs"><button id="profButts"><span class="specialMy">My</span> Songs</button></a>
+    <a href="/myartists"><button id="profButts"><span class="specialMy">My</span> Artists</button></a>
+    <a href="/myalbums"><button id="profButts"><span class="specialMy">My</span> Albums</button></a>
+    <a href="/mymetrics"><button id="profButts"><span class="specialMy">My</span> Metrics</button></a>
+    <a href="/search"><button id="profButts">Search</button></a>
 </div>
 
 {{#if weeklyRec}}
@@ -19,3 +19,4 @@
         <span>{{this.artistName}}</span>
     </div>
 {{/each}}
+<img id="loginLogo" src="public/img/MY_WAY_logos/text.png" alt="logo" width="300" height="300" />

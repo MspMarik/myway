@@ -1,7 +1,6 @@
 <h1>Sign Up</h1>
 <img id="loginLogo" src="public/img/MY_WAY_logos/text.png" alt="logo" width="300" height="300" />
 
-<div id="error">{{errorStr}}</div>
 {{! ADD FORM ACTION }}
 <div id="signDiv"><div id="loginDiv"><form class="signupForm" action="/signup" id="signup-form" method="POST">
             <label>
@@ -24,6 +23,7 @@
             <br />
             <button id="subButt" type="submit">Sign Up!</button>
         </form></div>
+    <div id="error">{{errorStr}}</div>
 
     <p id="oldUserClick">Already a user? Click <a id="here" href="/loginlogout">here</a> to login!</p></div>
 <img id="loginLogo" src="public/img/MY_WAY_logos/notext.png" alt="logo" width="150" height="150" />
