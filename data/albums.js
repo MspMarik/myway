@@ -113,6 +113,7 @@ async function removeAlbum(userId, albumName, artistName) {
     }
     
     //return user;
+    return {ok: 'Album successfully removed'}
 }
 
 module.exports = {addAlbum, removeAlbum};

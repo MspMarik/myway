@@ -103,6 +103,7 @@ async function removeArtist(userId, artistName) {
     }
     
     //return user;
+    return {ok: 'Artist successfully removed'}
 }
 
 module.exports = {addArtist, removeArtist};
