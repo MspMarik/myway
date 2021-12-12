@@ -10,8 +10,8 @@ h1 {
     font-size: 80px;
     animation-duration: 2s;
     animation-name: slidein;
-    margin-top: 40px;
-    padding-top: 20px;
+    margin-top: 5px;
+    padding-top: 15px;
     padding-bottom: 0px;
     margin-bottom: 0px;
 }
@@ -42,7 +42,7 @@ header {
 
 ul {
     list-style-type: none;
-    margin: 10px;
+    margin: 10px 10px 0px 10px;
     text-align: center;
     overflow: hidden;
     background-color: #646eca;
@@ -77,7 +77,7 @@ a:visited {
 
 a:hover {
     text-decoration: none;
-    color: #ffecba;
+    color: #ffce4c;
     font-family: "Chivo", sans-serif;
 }
 
@@ -196,6 +196,15 @@ div {
 }
 
 #loginLogo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding: 0px;
+}
+
+#footLogo {
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -332,4 +341,10 @@ div {
     font-size: 40px;
     margin: 30px 0px 30px 0px;
     color: #ffd76b;
+}
+
+.remove {
+    background-color: transparent;
+    border-style: none;
+    color: white;
 }
