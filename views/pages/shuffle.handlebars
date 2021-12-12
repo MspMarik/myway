@@ -6,23 +6,28 @@
 <form id = "shuffleForm" action = "/shuffle" method = "POST">
     <label for="songOrArtist">Song or Artist?</label>
     <select id="songOrArtist" name="songOrArtist" onchange="selectValue">
-        <option value="song" id = "song">Song</option>
-        <option value="artist" id = "artist">Artist</option>
+        <option value="song" id = "song" name = "song">Song</option>
+        <option value="artist" id = "artist" name = "artist">Artist</option>
     </select>
     <label for="tag">Tag</label>
     <input type="text" name="tag" id="tag" />
+    <label for="submit">Shuffle!</label>
+    <input type="submit" name="submit" id="submit" />
 </form>
 
-{{!-- {{#if shuffleResult}}
-    {{#if shuffleResult.song}}
-        <h3>Your shuffled song:</h3>
-        <p>{{shuffleResult.songName}}</p>
+{{#if shuffleResults}}
+    {{#if song}}
+        <h2>Your shuffled song:</h2>
+        <p>{{shuffleResults.name}}</p>
         <p>by</p>
-        <p>{{shuffleResult.artistName}}</p>
+        <p>{{shuffleResults.artist}}</p>
     {{/if}}
-    {{#if shuffleResult.artist}}
-        <h3>Your shuffled artist:</h3>
-        <p>{{shuffleResult.artistName}}</p>
+    {{#if artist}}
+        <h2>Your shuffled artist:</h2>
+        <p>{{shuffleResults.name}}</p>
     {{/if}}
-{{/if}} --}}
-<script src="/public/js/shuffleScript.js"></script>
+{{/if}}
+
+{{#if error}}
+<h2>Bad shuffle! Try again.</h2>
+{{/if}}
