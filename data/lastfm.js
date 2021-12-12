@@ -134,20 +134,11 @@ async function getArtist(artistName) {
     return artistInfo.data.artist;
 }
 
-async function getSimilarArtists(artistName) {
-    if(!artistName) {
-        throw "Artist name not provided";
-    }
-    if(typeof artistName != "string") {
-        throw "Artist name must be a string";
-    }
-    let trimmedName = artistName.trim();
-    if(!trimmedName) {
-        throw "Artist name cannot be whitespace";
-    }
-    let requestURL = baseURL + `artist.getSimilar&artist=${trimmedName}`;
+async function getArtistsForRecommendations() {
+    let pageNumber = Math.floor(Math.random()*2 + 1); //Used to vary the recommendations
+    let requestURL = baseURL + `chart.getTopArtists&page=${pageNumber}`;
     let {data} = await axios.get(requestURL);
-    let artists = data.similarartists.artist;
+    let artists = data.artists.artist;
     return artists;
 }
 
@@ -370,4 +361,4 @@ async function getAlbumsByTextInput(input, userTag = undefined) {
     return filteredAlbums;
 }
 
-module.exports = {getArtist, getSimilarArtists, filterArtistsForRecommendations, getArtistsByTextInput, getArtistTags, getSongsByTextInput, getAlbumsByTextInput, getSongInfo, getSongTags, getAlbumInfo};
+module.exports = {getArtist, getArtistsForRecommendations, filterArtistsForRecommendations, getArtistsByTextInput, getArtistTags, getSongsByTextInput, getAlbumsByTextInput, getSongInfo, getSongTags, getAlbumInfo};

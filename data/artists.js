@@ -23,11 +23,6 @@ async function addArtist(userId, artistName, dislikeFlag = false) {
         throw "Artist's name is not a string";
     }
 
-    let trimmedArtist = artistName.trim();
-    if (!trimmedArtist) {
-        throw "Artist name cannot be whitespace";
-    }
-
     if (typeof dislikeFlag != "boolean") {
         throw "If provided, dislike flag should be a boolean";
     }
@@ -37,7 +32,7 @@ async function addArtist(userId, artistName, dislikeFlag = false) {
     let artistFound = false;
     for (let i = 0; i < currentArtistList.length; i++) {
         //Alter album liking if it's already present
-        if (trimmedArtist == currentArtistList[i].artistName) {
+        if (artistName == currentArtistList[i].artistName) {
             user.favorites.artists[i].disliked = dislikeFlag;
             artistFound = true;
             break;
@@ -78,17 +73,24 @@ async function removeArtist(userId, artistName) {
         throw "Artist's name is not a string";
     }
 
+<<<<<<< HEAD
     let trimmedArtist = artistName.trim();
     if (!trimmedArtist) {
         throw "Artist name cannot be whitespace";
     }
 
+=======
+>>>>>>> parent of 338dbc7... fixed merge conflicts from pulling
     let user = await getUserByID(userId);
     let currentArtistList = user.favorites.artists;
     let artistFound = false;
     for (let i = 0; i < currentArtistList.length; i++) {
         //Make sure artist is in the list already
+<<<<<<< HEAD
         if (trimmedArtist == currentArtistList[i].artistName) {
+=======
+        if (artistName == currentArtistList[i].artistName) {
+>>>>>>> parent of 338dbc7... fixed merge conflicts from pulling
             artistFound = true;
             user.favorites.artists.splice(i, 1);
             break;
@@ -105,7 +107,10 @@ async function removeArtist(userId, artistName) {
     }
 
     //return user;
+<<<<<<< HEAD
     return { ok: "Artist successfully removed" };
+=======
+>>>>>>> parent of 338dbc7... fixed merge conflicts from pulling
 }
 
 module.exports = { addArtist, removeArtist };
