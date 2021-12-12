@@ -106,9 +106,6 @@ async function removeSong(userId, songName, artistName) {
         throw "Artist name cannot be whitespace";
     }
 
-    if(typeof dislikeFlag != "boolean") {
-        throw "If provided, dislike flag should be a boolean";
-    }
 
     let user = await getUserByID(userId);
     let currentSongList = user.favorites.songs;

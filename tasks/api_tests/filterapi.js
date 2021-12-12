@@ -16,6 +16,8 @@ async function main() {
     catch(e) {
         console.log(e);
     }
+
+    console.log("All done!");
 }
 
 main();
