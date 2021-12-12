@@ -5,18 +5,18 @@
 
 <h2>Similar Artists</h2>
 {{#if artistData.similar.artist}}
-<ul>
-    {{#each artistData.similar.artist}}
-        <li><a href="/artistinfo/{{this.name}}">{{this.name}}</a></li>
-    {{/each}}
-</ul>
+    <ul>
+        {{#each artistData.similar.artist}}
+            <li><a href="/artistinfo/{{this.name}}">{{this.name}}</a></li>
+        {{/each}}
+    </ul>
 {{else}}
-<p>No similar artists found.</p>
+    <p>No similar artists found.</p>
 {{/if}}
 
 <h2>Artist Information</h2>
 {{#if artistData.bio.content}}
-<p>{{{artistData.bio.content}}}</p>
+    <p>{{{artistData.bio.content}}}</p>
 {{else}}
-<p>No information found.</p>
+    <p>No information available.</p>
 {{/if}}
