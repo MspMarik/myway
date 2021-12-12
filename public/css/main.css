@@ -117,19 +117,13 @@ div {
 #listen,
 #great,
 #groovy,
-#pina {
+#pina,
+#shuff {
     font-family: "Chivo", sans-serif;
     font-weight: 300;
     text-align: center;
     color: #ffce4c;
     margin-top: 20px;
-}
-
-#slogan,
-#listen,
-#great,
-#groovy,
-#pina {
     animation-duration: 2s;
     animation-name: slidein;
 }
@@ -146,7 +140,8 @@ div {
     }
 }
 
-#pina {
+#pina,
+#shuff {
     font-style: italic;
 }
 
