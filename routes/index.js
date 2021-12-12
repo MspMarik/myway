@@ -250,7 +250,7 @@ router.post("/search/songs", async (request, response) => {
             let yep = false;
             let cleanedYear
             if(request.body.prodYear){
-                cleanedYear = request.body.prodYear;
+                cleanedYear = xss(request.body.prodYear);
                 yep = true;
             }
             let retrievedSongs = await lastfmFunctions.getSongsByTextInput(cleanedSearchTerm, cleanedTag);
@@ -361,7 +361,8 @@ router.get("/myprofile", async (request, response) => {
     if(!request.session.userId) {
         response.redirect("/loginlogout");
     }else{
-        response.render("pages/myprofile", {});
+        let {username} = await userFunctions.getUserByID(request.session.userId)
+        response.render("pages/myprofile", {username: username});
     }
 });
 
@@ -400,13 +401,6 @@ router.get("/ye", async (request, response) => {
     }
 });
 
-router.get("/myprofile", async (request, response) => {
-    if (!request.session.userId) {
-        response.redirect("/loginlogout");
-    } else {
-        response.render("pages/myprofile", {});
-    }
-});
 
 router.get("/mysongs", async (request, response) => {
     if (!request.session.userId) {
@@ -480,9 +474,9 @@ router.post("/search/addAlbum", async (request, response) => {
     if (!request.session.userId) {
        //do nothing?
     } else {
-        let cleanAlbumName = request.body.albumName;
-        let cleanArtistName = request.body.artistName;
-        let cleanRating = request.body.ranking;
+        let cleanAlbumName = xss(request.body.albumName);
+        let cleanArtistName = xss(request.body.artistName);
+        let cleanRating = xss(request.body.ranking);
         let addData = await albumsFunctions.addAlbum(request.session.userId,cleanAlbumName, cleanArtistName, Number.parseInt(cleanRating));
         if(addData.ok){
             console.log(addData.ok);
@@ -562,15 +556,35 @@ router.get("/myrecommendedartists", async (request, response) => {
         response.redirect("/loginlogout");
     }
     else {
-        let recs;
-        if(!request.session.cachedRecommendations) { //Getting recommendations is pretty expensive, so cache it once per session
-            recs = await metricsFunctions.getRecommendations(request.session.userId);
-            request.session.cachedRecommendations = recs;
+        // let recs;
+        // if(!request.session.cachedRecommendations) { //Getting recommendations is pretty expensive, so cache it once per session
+        //     recs = await metricsFunctions.getRecommendations(request.session.userId);
+        //     request.session.cachedRecommendations = recs;
+        // }
+        // else {
+        //     recs = request.session.cachedRecommendations;
+        // }
+        // response.render("pages/myrec", {recommendations: recs})
+        response.render("pages/myrec", {});
+    }
+});
+
+router.post("/myrecommendedartists", async (request, response) => {
+    if(!request.session.userId) {
+        response.redirect("/loginlogout");
+    }
+    else {
+        try {
+            let numRecs = Number.parseInt(xss(request.body.numRecs));
+            if(!numRecs || Number.isNaN(numRecs) || numRecs < 1) {
+                throw "Number of recommendations must be a number greater than or equal to 1"
+            }
+            let recommendations = await metricsFunctions.getRecommendations(request.session.userId, numRecs);
+            response.send({recommendations: recommendations});
         }
-        else {
-            recs = request.session.cachedRecommendations;
+        catch(err) {
+            response.send({recommendations: ["error"]});
         }
-        response.render("pages/myrec", {recommendations: recs})
     }
 });
 
