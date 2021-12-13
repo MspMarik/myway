@@ -149,7 +149,7 @@ async function getSimilarArtists(artistName) {
     }
     let requestURL = baseURL + `artist.getSimilar&artist=${encodeURIComponent(trimmedName)}`;
     let { data } = await axios.get(requestURL);
-    let artists = data.artists.artist;
+    let artists = data.similarartists.artist;
     return artists;
 }
 
@@ -368,4 +368,4 @@ async function getAlbumsByTextInput(input, userTag = undefined) {
     return filteredAlbums;
 }
 
-module.exports = { getArtist, filterArtistsForRecommendations, getArtistsByTextInput, getArtistTags, getSongsByTextInput, getAlbumsByTextInput, getSongInfo, getSongTags, getAlbumInfo };
+module.exports = { getArtist, filterArtistsForRecommendations, getArtistsByTextInput, getArtistTags, getSongsByTextInput, getAlbumsByTextInput, getSongInfo, getSongTags, getAlbumInfo, getSimilarArtists };
