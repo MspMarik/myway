@@ -1,21 +1,28 @@
-<h1>Sign Up For <span class="specialMy">My</span> Way</h1>
+<h1>Sign Up</h1>
+<img id="loginLogo" src="public/img/MY_WAY_logos/text.png" alt="logo" width="300" height="300" />
 
-<div id="error">{{errorStr}}</div>
 {{! ADD FORM ACTION }}
-<form class="signupForm" action="/signup" id="signup-form" method="POST">
-    <label>
-        Username:
-        <input type="text" id="username" name="username" />
-    </label>
-    <label>
-        Password:
-        <input type="password" id="password" name="password" />
-    </label>
-    <label>
-        Retype Password:
-        <input type="password" id="password2" name="password2" />
-    </label>
-    <button type="submit">Sign Up!</button>
-</form>
+<div id="signDiv"><div id="loginDiv"><form class="signupForm" action="/signup" id="signup-form" method="POST">
+            <label>
+                Username:
+                <br />
+                <input type="text" id="username" name="username" />
+            </label>
+            <br />
+            <label>
+                Password:
+                <br />
+                <input type="password" id="password" name="password" />
+            </label>
+            <br />
+            <label>
+                Retype Password:
+                <br />
+                <input type="password" id="password2" name="password2" />
+            </label>
+            <br />
+            <button id="subButt" type="submit">Sign Up!</button>
+        </form></div>
+    <div id="error">{{errorStr}}</div>
 
-<p>Already a user? Click <a href="/loginlogout">here</a> to login!</p>
+    <p id="oldUserClick">Already a user? Click <a id="here" href="/loginlogout">here</a> to login!</p></div>
