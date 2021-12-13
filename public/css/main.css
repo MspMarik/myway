@@ -161,11 +161,22 @@ div {
 #loginDiv,
 #ssFormDiv,
 #recSmalLDiv,
-#shuffSDiv {
+#shuffSDiv,
+#editSmallDiv,
+#editOf {
     padding-top: 30px;
     font-size: 30px;
     color: #2c37a1;
     font-family: "Chivo", sans-serif;
+    font-style: italic;
+}
+
+#editOf {
+    font-style: normal;
+    color: #2c37a1;
+}
+
+#editName {
     font-style: italic;
 }
 
@@ -182,7 +193,8 @@ div {
 #signDiv,
 #searchFormDiv,
 #recBigDiv,
-#shuffDiv {
+#shuffDiv,
+#bigEditDiv {
     background-color: #ffecba;
     text-align: center;
     width: 500px;
@@ -191,6 +203,17 @@ div {
     position: relative;
     border-radius: 25px;
 }
+
+#bigEditDiv {
+    margin-top: 60px;
+    padding: 20px;
+    padding-bottom: 45px;
+    width: 500px;
+    height: 200px;
+    margin-bottom: 60px;
+    line-height: 40px;
+}
+
 #searchFormDiv {
     height: 250px;
     margin-bottom: 50px;

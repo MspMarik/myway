@@ -1,0 +1,71 @@
+@font-face {
+    font-family: GT Super Display;
+    src: url(../fonts/GT\ Super\ Display\ Regular.ttf);
+}
+@font-face {
+    font-family: JakesHandwriting;
+    src: url(../fonts/YungJakesNewHandwriting-Regular.ttf);
+}
+
+body {
+    background-image: url(../img/Solid_black.svg);
+    background-repeat: repeat;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: white;
+}
+
+.h1contain {
+    width: 100%;
+}
+
+h1 {
+    font-family: GT Super Display;
+    font-size: 150pt;
+    text-align: center;
+    margin: 0 auto;
+    display: block;
+    white-space: nowrap;
+    color: yellow;
+}
+
+main {
+    text-align: center;
+}
+
+.marquee {
+    width: 100%;
+    line-height: 50px;
+    white-space: nowrap;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+.marquee p {
+    font-family: JakesHandwriting;
+    font-size: 25pt;
+    display: inline-block;
+    padding-left: 100%;
+    animation: marquee 160s linear infinite;
+    color: #40b16d;
+}
+@keyframes marquee {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(-100%, 0);
+    }
+}
+
+.small {
+    width: 300px;
+}
+
+.border {
+    border: white solid 2px;
+}
+
+a {
+    font-family: GT Super Display;
+    color: yellow;
+}
