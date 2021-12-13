@@ -3,7 +3,7 @@
 <h2>Need something new? Click whatever you'd like.</h2>
 
 {{! ADD FORM ACTION }}
-<div id="shuffDiv"><div id="shuffSDiv"><form>
+<div id="shuffDiv"><div id="shuffSDiv"><form id="shuffleForm" action="/shuffle" method="POST">
             <label for="songOrArtist">Song or Artist?</label><br />
             <div class="custom-select"><select id="songOrArtist" name="songOrArtist" onchange="selectValue">
                     <option value="song" id="song" name="song">Song</option>
