@@ -1,7 +1,11 @@
 <h1>{{albumName}} by {{artistName}}</h1>
-<div id="bigEditDiv"><div id="smallEditDiv"><form class="updateForm" action="/updateRanking" method="POST">
-            <span id="editOf">Edit your ranking of<br /> <span id="editName">{{albumName}}</span></span><br />
-            <label><input type="number" id="ranking" name="ranking" min="0" max="10" step="1" required /><br /><span id="editOf">/10</span></label><br />
-            <button type="submit" id="subButt" name="submitRank">Submit</button>
-        </form></div></div>
+
 {{! ADD FORM ACTION }}
+<div id="bigEditDiv"><div id="smallEditDiv"><form class="updateForm" action="/updateRanking" method="POST">
+    <span id="editOf">Edit your ranking of <br /> <span id="editName">{{albumName}}</span></span><br />
+    <input type="text" id="album" name="albumName" value="{{albumName}}" hidden />
+    <input type="text" id="artist" name="artistName" value="{{artistName}}" hidden />
+    <label><input type="number" id="ranking" name="ranking" min="0" max="10" step="1" required /><span id="editOf"><br /> /10</span></label><br /> 
+    <button type="submit" id="subButt" name="submitRank">Submit</button>
+</form><div></div>
+

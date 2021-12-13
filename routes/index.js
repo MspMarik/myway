@@ -641,6 +641,8 @@ router.post("/editRanking", async (request, response) => {
     } else {
         let cleanAlbumName = xss(request.body.albumName);
         let cleanArtistName = xss(request.body.artistName);
+        // console.log(cleanAlbumName);
+        // console.log(cleanArtistName);
         response.render("pages/editRanking", { albumName: cleanAlbumName, artistName: cleanArtistName });
     }
 });
@@ -660,6 +662,69 @@ router.post("/updateRanking", async (request, response) => {
         response.redirect("/myalbums");
     }
 });
+
+// router.post("/shuffle", async (request, response) => {
+//     if (!request.session.userId) {
+//         response.redirect("/loginlogout");
+//     } else {
+//         const alphabet = "abcdefghijklmnopqrstuvwxyz";
+//         const randomCharacter = Math.floor(Math.random() * alphabet.length);
+//         let pick = request.body.songOrArtist;
+//         let tag = xss(request.body.tag);
+//         let noneFound = true;
+//         if (pick == "song") {
+//             let addData;
+//             for (let i = 0; i < 26; i++) {
+//                 let char = alphabet[(randomCharacter + i) % 26];
+//                 addData = await lastfmFunctions.getSongsByTextInput(char, tag);
+//                 if (addData.length > 0) {
+//                     noneFound = false;
+//                     break;
+//                 }
+//             }
+
+//             if (noneFound) {
+//                 response.render("pages/shuffle", { error: true });
+//             } else {
+//                 let random = addData[Math.floor(Math.random() * addData.length)];
+//                 response.render("pages/shuffle", { shuffleResults: random, song: true });
+//             }
+
+//             //console.log(addData);
+//             // if(addData.length == 0){
+//             //     response.render("pages/shuffle", {error: true})
+//             // }else{
+//             // let random = addData[Math.floor(Math.random()*addData.length)];
+//             // response.render("pages/shuffle", {shuffleResults: random, song: true});
+//             // }
+//         }
+
+//         if (pick == "artist") {
+//             let addData;
+//             for (let i = 0; i < 26; i++) {
+//                 let char = alphabet[(randomCharacter + i) % 26];
+//                 addData = await lastfmFunctions.getArtistsByTextInput(char, tag);
+//                 if (addData.length > 0) {
+//                     noneFound = false;
+//                     break;
+//                 }
+//             }
+
+//             if (noneFound) {
+//                 response.render("pages/shuffle", { error: true });
+//             } else {
+//                 let random = addData[Math.floor(Math.random() * addData.length)];
+//                 response.render("pages/shuffle", { shuffleResults: random, artist: true });
+//             }
+
+//             // if(addData.length == 0){
+//             //     response.render("pages/shuffle", {error: true})
+//             // }else{
+//             // let random = addData[Math.floor(Math.random()*addData.length)];
+//             // response.render("pages/shuffle", {shuffleResults: random, artist: true});
+//         }
+//     }
+// });
 
 router.post("/shuffle", async (request, response) => {
     if (!request.session.userId) {
@@ -696,7 +761,6 @@ router.post("/shuffle", async (request, response) => {
             // response.render("pages/shuffle", {shuffleResults: random, song: true});
             // }
         }
-
         if (pick == "artist") {
             let addData;
             for (let i = 0; i < 26; i++) {
