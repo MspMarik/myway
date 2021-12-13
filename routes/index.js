@@ -649,16 +649,41 @@ router.post("/updateRanking", async (request, response) =>{
     if (!request.session.userId) {
         response.redirect("/loginlogout");
      } else {
-        let cleanAlbumName = xss(request.body.albumName);
-        let cleanArtistName = xss(request.body.artistName);
-        let addData = await albumsFunctions.removeAlbum(request.session.userId,cleanAlbumName, cleanArtistName);
-        if(addData.ok){
-            console.log("not this one!");
-        }
-        let cleanRating = xss(request.body.ranking);
-        let addData2 = await albumsFunctions.addAlbum(request.session.userId,cleanAlbumName, cleanArtistName,  Number.parseInt(cleanRating));
-        response.redirect("/myalbums")
+        try {
+            if(!request.body.albumName) {
+                throw "Album name not provided";
+            }
+            if(!request.body.artistName) {
+                throw "Artist name not provided";
+            }
+            if(typeof request.body.albumName != "string") {
+                throw "Album name must be a string";
+            }
+            if(typeof request.body.artistName != "string") {
+                throw "Artist name must be a string";
+            }
 
+            let cleanAlbumName = xss(request.body.albumName).trim();
+            if(!cleanAlbumName) {
+                throw "Album name cannot be whitespace";
+            }
+            let cleanArtistName = xss(request.body.artistName).trim();
+            if(!cleanArtistName) {
+                throw "Artist name cannot be whitespace";
+            }
+            let addData = await albumsFunctions.removeAlbum(request.session.userId,cleanAlbumName, cleanArtistName);
+            if(addData.ok){
+                console.log("not this one!");
+            }
+            let cleanRating = xss(request.body.ranking);
+            let addData2 = await albumsFunctions.addAlbum(request.session.userId,cleanAlbumName, cleanArtistName,  Number.parseInt(cleanRating));
+        }
+        catch(err) {
+
+        }
+        finally {
+            response.redirect("/myalbums")
+        }
      }
 });
 
@@ -666,63 +691,73 @@ router.post("/shuffle", async (request, response) =>{
 if (!request.session.userId){
     response.redirect("/loginlogout");
 }else{
-    const alphabet = "abcdefghijklmnopqrstuvwxyz";
-    const randomCharacter = Math.floor(Math.random() * alphabet.length);
-    let pick = request.body.songOrArtist;
-    let tag =  xss(request.body.tag);
-    let noneFound = true;
-    if(pick == "song"){
-        let addData;
-        for(let i = 0; i < 26; i++) {
-            let char = alphabet[(randomCharacter + i) % 26];
-            addData = await lastfmFunctions.getSongsByTextInput(char, tag);
-            if(addData.length > 0) {
-                noneFound = false;
-                break;
+        try {
+            if(!request.body.songOrArtist) {
+                throw "Song or artist choice not provided";
+            }
+            if(!request.body.tag) {
+                throw "Shuffle tag not provided";
+            }
+            if(typeof request.body.songOrArtist != "string") {
+                throw "Song or artist choice must be a string";
+            }
+            if(typeof request.body.tag != "string") {
+                throw "Shuffle tag not provided";
+            }
+            let pick = xss(request.body.songOrArtist).trim();
+            if(pick != "song" && pick != "artist") {
+                throw "You must choose between song and artist"
+            }
+            let tag =  xss(request.body.tag).trim();
+            if(!tag) {
+                throw "Tag cannot be whitespace";
+            }
+
+            const alphabet = "abcdefghijklmnopqrstuvwxyz";
+            const randomCharacter = Math.floor(Math.random() * alphabet.length);
+            let noneFound = true;
+            if(pick == "song"){
+                let addData;
+                for(let i = 0; i < 26; i++) {
+                    let char = alphabet[(randomCharacter + i) % 26];
+                    addData = await lastfmFunctions.getSongsByTextInput(char, tag);
+                    if(addData.length > 0) {
+                        noneFound = false;
+                        break;
+                    }
+                }
+
+                if(noneFound) {
+                    response.render("pages/shuffle", {error: true});
+                }
+                else {
+                    let random = addData[Math.floor(Math.random()*addData.length)];
+                    response.render("pages/shuffle", {shuffleResults: random, song: true});
+                }
+            }
+
+            if(pick == "artist"){
+                let addData;
+                for(let i = 0; i < 26; i++) {
+                    let char = alphabet[(randomCharacter + i) % 26];
+                    addData = await lastfmFunctions.getArtistsByTextInput(char, tag);
+                    if(addData.length > 0) {
+                        noneFound = false;
+                        break;
+                    }
+                }
+
+                if(noneFound) {
+                    response.render("pages/shuffle", {error: true});
+                }
+                else {
+                    let random = addData[Math.floor(Math.random()*addData.length)];
+                    response.render("pages/shuffle", {shuffleResults: random, artist: true});
+                }
             }
         }
-
-        if(noneFound) {
+        catch(err) {
             response.render("pages/shuffle", {error: true});
-        }
-        else {
-            let random = addData[Math.floor(Math.random()*addData.length)];
-            response.render("pages/shuffle", {shuffleResults: random, song: true});
-        }
-        
-        //console.log(addData);
-        // if(addData.length == 0){
-        //     response.render("pages/shuffle", {error: true})
-        // }else{
-        // let random = addData[Math.floor(Math.random()*addData.length)];
-        // response.render("pages/shuffle", {shuffleResults: random, song: true});
-        // }
-    }
-
-    if(pick == "artist"){
-        let addData;
-        for(let i = 0; i < 26; i++) {
-            let char = alphabet[(randomCharacter + i) % 26];
-            addData = await lastfmFunctions.getArtistsByTextInput(char, tag);
-            if(addData.length > 0) {
-                noneFound = false;
-                break;
-            }
-        }
-
-        if(noneFound) {
-            response.render("pages/shuffle", {error: true});
-        }
-        else {
-            let random = addData[Math.floor(Math.random()*addData.length)];
-            response.render("pages/shuffle", {shuffleResults: random, artist: true});
-        }
-        
-        // if(addData.length == 0){
-        //     response.render("pages/shuffle", {error: true})
-        // }else{
-        // let random = addData[Math.floor(Math.random()*addData.length)];
-        // response.render("pages/shuffle", {shuffleResults: random, artist: true});
         }
     }
 });
