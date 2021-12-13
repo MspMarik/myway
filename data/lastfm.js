@@ -6,7 +6,15 @@ const axios = require("axios");
 const api_key = "72fa9d4b46d0200e977b8a920742c10a";
 const baseURL = "https://ws.audioscrobbler.com/2.0/?api_key=" + api_key + "&format=json&method="; //Remember to supply method for each function that uses this base
 
-let getYear = (content) => {
+
+
+let getYear = (content) =>{
+    if(!content) {
+        throw "No content provided";
+    }
+    if(typeof content != "string") {
+        throw "Content is not a string";
+    }
     let arr = content.split(" ");
     let found = false;
     let n = -1;

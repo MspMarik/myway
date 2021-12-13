@@ -27,7 +27,7 @@ router.post("/loginlogout", async (request, response) => {
     try {
         //First, see if the user is already logged in. If so, redirect to user's profile page
         if (request.session.userId) {
-            response.redirect("/");
+            response.redirect("/myprofile");
         } else {
             //Then, check that login credentials are provided and of proper format
             //Username Checking
@@ -56,14 +56,9 @@ router.post("/loginlogout", async (request, response) => {
             }
 
             //Next, check to see if the signup credentials are valid. If they are, redirect to the user's profile page
-            try {
-                let userId = await userFunctions.loginUser(cleanedUsername, cleanedPassword);
-                //console.log(userId);
-                request.session.userId = userId;
-                response.redirect("/myprofile");
-            } catch (err) {
-                response.render("pages/login", { errorStr: err });
-            }
+            let userId = await userFunctions.loginUser(cleanedUsername, cleanedPassword);
+            request.session.userId = userId;
+            response.redirect("/");
         }
     } catch (err) {
         //Finally, if the credentials are not valid, render the signup page again, this time with an error
@@ -75,7 +70,7 @@ router.post("/loginlogout", async (request, response) => {
 router.get("/signup", async (request, response) => {
     //Check if the user is logged in. If so, redirect to profile page. Else render signup page.
     if (request.session.userId) {
-        response.redirect("/");
+        response.redirect("/myprofile");
     } else {
         response.render("pages/signup", {}); //INC: Path to signup, remember to include handlebar fields
     }
@@ -91,7 +86,7 @@ router.post("/signup", async (request, response) => {
     try {
         //First, see if the user is already logged in. If so, redirect to user's profile page
         if (request.session.userId) {
-            response.redirect("/");
+            response.redirect("/myprofile");
         } else {
             //Then, check that signup credentials are provided and of proper format
             //Username Checking
@@ -182,24 +177,24 @@ router.post("/search/artists", async (request, response) => {
                 if (typeof userTag != "string" || !userTag.trim()) {
                     throw "If provided, search tag must be in the form of a non-whitespace string";
                 } else {
-                    cleanedTag = xss(request.body.tag.trim());
+                    cleanedTag = xss(request.body.tag).trim();
                 }
             }
 
             let retrievedArtists = await lastfmFunctions.getArtistsByTextInput(cleanedSearchTerm, cleanedTag);
             let empty = false;
             if (retrievedArtists.length == 0) {
-                empty = true;
+                throw "No search results found";
             }
             for (let i = 0; i < retrievedArtists.length; i++) {
                 retrievedArtists[i].art = true;
             }
 
-            response.render("pages/search", { artist: true, searchResults: retrievedArtists, error: empty });
+            response.render("pages/search", { artist: true, searchResults: retrievedArtists});
         }
     } catch (err) {
         //TODO: Figure out how errors should be displayed on this page
-        response.render("pages/search", { artist: true, searchResults: [], error: err });
+        response.render("pages/search", { artist: true, /*searchResults: [],*/ errStr: err });
     }
 });
 
@@ -225,9 +220,9 @@ router.post("/search/songs", async (request, response) => {
                 throw "Search term must be a string";
             }
 
-            let cleanedSearchTerm = xss(request.body.searchbox);
-            if (!cleanedSearchTerm) {
-                throw "Search term cannot be whitespace";
+            let cleanedSearchTerm = xss(request.body.searchbox).trim();
+            if(!cleanedSearchTerm) {
+                throw "Search term cannot be whitespace"
             }
             let cleanedTag;
 
@@ -236,7 +231,7 @@ router.post("/search/songs", async (request, response) => {
                 if (typeof userTag != "string" || !userTag.trim()) {
                     throw "If provided, search tag must be in the form of a non-whitespace string";
                 } else {
-                    cleanedTag = xss(request.body.tag.trim());
+                    cleanedTag = xss(request.body.tag).trim();
                 }
             }
             let yep = false;
@@ -267,11 +262,11 @@ router.post("/search/songs", async (request, response) => {
                 }
             }
 
-            response.render("pages/search", { song: true, searchResults: retrievedSongs, error: empty });
+            response.render("pages/search", { song: true, searchResults: retrievedSongs});
         }
     } catch (err) {
         //TODO: Figure out how errors should be displayed on this page
-        response.render("pages/search", { song: true, searchResults: [], error: err });
+        response.render("pages/search", { song: true, /*searchResults: [],*/ errStr: err });
     }
 });
 
@@ -297,12 +292,15 @@ router.post("/search/albums", async (request, response) => {
                 throw "Search term must be a string";
             }
 
-            let cleanedSearchTerm = xss(request.body.searchbox);
+            let cleanedSearchTerm = xss(request.body.searchbox).trim();
+            if(!cleanedSearchTerm) {
+                throw "Search term cannot be whitespace"
+            }
             let cleanedTag;
 
             //Tag Checking
             if (request.body.tag) {
-                if (typeof userTag != string || !userTag.trim()) {
+                if (typeof userTag != "string" || !userTag.trim()) {
                     throw "If provided, search tag must be in the form of a non-whitespace string";
                 } else {
                     cleanedTag = xss(request.body.tag.trim());
@@ -340,11 +338,11 @@ router.post("/search/albums", async (request, response) => {
                     retrievedAlbums[i].album = true;
                 }
             }
-            response.render("pages/search", { album: true, searchResults: retrievedAlbums, error: empty });
+            response.render("pages/search", {album: true, searchResults: retrievedAlbums});
         }
     } catch (err) {
         //TODO: Figure out how errors should be displayed on this page
-        response.render("pages/search", { album: true, searchResults: [], error: err });
+        response.render("pages/search", { album: true, /*searchResults: [],*/ errStr: err });
     }
 });
 
@@ -357,32 +355,6 @@ router.get("/myprofile", async (request, response) => {
     }
 });
 
-// //Logout of the website
-// router.get("/logout", async (request, response) => {
-//     //Check if the user is logged in. If so, redirect to "main page" with a succesful logout message. Else redirect to "main page" without said message
-//     if (request.session.userId) {
-//         request.session.destroy();
-//         response.render("pages/login", { logoutMsg: "Logged out" });
-//     } else {
-//         response.redirect("/");
-//     }
-// });
-
-//editRanking page for users of webstie
-// router.get("/editRanking", async (request, response) => {
-//     if (!request.session.userId) {
-//         response.redirect("/loginlogout");
-//     } else {
-//         response.render("pages/editRanking", { album: true });
-//     }
-// });
-
-// router.post("/editRanking", async (request, response) => {
-//     if (!request.session.userId) {
-//         response.redirect("/loginlogout");
-//     } else {
-//     }
-// });
 
 router.get("/ye", async (request, response) => {
     if (!request.session.userId) {
@@ -442,10 +414,10 @@ router.post("/search/addLikedSong", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
-        let cleanSongName = xss(request.body.songName.trim());
-        let cleanArtistName = xss(request.body.artistName.trim());
-        let addData = await songsFunctions.addSong(request.session.userId, cleanSongName, cleanArtistName, false);
-        if (addData.ok) {
+        let cleanSongName = xss(request.body.songName).trim();
+        let cleanArtistName = xss(request.body.artistName).trim();
+        let addData = await songsFunctions.addSong(request.session.userId,cleanSongName, cleanArtistName, false);
+        if(addData.ok){
             console.log(addData.ok);
         } else {
             console.log("something is amuck");
@@ -457,10 +429,10 @@ router.post("/search/addDislikedSong", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
-        let cleanSongName = xss(request.body.songName.trim());
-        let cleanArtistName = xss(request.body.artistName.trim());
-        let addData = await songsFunctions.addSong(request.session.userId, cleanSongName, cleanArtistName, true);
-        if (addData.ok) {
+        let cleanSongName = xss(request.body.songName).trim();
+        let cleanArtistName = xss(request.body.artistName).trim();
+        let addData = await songsFunctions.addSong(request.session.userId,cleanSongName, cleanArtistName, true);
+        if(addData.ok){
             console.log(addData.ok);
         } else {
             console.log("something is amuck");
@@ -473,20 +445,21 @@ router.post("/search/addAlbum", async (request, response) => {
         response.redirect("/loginlogout");
     } else {
         try {
-            let cleanAlbumName = xss(request.body.albumName.trim());
-            let cleanArtistName = xss(request.body.artistName.trim());
-            if (!request.body.ranking) {
+            let cleanAlbumName = xss(request.body.albumName).trim();
+            let cleanArtistName = xss(request.body.artistName).trim();
+            if(!request.body.ranking) {
                 throw "Ranking not provided";
-            }
-            let cleanRating = xss(request.body.ranking);
-            let addData = await albumsFunctions.addAlbum(request.session.userId, cleanAlbumName, cleanArtistName, Number.parseInt(cleanRating));
-            if (addData.ok) {
+            } 
+            let cleanRating = xss(request.body.ranking).trim();
+            let addData = await albumsFunctions.addAlbum(request.session.userId,cleanAlbumName, cleanArtistName, Number.parseInt(cleanRating));
+            if(addData.ok){
                 console.log(addData.ok);
             } else {
                 console.log("something is amuck");
             }
-        } catch (err) {
-            console.log(err);
+        }
+        catch(err) {
+            response.render("pages/mypage", {album: true, errString: err});
         }
     }
 });
@@ -495,7 +468,7 @@ router.post("/search/addLikedArtist", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
-        let cleanArtistName = xss(request.body.artistName);
+        let cleanArtistName = xss(request.body.artistName).trim();
         let addData = await artistsFunctions.addArtist(request.session.userId, cleanArtistName, false);
         if (addData.ok) {
             console.log(addData.ok);
@@ -509,7 +482,7 @@ router.post("/search/addDislikedArtist", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
-        let cleanArtistName = xss(request.body.artistName);
+        let cleanArtistName = xss(request.body.artistName).trim();
         let addData = await artistsFunctions.addArtist(request.session.userId, cleanArtistName, true);
         if (addData.ok) {
             console.log(addData.ok);
@@ -541,8 +514,8 @@ router.get("/artistinfo/:artistName", async (request, response) => {
             if (typeof request.params.artistName != "string") {
                 throw "Provided artist name not a string";
             }
-            let cleanedName = xss(request.params.artistName.trim());
-            if (!cleanedName) {
+            let cleanedName = xss(request.params.artistName).trim();
+            if(!cleanedName) {
                 throw "Artist name provided is whitespace";
             }
 
@@ -557,16 +530,8 @@ router.get("/artistinfo/:artistName", async (request, response) => {
 router.get("/myrecommendedartists", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
-    } else {
-        // let recs;
-        // if(!request.session.cachedRecommendations) { //Getting recommendations is pretty expensive, so cache it once per session
-        //     recs = await metricsFunctions.getRecommendations(request.session.userId);
-        //     request.session.cachedRecommendations = recs;
-        // }
-        // else {
-        //     recs = request.session.cachedRecommendations;
-        // }
-        // response.render("pages/myrec", {recommendations: recs})
+    }
+    else {
         response.render("pages/myrec", {});
     }
 });
@@ -577,7 +542,7 @@ router.post("/myrecommendedartists", async (request, response) => {
     } else {
         try {
             let numRecs = Number.parseInt(xss(request.body.numRecs));
-            if (!numRecs || Number.isNaN(numRecs) || numRecs < 1) {
+            if(!numRecs || Number.isNaN(numRecs) || numRecs < 1) {
                 throw "Number of recommendations must be a number greater than or equal to 1";
             }
             let recommendations = await metricsFunctions.getRecommendations(request.session.userId, numRecs);
@@ -622,182 +587,168 @@ router.post("/removeArtist", async (request, response) => {
 router.post("/removeAlbum", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
-    } else {
-        let cleanAlbumName = request.body.albumName;
-        let cleanArtistName = request.body.artistName;
-        let addData = await albumsFunctions.removeAlbum(request.session.userId, cleanAlbumName, cleanArtistName);
-        if (addData.ok) {
-            console.log(addData.ok);
-            response.redirect("/myalbums");
-        } else {
-            console.log("something is amuck");
-        }
-    }
+     } else {
+         let cleanAlbumName = request.body.albumName;
+         let cleanArtistName = request.body.artistName;
+         let addData = await albumsFunctions.removeAlbum(request.session.userId,cleanAlbumName, cleanArtistName);
+         if(addData.ok){
+             console.log(addData.ok);
+             response.redirect("/myalbums")
+         }else{
+             console.log("something is amuck");
+         }
+     }
 });
 
-router.post("/editRanking", async (request, response) => {
+router.post("/editRanking", async (request, response) =>{ //TODO: Handle error
     if (!request.session.userId) {
         response.redirect("/loginlogout");
-    } else {
-        let cleanAlbumName = xss(request.body.albumName);
-        let cleanArtistName = xss(request.body.artistName);
-        // console.log(cleanAlbumName);
-        // console.log(cleanArtistName);
-        response.render("pages/editRanking", { albumName: cleanAlbumName, artistName: cleanArtistName });
-    }
+     } else {
+        try {
+            if(!request.body.albumName) {
+                throw "Album name not provided";
+            }
+            if(!request.body.artistName) {
+                throw "Artist name not provided";
+            }
+            if(typeof request.body.albumName != "string") {
+                throw "Album name must be a string";
+            }
+            if(typeof request.body.artistName != "string") {
+                throw "Artist name must be a string";
+            }
+
+            let cleanAlbumName = xss(request.body.albumName);
+            if(!cleanAlbumName) {
+                throw "Album name cannot be whitespace";
+            }
+            let cleanArtistName = xss(request.body.artistName);
+            if(!cleanArtistName) {
+                throw "Artist name cannot be whitespace";
+            }
+            response.render("pages/editRanking", {albumName:cleanAlbumName, artistName:cleanArtistName});
+        }
+        catch(err) {
+            response.render("pages/mypage", {album: "Example", errStr: err});
+        }
+     }
 });
 
 router.post("/updateRanking", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
-    } else {
-        let cleanAlbumName = xss(request.body.albumName);
-        let cleanArtistName = xss(request.body.artistName);
-        let addData = await albumsFunctions.removeAlbum(request.session.userId, cleanAlbumName, cleanArtistName);
-        if (addData.ok) {
-            console.log("not this one!");
+     } else {
+        try {
+            if(!request.body.albumName) {
+                throw "Album name not provided";
+            }
+            if(!request.body.artistName) {
+                throw "Artist name not provided";
+            }
+            if(typeof request.body.albumName != "string") {
+                throw "Album name must be a string";
+            }
+            if(typeof request.body.artistName != "string") {
+                throw "Artist name must be a string";
+            }
+
+            let cleanAlbumName = xss(request.body.albumName).trim();
+            if(!cleanAlbumName) {
+                throw "Album name cannot be whitespace";
+            }
+            let cleanArtistName = xss(request.body.artistName).trim();
+            if(!cleanArtistName) {
+                throw "Artist name cannot be whitespace";
+            }
+
+            let addData = await albumsFunctions.removeAlbum(request.session.userId,cleanAlbumName, cleanArtistName);
+            if(addData.ok){
+                console.log("not this one!");
+            }
+            let cleanRating = xss(request.body.ranking);
+            let addData2 = await albumsFunctions.addAlbum(request.session.userId,cleanAlbumName, cleanArtistName,  Number.parseInt(cleanRating));
+            response.redirect("/myalbums")
         }
-        let cleanRating = xss(request.body.ranking);
-        let addData2 = await albumsFunctions.addAlbum(request.session.userId, cleanAlbumName, cleanArtistName, Number.parseInt(cleanRating));
-        response.redirect("/myalbums");
-    }
+        catch(err) {
+            response.render("page/editRanking", {errStr: err});
+        }
+     }
 });
 
-// router.post("/shuffle", async (request, response) => {
-//     if (!request.session.userId) {
-//         response.redirect("/loginlogout");
-//     } else {
-//         const alphabet = "abcdefghijklmnopqrstuvwxyz";
-//         const randomCharacter = Math.floor(Math.random() * alphabet.length);
-//         let pick = request.body.songOrArtist;
-//         let tag = xss(request.body.tag);
-//         let noneFound = true;
-//         if (pick == "song") {
-//             let addData;
-//             for (let i = 0; i < 26; i++) {
-//                 let char = alphabet[(randomCharacter + i) % 26];
-//                 addData = await lastfmFunctions.getSongsByTextInput(char, tag);
-//                 if (addData.length > 0) {
-//                     noneFound = false;
-//                     break;
-//                 }
-//             }
+router.post("/shuffle", async (request, response) =>{
+if (!request.session.userId){
+    response.redirect("/loginlogout");
+}else{
+        try {
+            if(!request.body.songOrArtist) {
+                throw "Song or artist choice not provided";
+            }
+            if(typeof request.body.songOrArtist != "string") {
+                throw "Song or artist choice must be a string";
+            }
+            let pick = xss(request.body.songOrArtist).trim();
+            if(pick != "song" && pick != "artist") {
+                throw "You must choose between song and artist"
+            }
 
-//             if (noneFound) {
-//                 response.render("pages/shuffle", { error: true });
-//             } else {
-//                 let random = addData[Math.floor(Math.random() * addData.length)];
-//                 response.render("pages/shuffle", { shuffleResults: random, song: true });
-//             }
-
-//             //console.log(addData);
-//             // if(addData.length == 0){
-//             //     response.render("pages/shuffle", {error: true})
-//             // }else{
-//             // let random = addData[Math.floor(Math.random()*addData.length)];
-//             // response.render("pages/shuffle", {shuffleResults: random, song: true});
-//             // }
-//         }
-
-//         if (pick == "artist") {
-//             let addData;
-//             for (let i = 0; i < 26; i++) {
-//                 let char = alphabet[(randomCharacter + i) % 26];
-//                 addData = await lastfmFunctions.getArtistsByTextInput(char, tag);
-//                 if (addData.length > 0) {
-//                     noneFound = false;
-//                     break;
-//                 }
-//             }
-
-//             if (noneFound) {
-//                 response.render("pages/shuffle", { error: true });
-//             } else {
-//                 let random = addData[Math.floor(Math.random() * addData.length)];
-//                 response.render("pages/shuffle", { shuffleResults: random, artist: true });
-//             }
-
-//             // if(addData.length == 0){
-//             //     response.render("pages/shuffle", {error: true})
-//             // }else{
-//             // let random = addData[Math.floor(Math.random()*addData.length)];
-//             // response.render("pages/shuffle", {shuffleResults: random, artist: true});
-//         }
-//     }
-// });
-
-router.post("/shuffle", async (request, response) => {
-    if (!request.session.userId) {
-        response.redirect("/loginlogout");
-    } else {
-        const alphabet = "abcdefghijklmnopqrstuvwxyz";
-        const randomCharacter = Math.floor(Math.random() * alphabet.length);
-        let pick = request.body.songOrArtist;
-        let tag = xss(request.body.tag);
-        let noneFound = true;
-        if (pick == "song") {
-            let addData;
-            for (let i = 0; i < 26; i++) {
-                let char = alphabet[(randomCharacter + i) % 26];
-                addData = await lastfmFunctions.getSongsByTextInput(char, tag);
-                if (addData.length > 0) {
-                    noneFound = false;
-                    break;
+            let tag;
+            if(request.body.tag) {
+                if(typeof request.body.tag != "string") {
+                    throw "If provided, shuffle tag should be a string";
+                }
+                else {
+                    tag = xss(request.body.tag).trim();
                 }
             }
 
-            if (noneFound) {
-                response.render("pages/shuffle", { error: true });
-            } else {
-                let random = addData[Math.floor(Math.random() * addData.length)];
-                response.render("pages/shuffle", { shuffleResults: random, song: true });
-            }
+            const alphabet = "abcdefghijklmnopqrstuvwxyz";
+            const randomCharacter = Math.floor(Math.random() * alphabet.length);
+            let noneFound = true;
+            if(pick == "song"){
+                let addData;
+                for(let i = 0; i < 26; i++) {
+                    let char = alphabet[(randomCharacter + i) % 26];
+                    addData = await lastfmFunctions.getSongsByTextInput(char, tag);
+                    if(addData.length > 0) {
+                        noneFound = false;
+                        break;
+                    }
+                }
 
-            //console.log(addData);
-            // if(addData.length == 0){
-            //     response.render("pages/shuffle", {error: true})
-            // }else{
-            // let random = addData[Math.floor(Math.random()*addData.length)];
-            // response.render("pages/shuffle", {shuffleResults: random, song: true});
-            // }
-        }
-        if (pick == "artist") {
-            let addData;
-            for (let i = 0; i < 26; i++) {
-                let char = alphabet[(randomCharacter + i) % 26];
-                addData = await lastfmFunctions.getArtistsByTextInput(char, tag);
-                if (addData.length > 0) {
-                    noneFound = false;
-                    break;
+                if(noneFound) {
+                    throw "Bad shuffle! Try again.";
+                }
+                else {
+                    let random = addData[Math.floor(Math.random()*addData.length)];
+                    response.render("pages/shuffle", {shuffleResults: random, song: true});
                 }
             }
 
-            if (noneFound) {
-                response.render("pages/shuffle", { error: true });
-            } else {
-                let random = addData[Math.floor(Math.random() * addData.length)];
-                response.render("pages/shuffle", { shuffleResults: random, artist: true });
-            }
+            if(pick == "artist"){
+                let addData;
+                for(let i = 0; i < 26; i++) {
+                    let char = alphabet[(randomCharacter + i) % 26];
+                    addData = await lastfmFunctions.getArtistsByTextInput(char, tag);
+                    if(addData.length > 0) {
+                        noneFound = false;
+                        break;
+                    }
+                }
 
-            // if(addData.length == 0){
-            //     response.render("pages/shuffle", {error: true})
-            // }else{
-            // let random = addData[Math.floor(Math.random()*addData.length)];
-            // response.render("pages/shuffle", {shuffleResults: random, artist: true});
+                if(noneFound) {
+                    throw "Bad shuffle! Try again.";
+                }
+                else {
+                    let random = addData[Math.floor(Math.random()*addData.length)];
+                    response.render("pages/shuffle", {shuffleResults: random, artist: true});
+                }
+            }
+        }
+        catch(err) {
+            response.render("pages/shuffle", {errStr: err});
         }
     }
 });
-
-// router.get("/reccomend", async (request, response) => {
-//     if (!request.session.userId) {
-//         response.redirect("/loginlogout");
-//     } else {
-//         let userSongMetrics = await metricsFunctions.getSongDataForMetrics(request.session.userId);
-//         let likedData = userSongMetrics.likedTags;
-//         let dislikedData = userSongMetrics.dislikedTags;
-//         response.render("pages/mymetrics", { likedData: likedData, dislikedData: dislikedData });
-//     }
-// });
 
 const constructorMethod = (app) => {
     app.use("/", router);
