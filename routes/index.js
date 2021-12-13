@@ -60,7 +60,7 @@ router.post("/loginlogout", async (request, response) => {
                 let userId = await userFunctions.loginUser(cleanedUsername, cleanedPassword);
                 //console.log(userId);
                 request.session.userId = userId;
-                response.redirect("/");
+                response.redirect("/myprofile");
             } catch (err) {
                 response.render("pages/login", { errorStr: err });
             }
