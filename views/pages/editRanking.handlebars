@@ -6,7 +6,7 @@
     <input type="text" id="album" name="albumName" value="{{albumName}}" hidden />
     <input type="text" id="artist" name="artistName" value="{{artistName}}" hidden />
 
-    <label><input type="number" id="ranking" name="ranking" min="0" max="10" step="1" required />/10</label>
+    <label><input type="number" id="ranking" name="ranking" min="0" max="10" step="1" required /><br><span id="editOf">/10</span></label><br>
     <button type="submit" id="submitRank" name="submitRank">Submit</button>
 </form>
 <div id="error">{{errStr}}</div>
