@@ -17,17 +17,17 @@
             <input type="submit" name="submit" id="submit" />
         </form></div></div>
 
-{{#if shuffleResults}}
-    {{#if song}}
-        <h2>Your shuffled song:</h2>
-        <p>{{shuffleResults.name}}</p>
-        <p>by</p>
-        <p>{{shuffleResults.artist}}</p>
+<div id="shuffResDiv">{{#if shuffleResults}}
+        {{#if song}}
+            <h2>Your shuffled song:</h2>
+            <p>{{shuffleResults.name}}</p>
+            <p>by</p>
+            <p>{{shuffleResults.artist}}</p>
+        {{/if}}
+        {{#if artist}}
+            <h2>Your shuffled artist:</h2>
+            <p>{{shuffleResults.name}}</p>
+        {{/if}}
     {{/if}}
-    {{#if artist}}
-        <h2>Your shuffled artist:</h2>
-        <p>{{shuffleResults.name}}</p>
-    {{/if}}
-{{/if}}
 
 <div id="error">{{errStr}}</div>
