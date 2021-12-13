@@ -56,14 +56,9 @@ router.post("/loginlogout", async (request, response) => {
             }
 
             //Next, check to see if the signup credentials are valid. If they are, redirect to the user's profile page
-            try {
-                let userId = await userFunctions.loginUser(cleanedUsername, cleanedPassword);
-                //console.log(userId);
-                request.session.userId = userId;
-                response.redirect("/");
-            } catch (err) {
-                response.render("pages/login", { errorStr: err });
-            }
+            let userId = await userFunctions.loginUser(cleanedUsername, cleanedPassword);
+            request.session.userId = userId;
+            response.redirect("/");
         }
     } catch (err) {
         //Finally, if the credentials are not valid, render the signup page again, this time with an error

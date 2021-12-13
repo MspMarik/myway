@@ -9,6 +9,12 @@ const baseURL = "https://ws.audioscrobbler.com/2.0/?api_key=" + api_key + "&form
 
 
 let getYear = (content) =>{
+    if(!content) {
+        throw "No content provided";
+    }
+    if(typeof content != "string") {
+        throw "Content is not a string";
+    }
     let arr = content.split(" ");
     let found = false;
     let n = -1;
