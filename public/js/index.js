@@ -240,7 +240,7 @@ if (searchForm) {
         if (productionYear) {
             year = parseInt(productionYear.value);
             if (year) {
-                if (typeof year != "number" && isNaN(year)) {
+                if (isNaN(year)) {
                     errorOnPage("If provided, year should be a number");
                     event.preventDefault();
                     return false;
