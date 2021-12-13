@@ -307,7 +307,7 @@ if(editRankingForm) {
 }
 
 //Shuffle Form
-let shuffleForm = docuemnt.getElementById("shuffleForm");
+let shuffleForm = document.getElementById("shuffleForm");
 let tagContainer = document.getElementById("tag");
 
 if(shuffleForm) {

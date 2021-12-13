@@ -49,7 +49,7 @@ async function getRecommendations(userId, numRecs) {
         if(!artistList[i].disliked) {
             let similarArtists = await getSimilarArtists(artistList[i].artistName);
             for(let j = 0; j < similarArtists.length; j++) {
-                recMap.set(similarArtists[i].name, true);
+                recMap.set(similarArtists[j].name, true);
             }
         }
     }
