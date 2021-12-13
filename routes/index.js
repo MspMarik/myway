@@ -641,6 +641,8 @@ router.post("/editRanking", async (request, response) => {
     } else {
         let cleanAlbumName = xss(request.body.albumName);
         let cleanArtistName = xss(request.body.artistName);
+        // console.log(cleanAlbumName);
+        // console.log(cleanArtistName);
         response.render("pages/editRanking", { albumName: cleanAlbumName, artistName: cleanArtistName });
     }
 });
