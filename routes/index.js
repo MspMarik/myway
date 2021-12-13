@@ -540,7 +540,7 @@ router.post("/myrecommendedartists", async (request, response) => {
         try {
             let numRecs = Number.parseInt(xss(request.body.numRecs));
             if(!numRecs || Number.isNaN(numRecs) || numRecs < 1) {
-                throw "Number of recommendations must be a number greater than or equal to 1"
+                throw "Number of recommendations must be a number greater than or equal to 1";
             }
             let recommendations = await metricsFunctions.getRecommendations(request.session.userId, numRecs);
             response.send({recommendations: recommendations});
