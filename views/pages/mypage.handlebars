@@ -62,6 +62,7 @@
                         <input type="text" name = "songName" value ="{{this.songName}}" hidden>
                         <input type="text" name = "artistName" value ="{{this.artistName}}" hidden>
                         <button class="remove">&#128465;</button>
+                        </form>
                     </div>
                 {{/each}}
             {{/if}}
@@ -75,8 +76,16 @@
                     <span>{{this.albumName}}</span>
                     <span>{{this.artistName}}</span>
                     <span>Rating: {{this.rating}}</span>
-                    <a href="/editRating"><button>&#9999; Edit Ranking</button></a>
+                    {{!-- <a href="/editRanking"><button>&#9999; Edit Ranking</button></a> --}}
+                    <form class = "editForm" action = "/editRanking" method = "POST">
+                    <input type="text" id ="albumName" name = "albumName" value ="{{this.albumName}}" hidden>
+                    <input type="text"id = "artistName" name = "artistName" value ="{{this.artistName}}" hidden>
+                    <button class="remove">&#9999;</button>
+                    <form class = "removeForm" action = "/removeAlbum" method = "POST">
+                    <input type="text" name = "albumName" value ="{{this.albumName}}" hidden>
+                    <input type="text" name = "artistName" value ="{{this.artistName}}" hidden>
                     <button class="remove">&#128465;</button>
+                    </form>
                 </div>
             {{/each}}
         {{/unless}}

@@ -88,8 +88,8 @@ async function removeArtist(userId, artistName) {
     for (let i = 0; i < currentArtistList.length; i++) {
         //Make sure artist is in the list already
         if (trimmedArtist == currentArtistList[i].artistName) {
-            user.favorites.artists[i].disliked = dislikeFlag;
             artistFound = true;
+            user.favorites.artists.splice(i, 1);
             break;
         }
     }

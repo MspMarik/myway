@@ -435,3 +435,9 @@ div {
     padding: 30px;
     background-color: #e9b425;
 }
+
+#piechart1,
+#piechart2 {
+    width: 100%;
+    height: 300px;
+}
