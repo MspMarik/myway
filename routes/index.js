@@ -436,8 +436,8 @@ router.post("/search/addLikedSong", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
-        let cleanSongName = xss(request.body.songName.trim());
-        let cleanArtistName = xss(request.body.artistName.trim());
+        let cleanSongName = xss(request.body.songName).trim();
+        let cleanArtistName = xss(request.body.artistName).trim();
         let addData = await songsFunctions.addSong(request.session.userId,cleanSongName, cleanArtistName, false);
         if(addData.ok){
             console.log(addData.ok);
@@ -451,8 +451,8 @@ router.post("/search/addDislikedSong", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
-        let cleanSongName = xss(request.body.songName.trim());
-        let cleanArtistName = xss(request.body.artistName.trim());
+        let cleanSongName = xss(request.body.songName).trim();
+        let cleanArtistName = xss(request.body.artistName).trim();
         let addData = await songsFunctions.addSong(request.session.userId,cleanSongName, cleanArtistName, true);
         if(addData.ok){
             console.log(addData.ok);
@@ -467,12 +467,12 @@ router.post("/search/addAlbum", async (request, response) => {
         response.redirect("/loginlogout");
     } else {
         try {
-            let cleanAlbumName = xss(request.body.albumName.trim());
-            let cleanArtistName = xss(request.body.artistName.trim());
+            let cleanAlbumName = xss(request.body.albumName).trim();
+            let cleanArtistName = xss(request.body.artistName).trim();
             if(!request.body.ranking) {
                 throw "Ranking not provided";
             } 
-            let cleanRating = xss(request.body.ranking);
+            let cleanRating = xss(request.body.ranking).trim();
             let addData = await albumsFunctions.addAlbum(request.session.userId,cleanAlbumName, cleanArtistName, Number.parseInt(cleanRating));
             if(addData.ok){
                 console.log(addData.ok);
@@ -490,7 +490,7 @@ router.post("/search/addLikedArtist", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
-        let cleanArtistName = xss(request.body.artistName);
+        let cleanArtistName = xss(request.body.artistName).trim();
         let addData = await artistsFunctions.addArtist(request.session.userId, cleanArtistName, false);
         if(addData.ok){
             console.log(addData.ok);
@@ -504,7 +504,7 @@ router.post("/search/addDislikedArtist", async (request, response) => {
     if (!request.session.userId) {
         response.redirect("/loginlogout");
     } else {
-        let cleanArtistName = xss(request.body.artistName);
+        let cleanArtistName = xss(request.body.artistName).trim();
         let addData = await artistsFunctions.addArtist(request.session.userId, cleanArtistName, true);
         if(addData.ok){
             console.log(addData.ok);
@@ -537,7 +537,7 @@ router.get("/artistinfo/:artistName", async (request, response) => {
             if(typeof request.params.artistName != "string") {
                 throw "Provided artist name not a string";
             }
-            let cleanedName = xss(request.params.artistName.trim());
+            let cleanedName = xss(request.params.artistName).trim();
             if(!cleanedName) {
                 throw "Artist name provided is whitespace";
             }
@@ -671,6 +671,7 @@ router.post("/updateRanking", async (request, response) =>{
             if(!cleanArtistName) {
                 throw "Artist name cannot be whitespace";
             }
+
             let addData = await albumsFunctions.removeAlbum(request.session.userId,cleanAlbumName, cleanArtistName);
             if(addData.ok){
                 console.log("not this one!");
