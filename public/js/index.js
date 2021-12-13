@@ -5,7 +5,7 @@ function addLikedArtist(name) {
     let addRequest = {
         method: "POST",
         url: "/search/addLikedArtist",
-        data: {artistName: name}
+        data: { artistName: name },
     };
     $.ajax(addRequest);
 }
@@ -14,7 +14,7 @@ function addDislikedArtist(name) {
     let addRequest = {
         method: "POST",
         url: "/search/addDislikedArtist",
-        data: {artistName: name}
+        data: { artistName: name },
     };
     $.ajax(addRequest);
 }
@@ -47,7 +47,7 @@ function drawChart() {
     }
 
     var data;
-    if(likedArr[0][1] != undefined) {
+    if (likedArr[0][1] != undefined) {
         data = google.visualization.arrayToDataTable(likedArr);
         var options = {
             title: "My Liked Songs",
@@ -56,7 +56,7 @@ function drawChart() {
         chart.draw(data, options);
     }
 
-    if(dislikedArr[0][1] != undefined) {
+    if (dislikedArr[0][1] != undefined) {
         data = google.visualization.arrayToDataTable(dislikedArr);
         options = {
             title: "My Disliked Songs",
@@ -65,7 +65,6 @@ function drawChart() {
         chart.draw(data, options);
     }
 }
-
 
 /*
     Clientside Error Handling Functions
@@ -238,7 +237,7 @@ if (searchForm) {
             return false;
         }
         let year;
-        if(productionYear) {
+        if (productionYear) {
             year = productionYear.value;
             if (year) {
                 if (typeof year != "number") {
@@ -324,7 +323,7 @@ if(shuffleForm) {
 /*
 AJAX Request for My Recommendations
 */
-$(function() {
+$(function () {
     let recForm = $("#recForm");
     let numRecsContainer = $("#numRecs");
     let recInfoDiv = $("#recInfoDiv");
@@ -333,34 +332,32 @@ $(function() {
     recForm.on("submit", (event) => {
         event.preventDefault();
         let numRecs = numRecsContainer.val();
-        if(!numRecs || typeof numRecs != "number" || numRecs < 1) {
+        if (!numRecs || typeof numRecs != "number" || numRecs < 1) {
             recInfoDiv.text("Number of recommendations must be a number greater than or equal to 1");
             recInfoDiv.show();
         }
         let recommendationRequest = {
             method: "POST",
             url: "/myrecommendedartists",
-            data: {numRecs: numRecs}
-        }
+            data: { numRecs: numRecs },
+        };
         recInfoDiv.text("Getting your recommendations...");
         recInfoDiv.show();
-        $.ajax(recommendationRequest).then(response => {
+        $.ajax(recommendationRequest).then((response) => {
             let recommendations = response.recommendations;
             recList.empty();
-            if(!recommendations.length) {
-                 recInfoDiv.text("Sorry, no recommendations were found...");
-                 recInfoDiv.show();
-            }
-            else {
+            if (!recommendations.length) {
+                recInfoDiv.text("Sorry, no recommendations were found...");
+                recInfoDiv.show();
+            } else {
                 console.log(numRecs);
                 console.log(recommendations.length);
-                if(numRecs > recommendations.length) {
+                if (numRecs > recommendations.length) {
                     recInfoDiv.text("These are all the recommendations we have!");
-                }
-                else {
+                } else {
                     recInfoDiv.hide();
                 }
-                for(let i = 0; i < recommendations.length; i++) {
+                for (let i = 0; i < recommendations.length; i++) {
                     recList.append(`<li>${recommendations[i]}</li>`);
                 }
             }

@@ -1,5 +1,5 @@
 <h1>{{artistData.name}}</h1>
-
+<h2 id="great">Great Pick!</h2>
 <button onclick="addLikedArtist('{{artistData.name}}')">Add to <span class="specialMy">My</span> Liked Artists</button>
 <button onclick="addDislikedArtist('{{artistData.name}}')">Add to <span class="specialMy">My</span> Disliked Artists</button>
 
@@ -15,8 +15,10 @@
 {{/if}}
 
 <h2>Artist Information</h2>
+<div id="addArtDiv"><button id="addArtist" onclick="addArtist({{artistID}})">Add to <span class="specialMy">My</span> Artists</button>
+
 {{#if artistData.bio.content}}
-    <p>{{{artistData.bio.content}}}</p>
+    <div id="artInfoDiv"><p>{{{artistData.bio.content}}}</p></div>
 {{else}}
     <p>No information available.</p>
 {{/if}}

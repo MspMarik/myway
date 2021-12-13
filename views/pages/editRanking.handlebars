@@ -1,10 +1,10 @@
 <h1>{{albumName}} by {{artistName}}</h1>
 
 {{! ADD FORM ACTION }}
-<form class = "updateForm" action = "/updateRanking" method = "POST">
+<form class="updateForm" action="/updateRanking" method="POST">
     <span>Edit your ranking of {{albumName}}</span>
-    <input type ="text" id = "album" name = "albumName" value = "{{albumName}}" hidden>
-    <input type ="text" id = "artist" name = "artistName" value = "{{artistName}}" hidden>
+    <input type="text" id="album" name="albumName" value="{{albumName}}" hidden />
+    <input type="text" id="artist" name="artistName" value="{{artistName}}" hidden />
     <label><input type="number" id="ranking" name="ranking" min="0" max="10" step="1" required />/10</label>
     <button type="submit" id="submitRank" name="submitRank">Submit</button>
 </form>

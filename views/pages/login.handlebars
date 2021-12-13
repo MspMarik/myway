@@ -1,18 +1,19 @@
-<h1>Login to <span class="specialMy">My</span> Way</h1>
+<h1>Login</h1>
 {{! ADD FORM ACTION }}
-<form class = "loginForm" action = "/loginlogout" id = 'login-form' method = "POST">
-    <label>
-        Username:
-        <input type="text" id="username" name="username" />
-    </label>
-    <label>
-        Password:
-        <input type="password" id="password" name="password" />
-    </label>
-    <button type="submit">Login!</button>
-</form>
+<img id="loginLogo" src="public/img/MY_WAY_logos/text.png" alt="logo" width="300" height="300" />
+<div id="lbigDiv"><div id="loginDiv"><form class="loginForm" action="/loginlogout" id="login-form" method="POST">
+            <label>
+                Username:<br />
+                <input type="text" id="username" name="username" placeholder="username" />
+            </label>
+            <br />
+            <label>
+                Password:<br />
+                <input type="password" id="password" name="password" placeholder="password" />
+            </label>
+            <br />
+            <button id="logButt" type="submit">Login!</button>
+        </form></div>
 
-<div id="error">{{errorStr}}</div>
-
-<p>Not a user yet? Click <a href="/signup">here</a> to signup!</p>
-
+    <div id="error">{{errorStr}}</div>
+    <p id="newUserClick">Not a user yet? Click <a id="here" aria-label="sign up link" href="/signup">here</a> to signup!</p></div>
