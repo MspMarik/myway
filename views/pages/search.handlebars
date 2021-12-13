@@ -63,10 +63,10 @@
             <h3>{{this.albumName}} by {{this.artistName}}</h3>
 
             {{! ADD FORM ACTION }}
-            <form>
+            <form class="addAlbumForm">
                 <span>Input your ranking of {{albumName}}</span>
-                <label><input type="number" id="ranking" name="ranking" min="0" max="10" step="1" required />/10</label>
-                <button type="submit" id="submitRank" name="submitRank">Submit</button>
+                <label><input type="number" class="ranking" name="ranking" min="0" max="10" step="1" required />/10</label>
+                <button type="submit" class="submitRank" name="submitRank">Submit</button>
             </form>
         </div>
     {{/each}}
@@ -74,9 +74,4 @@
     <a href="/search">Search for something else?</a>
 {{/if}}
 
-{{#if error}}
-    <div>
-        <p>We're sorry but we couldn't find anything for {{searchTerm}}{{#if prodYear}} produced in {{prodYear}}{{/if}}.</p>
-        {{!-- <p>{{error}}</p> --}}
-    </div>
-{{/if}}
+<div id="error">{{errStr}}</div>

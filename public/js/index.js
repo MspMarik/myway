@@ -251,6 +251,76 @@ if (searchForm) {
     });
 }
 
+//Search Add Album Form
+let addAlbumForms = document.getElementsByClassName("addAlbumForm");
+let addAlbumFormValueContainers = document.getElementsByClassName("ranking");
+
+if(addAlbumForms) {
+    albumFormArray = Array.from(addAlbumForms);
+    albumValueArray = Array.from(addAlbumFormValueContainers);
+    for(let i = 0; i < albumFormArray.length; i++) {
+        albumFormArray[i].addEventListener("submit", (event) => {
+            let albumValue = albumValueArray[i].value;
+            if(!albumValue) {
+                errorOnPage("Album ranking not provided");
+                event.preventDefault();
+                return false;
+            }
+            if(typeof albumValue != "number") {
+                errorOnPage("Album ranking must be a number");
+                event.preventDefault();
+                return false;
+            }
+            if(albumValue < 0 || albumValue > 10) {
+                errorOnPage("Album ranking must be in between 0 and 10");
+                event.preventDefault();
+                return false;
+            }
+        });
+    }
+}
+
+
+//Edit Ranking Form
+let editRankingForm = document.getElementById("updateForm");
+let editValueContainer = document.getElementById("ranking");
+
+if(editRankingForm) {
+    editRankingForm.addEventListener("submit", (event) => {
+        let newRanking = editValueContainer.value;
+        if (!newRanking) {
+            errorOnPage("New ranking not provided");
+            event.preventDefault();
+            return false;
+        }
+        if (typeof newRanking != "number") {
+            errorOnPage("New ranking should be a number");
+            event.preventDefault();
+            return false;
+        }
+        if(newRanking < 0 || newRanking > 10) {
+            errorOnPage("New ranking must be in between 0 and 10");
+            event.preventDefault();
+            return false;
+        }
+    });
+}
+
+//Shuffle Form
+let shuffleForm = docuemnt.getElementById("shuffleForm");
+let tagContainer = document.getElementById("tag");
+
+if(shuffleForm) {
+   shuffleForm.addEventListener("submit", (event) => {
+       let tag = tagContainer.value;
+       if(tag && typeof tag != "string") {
+           errorOnPage("If provided, shuffle tag must be a string");
+           event.preventDefault();
+           return false;
+       }
+   }); 
+}
+
 /*
 AJAX Request for My Recommendations
 */
