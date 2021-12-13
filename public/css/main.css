@@ -193,6 +193,7 @@ div {
 }
 #searchFormDiv {
     height: 250px;
+    margin-bottom: 50px;
 }
 #recBigDiv {
     height: 175px;
@@ -204,6 +205,7 @@ div {
 #searchbox,
 #prodYear,
 #numRecs,
+#ranking,
 #tag {
     height: 25px;
     font-family: "Chivo", sans-serif;
@@ -350,6 +352,7 @@ div {
 
 #proRecs {
     text-align: center;
+    font-size: 35px;
 }
 
 #songBigDiv {
@@ -374,14 +377,6 @@ div {
     background-color: transparent;
     border-style: none;
     color: white;
-}
-
-#disliked {
-    background-color: aqua !important;
-}
-
-#metrics {
-    background-color: aqua !important;
 }
 
 #artInfoDiv {
@@ -412,6 +407,31 @@ div {
     text-align: center;
 }
 
-#recList {
+/* #recList {
     background-color: transparent;
+} */
+
+.remove {
+    font-size: 35px;
+}
+#searchRes {
+    text-align: center;
+    font-size: 30px;
+
+    /* display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-items: center;
+    align-content: stretch; */
+    margin: 20px;
+}
+
+#spacing {
+    padding: 20px;
+}
+
+#metDiv {
+    padding: 30px;
+    background-color: #e9b425;
 }

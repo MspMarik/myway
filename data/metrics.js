@@ -1,14 +1,13 @@
 //This file contains all the functions for calculating metrics data
-const {getUserByID} = require("./users");
-const {getArtistsForRecommendations, filterArtistsForRecommendations, getArtistTags, getSongTags} = require("./lastfm");
+const { getUserByID } = require("./users");
+const { getSimilarArtists, getSongTags } = require("./lastfm");
 
 function countTags(listOfTags) {
     let tagsObject = {};
-    for(let i = 0; i < listOfTags.length; i++) {
-        if(!tagsObject[listOfTags[i]]) {
+    for (let i = 0; i < listOfTags.length; i++) {
+        if (!tagsObject[listOfTags[i]]) {
             tagsObject[listOfTags[i]] = 1;
-        }
-        else {
+        } else {
             tagsObject[listOfTags[i]]++;
         }
     }
@@ -22,47 +21,51 @@ async function getSongDataForMetrics(userId) {
     let songsList = user.favorites.songs;
     let tagsOfLiked = [];
     let tagsOfDisliked = [];
-    for(let i = 0; i < songsList.length; i++) {
+    for (let i = 0; i < songsList.length; i++) {
         let songTags = await getSongTags(songsList[i].songName, songsList[i].artistName);
         //console.log(songTags);
-        if(!songsList[i].disliked) { //Song is liked
+        if (!songsList[i].disliked) {
+            //Song is liked
             tagsOfLiked = tagsOfLiked.concat(songTags);
-        }
-        else { //Song is disliked
+        } else {
+            //Song is disliked
             tagsOfDisliked = tagsOfDisliked.concat(songTags);
         }
     }
     console.log(tagsOfLiked);
     console.log(tagsOfDisliked);
-    let countObject = {likedTags: undefined, dislikedTags: undefined};
+    let countObject = { likedTags: undefined, dislikedTags: undefined };
     countObject.likedTags = countTags(tagsOfLiked);
     countObject.dislikedTags = countTags(tagsOfDisliked);
 
-    return countObject
+    return countObject;
 }
 
-async function getRecommendations(userId) {
+async function getRecommendations(userId, numRecs) {
     let user = await getUserByID(userId);
     let artistList = user.favorites.artists;
-    let tagsList = [];
-    let topArtists = await getArtistsForRecommendations();
-    for(let i = 0; i < artistList.length; i++) { //Get all the tags from the user's liked artists
-        let artistTags = await getArtistTags(artistList[i].artistName);
-        if(!artistList[i].disliked) {
-            tagsList = tagsList.concat(artistTags);
+    let recMap = new Map();
+    for (let i = 0; i < artistList.length; i++) {
+        if (!artistList[i].disliked) {
+            let similarArtists = await getSimilarArtists(artistList[i].artistName);
+            for (let j = 0; j < similarArtists.length; j++) {
+                recMap.set(similarArtists[i].name, true);
+            }
         }
     }
-    let countedList = countTags(tagsList);
-    countedList.shift(); //Removes the labels put there for the metrics
-    let tagAvgOccurence = 0; //Get the average number of times a tag occurs
-    for(let i = 0; i < countedList.length; i++) {
-        tagAvgOccurence += countedList[i][1];
+    for (let i = 0; i < artistList.length; i++) {
+        recMap.delete(artistList[i].artistName);
     }
-    tagAvgOccurence /= countedList.length;
-    countedList = countedList.filter(tagCounter => {return tagCounter[1] >= tagAvgOccurence}) //Keep tag only if the number of times the tag appears is higher than or equal to the average number of times any tag appears
-    let filteringTags = countedList.map(tagCounter => tagCounter[0]); //Remove the numbers from the tag names
-    let recommendationList = await filterArtistsForRecommendations(topArtists, filteringTags);
-    return recommendationList;
+    let recommendations = Array.from(recMap.keys());
+    if (recommendations.length > numRecs) {
+        //Reduce recommendations to the number of recommendations asked for
+        let initLength = recommendations.length;
+        for (let i = 0; i < initLength - numRecs; i++) {
+            let removedIndex = Math.floor(Math.random() * recommendations.length); //Selects a random number from 0 to length-1
+            recommendations.splice(removedIndex, 1);
+        }
+    }
+    return recommendations;
 }
 
-module.exports = {getSongDataForMetrics, getRecommendations};
+module.exports = { getSongDataForMetrics, getRecommendations };
