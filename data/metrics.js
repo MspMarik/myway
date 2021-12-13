@@ -48,8 +48,8 @@ async function getRecommendations(userId, numRecs) {
     for (let i = 0; i < artistList.length; i++) {
         if (!artistList[i].disliked) {
             let similarArtists = await getSimilarArtists(artistList[i].artistName);
-            for (let j = 0; j < similarArtists.length; j++) {
-                recMap.set(similarArtists[i].name, true);
+            for(let j = 0; j < similarArtists.length; j++) {
+                recMap.set(similarArtists[j].name, true);
             }
         }
     }
