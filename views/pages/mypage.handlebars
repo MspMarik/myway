@@ -3,15 +3,15 @@
 
 <div id="songBigDiv">
     {{#unless album}}
-        <h2 id="likeDislike">Liked</h2>
+        <h2 class="likeDislike">Liked</h2>
         {{#unless liked}}
             <p id="songT">Looks like you don't have any liked {{#if song}}songs{{/if}}{{#if artist}}artists{{/if}} saved</br> &#128532;</p>
         {{else}}
             {{#if song}}
                 {{#each liked}}
-                    <div id="proRecs">
-                        <span id="songName">{{this.songName}} </span>
-                        <span id="artistName">{{this.artistName}}</span>
+                    <div class="proRecs">
+                        <span class="songName">{{this.songName}} </span>
+                        <span class="artistName">{{this.artistName}}</span>
                         <form class = "removeForm" action = "/removeSong" method = "POST">
                         <input type="text" name = "songName" value ="{{this.songName}}" hidden>
                         <input type="text" name = "artistName" value ="{{this.artistName}}" hidden>
@@ -23,7 +23,7 @@
 
             {{#if artist}}
                 {{#each liked}}
-                    <div id="proRecs">
+                    <div class="proRecs">
                         <span>{{this.songName}}</span>
                         <span>{{this.artistName}}</span>
                         <form class = "removeForm" action = "/removeArtist" method = "POST">
@@ -35,15 +35,15 @@
                 {{/each}}
             {{/if}}
         {{/unless}}
-        <h2 id="likeDislike">Disliked</h2>
+        <h2 class="likeDislike">Disliked</h2>
         {{#unless disliked}}
             <p id="songT">Looks like you don't have any disliked {{#if song}}songs{{/if}}{{#if artist}}artists{{/if}} saved</br> &#128513;</p>
         {{else}}
             {{#if song}}
                 {{#each disliked}}
-                    <div id="proRecs">
-                        <span id="songName">{{this.songName}}</span>
-                        <span id="artistName">{{this.artistName}}</span>
+                    <div class="proRecs">
+                        <span class="songName">{{this.songName}}</span>
+                        <span class="artistName">{{this.artistName}}</span>
                         <form class = "removeForm" action = "/removeSong" method = "POST">
                         <input type="text" name = "songName" value ="{{this.songName}}" hidden>
                         <input type="text" name = "artistName" value ="{{this.artistName}}" hidden>
@@ -55,7 +55,7 @@
 
             {{#if artist}}
                 {{#each disliked}}
-                    <div id="proRecs">
+                    <div class="proRecs">
                         <span>{{this.songName}}</span>
                         <span>{{this.artistName}}</span>
                         <form class = "removeForm" action = "/removeArtist" method = "POST">
@@ -72,14 +72,14 @@
             <p id="songT">Looks like you don't have any albums saved &#128532;</p>
         {{else}}
             {{#each albumList}}
-                <div id="proRecs">
+                <div class="proRecs">
                     <span>{{this.albumName}}</span>
                     <span>{{this.artistName}}</span>
                     <span>Rating: {{this.rating}}</span>
                     {{!-- <a href="/editRanking"><button>&#9999; Edit Ranking</button></a> --}}
                     <form class = "editForm" action = "/editRanking" method = "POST">
-                    <input type="text" id ="albumName" name = "albumName" value ="{{this.albumName}}" hidden>
-                    <input type="text"id = "artistName" name = "artistName" value ="{{this.artistName}}" hidden>
+                    <input type="text" name = "albumName" value ="{{this.albumName}}" hidden>
+                    <input type="text" name = "artistName" value ="{{this.artistName}}" hidden>
                     <button class="remove">&#9999;</button>
                     </form>
                     <form class = "removeForm" action = "/removeAlbum" method = "POST">

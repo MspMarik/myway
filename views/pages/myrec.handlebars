@@ -1,10 +1,12 @@
 <h1><span class="specialMy">My</span> Recommended Artists</h1>
 <h2 id="groovy">Groovy!</h2>
 <div id="recBigDiv"><div id="recSmalLDiv"><form id="recForm">
-            <label id="reccomLabel">How Many Recommendations?
-                <input type="number" id="numRecs" name="numRecs" min="1" step="1" required /></br>
-                <button type="submit" id="submitRecs" name="Get Your Recommendations">Gimme!</button>
+            <label class="reccomLabel">How Many Recommendations?
+                <input type="number" id="numRecs" name="numRecs" min="1" step="1" required /><br />
             </label>
+
+            <button type="submit" id="submitRecs" name="Get Your Recommendations">Gimme!</button>
+
         </form></div></div>
 
 <p id="recInfoDiv" hidden><span id="recHiddenErr">{{errString}}</span></p>

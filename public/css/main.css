@@ -99,7 +99,7 @@ div {
     color: #ffe08f;
 }
 
-#songSpan {
+.songSpan {
     font-size: 20px;
 }
 
@@ -145,12 +145,12 @@ div {
     font-style: italic;
 }
 
-#songSpan {
+.songSpan {
     font-size: 15px;
     color: white;
 }
 
-#songTitle {
+.songTitle {
     font-size: 30px;
     font-family: "Ubuntu Mono", monospace;
     font-weight: 700;
@@ -228,7 +228,7 @@ div {
 #searchbox,
 #prodYear,
 #numRecs,
-#ranking,
+.ranking,
 #tag {
     height: 25px;
     font-family: "Chivo", sans-serif;
@@ -335,8 +335,8 @@ div {
     font-weight: 300;
 }
 
-#profButts,
-#seaButt {
+.profButts,
+.seaButt {
     text-align: center;
     margin: 0px 40px 40px 40px;
     background-color: #2c37a1;
@@ -348,8 +348,8 @@ div {
     font-weight: 700;
 }
 
-#profButts:hover,
-#seaButt:hover {
+.profButts:hover,
+.seaButt:hover {
     color: #e9b425;
 }
 
@@ -358,7 +358,7 @@ div {
     text-align: center;
 }
 
-#songName {
+.songName {
     color: #ffecba;
     font-size: 30px;
     text-align: center;
@@ -366,14 +366,14 @@ div {
     font-style: italic;
 }
 
-#artistName {
+.artistName {
     color: #e9b425;
     font-size: 30px;
     text-align: center;
     font-weight: 700;
 }
 
-#proRecs {
+.proRecs {
     text-align: center;
     font-size: 35px;
 }
@@ -388,7 +388,7 @@ div {
     font-family: "Mulish", sans-serif;
 }
 
-#likeDislike,
+.likeDislike,
 #sorry {
     font-size: 40px;
     margin: 30px 0px 30px 0px;
@@ -465,7 +465,7 @@ div {
     font-weight: 900;
 }
 
-#spacing {
+.spacing {
     padding: 20px;
 }
 

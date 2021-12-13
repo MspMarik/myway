@@ -6,8 +6,8 @@
 <div id="shuffDiv"><div id="shuffSDiv"><form id="shuffleForm" action="/shuffle" method="POST">
             <label for="songOrArtist">Song or Artist?</label><br />
             <div class="custom-select"><select id="songOrArtist" name="songOrArtist" onchange="selectValue">
-                    <option value="song" id="song" name="song">Song</option>
-                    <option value="artist" id="artist" name="artist">Artist</option>
+                    <option value="song" id="song">Song</option>
+                    <option value="artist" id="artist">Artist</option>
                 </select><br /></div>
 
             <label for="tag">Genre</label>
@@ -29,5 +29,6 @@
             <p>{{shuffleResults.name}}</p>
         {{/if}}
     {{/if}}
+</div>
 
 <div id="error">{{errStr}}</div>
